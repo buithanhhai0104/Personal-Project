@@ -4,7 +4,7 @@ import axios from "axios";
 export const bookTickets = async (bookticketData: IBookTicket) => {
   try {
     const response = await axios.post(
-      "http://localhost:4000/tickets/book-ticket",
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/tickets/book-ticket",
       bookticketData,
       {
         withCredentials: true,
@@ -18,7 +18,9 @@ export const bookTickets = async (bookticketData: IBookTicket) => {
 
 export const checkTickets = async (id: string) => {
   try {
-    const response = await axios.get(`http://localhost:4000/tickets/${id}`);
+    const response = await axios.get(
+      `https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/tickets/${id}`
+    );
     return response.data;
   } catch (err) {
     console.log("Error check tickets", err);
@@ -50,7 +52,9 @@ export const updateTicketStatus = async (
 
 export const getTickets = async () => {
   try {
-    const response = await axios.get("http://localhost:4000/tickets");
+    const response = await axios.get(
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/tickets"
+    );
     return response.data;
   } catch (err) {
     console.log("Lỗi khi lấy dữ liệu tất cả vé", err);
@@ -58,7 +62,9 @@ export const getTickets = async () => {
 };
 export const deleteTicketById = async (id: string) => {
   try {
-    const response = await axios.delete(`http://localhost:4000/tickets/${id}`);
+    const response = await axios.delete(
+      `https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/tickets/${id}`
+    );
     return response.data;
   } catch (err) {
     console.log("Lỗi xóa vé theo id", err);

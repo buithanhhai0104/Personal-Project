@@ -14,9 +14,13 @@ export function generateMetadata(): Metadata {
 }
 
 export default async function Home() {
-  const getTrips = await fetch("http://localhost:4000/api/trips");
+  const getTrips = await fetch(
+    "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/trips"
+  );
   const tripsData: ITrips[] = await getTrips.json();
-  const getNews = await fetch("http://localhost:4000/news");
+  const getNews = await fetch(
+    "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
+  );
   const newsData: INews[] = await getNews.json();
 
   return (

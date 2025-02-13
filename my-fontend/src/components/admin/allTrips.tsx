@@ -12,7 +12,7 @@ const AllTrips = () => {
   const [activeLocation, setActiveLocation] = useState<string>("Tất cả");
   const [editMode, setEditMode] = useState<boolean>(false);
   const [currentTrip, setCurrentTrip] = useState<ITrips | null>(null);
-  const [loading, setLoading] = useState<boolean>(false); // Thêm trạng thái loading
+  const [loading, setLoading] = useState<boolean>(false); 
 
   const fetchAllTrips = async () => {
     setLoading(true);

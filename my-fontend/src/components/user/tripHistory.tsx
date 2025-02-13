@@ -12,6 +12,8 @@ const TripHistory = () => {
   const router = useRouter();
 
   useEffect(() => {
+    if (!user?.id) return;
+
     const fetchTrips = async () => {
       const res = await getTickets();
       if (Array.isArray(res)) {
@@ -19,7 +21,7 @@ const TripHistory = () => {
       }
     };
     fetchTrips();
-  }, []);
+  }, [user?.id]);
 
   const newTicketsList = ticketsList
     ?.filter((t) => t.booking_time)

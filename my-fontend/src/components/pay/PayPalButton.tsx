@@ -31,7 +31,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
           setLoading(true);
           try {
             const response = await axios.post(
-              "http://localhost:4000/paypal/create-payment",
+              "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/paypal/create-payment",
               {
                 total: amount,
                 currency,
@@ -50,7 +50,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
           setLoading(true);
           try {
             const response = await axios.post(
-              `http://localhost:4000/paypal/capture-payment/${data.orderID}`
+              `https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/paypal/capture-payment/${data.orderID}`
             );
             setLoading(false);
             onSuccess(response.data);

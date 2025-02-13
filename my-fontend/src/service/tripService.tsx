@@ -9,7 +9,9 @@ interface IParams {
 
 export const getAllTrips = async () => {
   try {
-    const response = await axios.get("http://localhost:4000/api/trips");
+    const response = await axios.get(
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/trips"
+    );
     return response.data;
   } catch (err) {
     console.log("Lỗi gọi api Trips", err);
@@ -19,7 +21,7 @@ export const getAllTrips = async () => {
 export const createTrip = async (createTripForm: ICreateTrip) => {
   try {
     const response = await axios.post(
-      "http://localhost:4000/api/trips",
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/trips",
       createTripForm,
       {
         headers: {
@@ -36,7 +38,7 @@ export const createTrip = async (createTripForm: ICreateTrip) => {
 export const deleteTrip = async (id: number) => {
   try {
     const response = await axios.delete(
-      `http://localhost:4000/api/trips/${id}`,
+      `https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/trips/${id}`,
       {
         withCredentials: true,
       }
@@ -59,7 +61,7 @@ export const UpdateTripbyId = async (
         .replace("T", " ");
     }
     const respone = await axios.put(
-      `http://localhost:4000/api/trips/${id}`,
+      `https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/trips/${id}`,
       modifiedTrip,
       {
         headers: {
@@ -76,9 +78,12 @@ export const UpdateTripbyId = async (
 
 export const getTripById = async (id: number) => {
   try {
-    const response = await axios.get(`http://localhost:4000/api/trips/${id}`, {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/trips/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (err) {
     console.log("Lỗi gọi api trip theo id", err);
@@ -87,9 +92,12 @@ export const getTripById = async (id: number) => {
 
 export const apiTripsSearch = async (params: IParams) => {
   try {
-    const response = await axios.get("http://localhost:4000/api/search", {
-      params,
-    });
+    const response = await axios.get(
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/search",
+      {
+        params,
+      }
+    );
     return response.data;
   } catch (err) {
     console.log("Lỗi gọi api tìm kiếm chuyến xe", err);

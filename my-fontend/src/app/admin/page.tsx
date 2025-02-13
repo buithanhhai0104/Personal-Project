@@ -3,7 +3,8 @@ import AllTickets from "@/components/admin/allTickets";
 import AllTrips from "@/components/admin/allTrips";
 import CreateTrip from "@/components/admin/createTrip";
 import Users from "@/components/admin/users";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { BsChevronDown, BsChevronRight } from "react-icons/bs";
 import { useUser } from "@/context/authContext";
 import { useRouter } from "next/navigation";
@@ -24,7 +25,7 @@ const Manage = () => {
     useState<ActiveComponent>("allTrips");
   const user = useUser();
   const router = useRouter();
-  const componentMap: Record<ActiveComponent, JSX.Element> = {
+  const componentMap: Record<ActiveComponent, ReactNode> = {
     createTrip: <CreateTrip />,
     allTrips: <AllTrips />,
     users: <Users />,
@@ -49,7 +50,7 @@ const Manage = () => {
   ];
 
   useEffect(() => {
-    if (user && user.user === null) return; // Đợi dữ liệu user load xong
+    if (user && user.user === null) return;
     if (!user?.user || user?.user?.role !== "admin") {
       router.push("/unauthorized");
     }

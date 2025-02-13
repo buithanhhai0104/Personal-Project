@@ -14,7 +14,7 @@ interface IRegisterData {
 export const apiLogin = async (loginData: ILoginData) => {
   try {
     const response = await axios.post(
-      "http://localhost:4000/auth/login",
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/auth/login",
       loginData,
       {
         withCredentials: true, // Gửi cookie với request
@@ -44,7 +44,7 @@ export const apiLogin = async (loginData: ILoginData) => {
 export const apiRegister = async (registerData: IRegisterData) => {
   try {
     const respone = await axios.post(
-      "http://localhost:4000/auth/register",
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/auth/register",
       registerData,
       {
         withCredentials: true,
@@ -58,7 +58,7 @@ export const apiRegister = async (registerData: IRegisterData) => {
 export const apiLogout = async () => {
   try {
     const respone = await axios.post(
-      "http://localhost:4000/auth/logout",
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/auth/logout",
       {},
       {
         withCredentials: true,
@@ -72,9 +72,12 @@ export const apiLogout = async () => {
 
 export const getUser = async () => {
   try {
-    const response = await axios.get("http://localhost:4000/userinfo", {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/userinfo",
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (err) {
     console.log("Xác thực không thành công", err);

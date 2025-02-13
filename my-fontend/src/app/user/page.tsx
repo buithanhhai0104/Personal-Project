@@ -2,6 +2,7 @@
 import { useState } from "react";
 import TripHistory from "@/components/user/tripHistory";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { ReactNode } from "react";
 
 type ActiveComponent = "infomation" | "tripHistory";
 
@@ -10,7 +11,7 @@ const User = () => {
     useState<ActiveComponent>("infomation");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const componentMap: Record<ActiveComponent, JSX.Element> = {
+  const componentMap: Record<ActiveComponent, ReactNode> = {
     tripHistory: <TripHistory />,
     infomation: <div>123</div>,
   };

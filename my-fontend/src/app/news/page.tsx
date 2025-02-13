@@ -4,7 +4,9 @@ import Image from "next/image";
 import Allnews from "@/components/news/allnews";
 
 export default async function NewsPage() {
-  const getNews = await fetch("http://localhost:4000/news");
+  const getNews = await fetch(
+    "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
+  );
   const newsData: INews[] = await getNews.json();
   console.log(newsData);
 
