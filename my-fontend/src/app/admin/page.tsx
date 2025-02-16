@@ -56,7 +56,6 @@ const Manage = () => {
     }
   }, [user, router]);
 
-  console.log(user.user);
   if (!user.user || user.user?.role !== "admin") return null;
 
   return (
