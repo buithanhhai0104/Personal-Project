@@ -10,7 +10,7 @@ interface IParams {
 export const getAllTrips = async () => {
   try {
     const response = await axios.get(
-      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app//api/trips"
+      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/api/trips"
     );
     return response.data;
   } catch (err) {
@@ -21,7 +21,7 @@ export const getAllTrips = async () => {
 export const createTrip = async (createTripForm: ICreateTrip) => {
   try {
     const response = await axios.post(
-      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app//api/trips",
+      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/api/trips",
       createTripForm,
       {
         headers: {
@@ -38,7 +38,7 @@ export const createTrip = async (createTripForm: ICreateTrip) => {
 export const deleteTrip = async (id: number) => {
   try {
     const response = await axios.delete(
-      `https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app//api/trips/${id}`,
+      `https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/api/trips/${id}`,
       {
         withCredentials: true,
       }
@@ -61,7 +61,7 @@ export const UpdateTripbyId = async (
         .replace("T", " ");
     }
     const respone = await axios.put(
-      `https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app//api/trips/${id}`,
+      `https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/api/trips/${id}`,
       modifiedTrip,
       {
         headers: {
@@ -79,7 +79,7 @@ export const UpdateTripbyId = async (
 export const getTripById = async (id: number) => {
   try {
     const response = await axios.get(
-      `https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app//api/trips/${id}`,
+      `https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/api/trips/${id}`,
       {
         withCredentials: true,
       }
@@ -93,7 +93,7 @@ export const getTripById = async (id: number) => {
 export const apiTripsSearch = async (params: IParams) => {
   try {
     const response = await axios.get(
-      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app//api/search",
+      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/api/search",
       {
         params,
       }
