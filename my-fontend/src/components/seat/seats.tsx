@@ -2,7 +2,7 @@ import { ISeats } from "@/types/trips";
 import React, { useEffect, useState } from "react";
 
 interface ISeatsProps {
-  seats: string;
+  seats: ISeats[];
   onSeatsChange: (seats: string[]) => void;
 }
 
@@ -11,17 +11,13 @@ const Seats: React.FC<ISeatsProps> = ({ seats, onSeatsChange }) => {
   const [downstairs, setDowntairs] = useState<ISeats[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   useEffect(() => {
-    const seatsArray = JSON.parse(seats) as {
-      seat_number: string;
-      status: string;
-    }[];
-    if (seatsArray) {
-      const upstairsFilter = seatsArray.filter(
+    if (seats) {
+      const upstairsFilter = seats.filter(
         (item) => item.seat_number.slice(0, 1) === "B"
       );
       setUptairs(upstairsFilter);
 
-      const downstairsFilter = seatsArray.filter(
+      const downstairsFilter = seats.filter(
         (item) => item.seat_number.slice(0, 1) === "A"
       );
       setDowntairs(downstairsFilter);

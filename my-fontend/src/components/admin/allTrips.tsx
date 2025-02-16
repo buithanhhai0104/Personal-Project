@@ -199,16 +199,9 @@ const AllTrips = () => {
             month: "2-digit",
             year: "numeric",
           });
-          const seatsArray = JSON.parse(trip.seats) as {
-            seat_number: string;
-            status: string;
-          }[];
-
-          const reservedSeats = Array.isArray(seatsArray)
-            ? seatsArray.filter((seat) => seat.status === "booked")
-            : [];
-          console.log(reservedSeats);
-          console.log(trip);
+          const reservedSeats = trip.seats.filter(
+            (seat) => seat.status === "booked"
+          );
           return (
             <div
               key={index}
