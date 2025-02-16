@@ -202,6 +202,10 @@ const AllTrips = () => {
 
           const reservedSeats = Array.isArray(trip?.seats)
             ? trip.seats.filter((seat) => seat.status === "booked")
+            : typeof trip.seats === "string"
+            ? JSON.parse(trip.seats).filter(
+                (seat: { status: string }) => seat.status === "booked"
+              )
             : [];
           console.log(reservedSeats);
           console.log(trip);
