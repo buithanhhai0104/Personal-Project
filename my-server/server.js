@@ -14,9 +14,7 @@ const startExpireTicketsJob = require("./jobs/expireTicketsJob");
 const app = express();
 const port = process.env.PORTDB_PORT || 4000;
 
-const allowedOrigins = [
-  "https://personal-project-rlxh-njy4lhq5b-thanh-hais-projects-0e39a8d1.vercel.app",
-];
+const allowedOrigins = ["https://personal-project-rlxh.vercel.app"];
 
 app.use(
   cors({
