@@ -12,7 +12,7 @@ const AllTrips = () => {
   const [activeLocation, setActiveLocation] = useState<string>("Tất cả");
   const [editMode, setEditMode] = useState<boolean>(false);
   const [currentTrip, setCurrentTrip] = useState<ITrips | null>(null);
-  const [loading, setLoading] = useState<boolean>(false); 
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchAllTrips = async () => {
     setLoading(true);
@@ -199,7 +199,9 @@ const AllTrips = () => {
             month: "2-digit",
             year: "numeric",
           });
-          const reservedSeats = trip.seats.filter(
+          if (Array.isArray(trip.seats)) {
+          }
+          const reservedSeats = trip.seats?.filter(
             (seat) => seat.status === "booked"
           );
           return (
