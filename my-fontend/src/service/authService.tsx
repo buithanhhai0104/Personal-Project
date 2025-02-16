@@ -17,7 +17,7 @@ export const apiLogin = async (loginData: ILoginData) => {
       "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/auth/login",
       loginData,
       {
-        withCredentials: true, // Gửi cookie với request
+        withCredentials: true,
       }
     );
     return {

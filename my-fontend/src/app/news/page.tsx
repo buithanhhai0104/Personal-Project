@@ -1,14 +1,14 @@
-import { INews } from "@/types/news";
+// import { INews } from "@/types/news";
 import React from "react";
-import Image from "next/image";
-import Allnews from "@/components/news/allnews";
+// import Image from "next/image";
+// import Allnews from "@/components/news/allnews";
 
 export default async function NewsPage() {
-  const getNews = await fetch(
-    "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
-  );
-  const newsData: INews[] = await getNews.json();
-  console.log(newsData);
+  // const getNews = await fetch(
+  //   "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
+  // );
+  // const newsData: INews[] = await getNews.json();
+  // console.log(newsData);
 
   // const handleGetNewsById = (newsId: number, newsTitle: string) => {
   //   const unsignedTitle = newsTitle
@@ -30,7 +30,7 @@ export default async function NewsPage() {
       <div className="grid grid-cols-4 gap-4">
         <div className="flex cursor-pointer flex-col col-span-4 row-span-2 sm:col-span-2">
           <div className=" flex w-full flex-col">
-            <Image
+            {/* <Image
               className="rounded-xl"
               src={newsData[0].image || ""}
               alt={newsData[0].title}
@@ -40,10 +40,10 @@ export default async function NewsPage() {
             />
             <h2 className="line_clamp font-medium text-[#111111] hover:opacity-90 mt-5 text-xl leading-6">
               {newsData[0].title}
-            </h2>
+            </h2> */}
           </div>
         </div>
-        {newsData.slice(1, 4).map((news) => {
+        {/* {newsData.slice(1, 4).map((news) => {
           const date = new Date(news.created_at);
           const formattedDate = date.toLocaleDateString("vi-VN");
           return (
@@ -70,13 +70,13 @@ export default async function NewsPage() {
               </div>
             </div>
           );
-        })}
+        })} */}
       </div>
       <div className="flex  justify-center items-center gap-5">
         <h2 className="text-3xl text-[#00613d]">Tất cả tin tức</h2>
         <div className="h-[2px] mt-1 w-full flex-1 bg-[#00613d]"></div>
       </div>
-      <Allnews newsData={newsData} />
+      {/* <Allnews newsData={newsData} /> */}
     </div>
   );
 }

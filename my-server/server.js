@@ -12,18 +12,26 @@ const newsRoutes = require("./src/routes/newsRoutes");
 const paypalRoutes = require("./src/routes/paypalRoutes");
 const startExpireTicketsJob = require("./jobs/expireTicketsJob");
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORTDB_PORT || 3307;
 
-// Middlewarel
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://nextjs-project-rho-jade.vercel.app",
-    ],
-    credentials: true,
+    origin: "http://localhost:3000", // ✅ Cho phép frontend kết nối
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // ✅ Quan trọng: Cho phép gửi cookies/token
   })
 );
+
+// Xử lý preflight request (OPTIONS)
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(200);
+});
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -34,6 +42,7 @@ app.use("/api", tripRoutes);
 app.use("/tickets", ticketsRoutes);
 app.use("/news", newsRoutes);
 app.use("/paypal", paypalRoutes);
+
 app.get("/userinfo", authController.verifyToken, (req, res) => {
   res.status(200).json({
     message: "Thông tin người dùng",
@@ -44,7 +53,9 @@ app.get("/userinfo", authController.verifyToken, (req, res) => {
     },
   });
 });
+
 startExpireTicketsJob();
+
 // Server listening
 app.listen(port, () => {
   console.log(`Server đang chạy tại http://localhost:${port}`);
