@@ -12,23 +12,36 @@ const newsRoutes = require("./src/routes/newsRoutes");
 const paypalRoutes = require("./src/routes/paypalRoutes");
 const startExpireTicketsJob = require("./jobs/expireTicketsJob");
 const app = express();
-const port = process.env.PORTDB_PORT || 3307;
+const port = process.env.PORTDB_PORT || 4000;
+
+const allowedOrigins = [
+  "https://personal-project-rlxh-9iwb1rsfq-thanh-hais-projects-0e39a8d1.vercel.app",
+];
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // ✅ Cho phép frontend kết nối
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // ✅ Quan trọng: Cho phép gửi cookies/token
+    credentials: true,
   })
 );
 
-// Xử lý preflight request (OPTIONS)
+// Xử lý request OPTIONS trước khi đến các route khác
 app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   res.sendStatus(200);
 });
 
@@ -54,6 +67,11 @@ app.get("/userinfo", authController.verifyToken, (req, res) => {
   });
 });
 
+app.use((req, res, next) => {
+  console.log(`📢 Received request: ${req.method} ${req.url}`);
+  console.log("Headers:", req.headers);
+  next();
+});
 startExpireTicketsJob();
 
 // Server listening
