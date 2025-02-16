@@ -12,7 +12,7 @@ export const getNewsById = async (url: string) => {
 export const getNewsAll = async () => {
   try {
     const res = await axios.get(
-      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
+      "server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/news"
     );
     return res.data;
   } catch (err) {
@@ -22,7 +22,7 @@ export const getNewsAll = async () => {
 export const createNews = async (newsData: INews) => {
   try {
     const res = await axios.post(
-      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news",
+      "server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/news",
       newsData,
       {
         headers: {
