@@ -204,6 +204,7 @@ const AllTrips = () => {
             ? trip.seats.filter((seat) => seat.status === "booked")
             : [];
           console.log(reservedSeats);
+          console.log(trip);
           return (
             <div
               key={index}
