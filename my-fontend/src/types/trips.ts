@@ -13,7 +13,7 @@ export interface ITrips {
   departure_time: string;
   start_time: string;
   arrival_time: string;
-  seats: ISeats[];
+  seats: string;
 }
 
 export interface ICreateTrip {
