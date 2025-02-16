@@ -1,11 +1,11 @@
 "use client";
 
-import { FaDotCircle } from "react-icons/fa";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
 import { ITrips } from "@/types/trips";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useUser } from "@/context/authContext";
+
 interface TripsItemProps {
   tripItem: ITrips;
 }
@@ -13,6 +13,8 @@ interface TripsItemProps {
 const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
   const { user } = useUser();
   const router = useRouter();
+
+  // Xử lý đặt chuyến
   const handleBookTrip = () => {
     if (user) {
       router.push(`/trips/${tripItem.id}`);
@@ -22,14 +24,17 @@ const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
     }
   };
 
+  // Kiểm tra seats trước khi filter
   const emptySeats = useMemo(() => {
-    return tripItem.seats.filter((item) => item.status === "available");
+    if (!Array.isArray(tripItem.seats)) return [];
+    return tripItem.seats.filter((seat) => seat.status === "available");
   }, [tripItem.seats]);
 
-  const formatTime = (time: string) => {
-    return time ? time.slice(0, -3) : "Không có thông tin";
-  };
+  // Format thời gian
+  const formatTime = (time?: string) =>
+    time?.slice(0, -3) || "Không có thông tin";
 
+  // Format tiền tệ
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -49,9 +54,9 @@ const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
             <div className="flex flex-1 items-center">
               <FaDotCircle className="mx-2 sm:m-3" />
               <div className="hidden sm:block flex-1 h-[1px] w-6 bg-gray-300 rounded-full"></div>
-              <div className=" flex text-center text-sm text-gray-500">
-                {tripItem.travel_time} <br />
-                (Asian/Ho Chi Minh)
+              <div className="flex text-center text-sm text-gray-500">
+                {tripItem.travel_time || "Không xác định"} <br /> (Asia/Ho Chi
+                Minh)
               </div>
               <div className="hidden sm:block flex-1 h-[1px] w-6 bg-gray-300 rounded-full"></div>
               <FaMapMarkerAlt className="mx-2 sm:m-3" />
@@ -63,15 +68,15 @@ const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
           </div>
           {/* Tên bến */}
           <div className="flex justify-between text-gray-700 text-sm sm:text-base mt-2">
-            <div>{tripItem.from_location}</div>
-            <div>{tripItem.to_location}</div>
+            <div>{tripItem.from_location || "Không xác định"}</div>
+            <div>{tripItem.to_location || "Không xác định"}</div>
           </div>
         </div>
 
         {/* Thông tin ghế trống và giá */}
         <div className="text-center sm:text-right">
           <div className="text-xs sm:text-sm text-gray-500">
-            {tripItem.bus_type} &bull;{" "}
+            {tripItem.bus_type || "Không xác định"} &bull;{" "}
             <span className="text-green-500">
               {emptySeats.length > 0
                 ? `${emptySeats.length} chỗ trống`
@@ -85,12 +90,17 @@ const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
       </div>
 
       {/* Nút chọn chuyến */}
-      <div className="mt-6 flex  sm:flex-row justify-end items-center">
+      <div className="mt-6 flex sm:flex-row justify-end items-center">
         <button
           onClick={handleBookTrip}
-          className="bg-orange-500 text-white px-4 sm:px-6 py-2 mt-4 sm:mt-0 rounded-lg hover:bg-orange-600 transition"
+          disabled={emptySeats.length === 0}
+          className={`px-4 sm:px-6 py-2 mt-4 sm:mt-0 rounded-lg transition ${
+            emptySeats.length > 0
+              ? "bg-orange-500 text-white hover:bg-orange-600"
+              : "bg-gray-400 text-gray-300 cursor-not-allowed"
+          }`}
         >
-          Chọn chuyến
+          {emptySeats.length > 0 ? "Chọn chuyến" : "Hết chỗ"}
         </button>
       </div>
     </div>
