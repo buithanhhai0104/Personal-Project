@@ -199,11 +199,10 @@ const AllTrips = () => {
             month: "2-digit",
             year: "numeric",
           });
-          if (Array.isArray(trip.seats)) {
-          }
-          const reservedSeats = trip.seats?.filter(
-            (seat) => seat.status === "booked"
-          );
+
+          const reservedSeats = Array.isArray(trip?.seats)
+            ? trip.seats.filter((seat) => seat.status === "booked")
+            : [];
           return (
             <div
               key={index}
