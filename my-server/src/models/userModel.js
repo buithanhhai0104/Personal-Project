@@ -3,7 +3,7 @@ const db = require("../config/db");
 const User = {
   // Lấy tất cả người dùng
   getAllUsers: (callback) => {
-    const sql = "SELECT * FROM users";
+    const sql = "SELECT * FROM user";
     db.query(sql, callback);
   },
 
@@ -15,13 +15,13 @@ const User = {
 
   // Xóa người dùng
   deleteUser: (id, callback) => {
-    const sql = "DELETE FROM users WHERE id = ?";
+    const sql = "DELETE FROM user WHERE id = ?";
     db.query(sql, [id], callback);
   },
 
   // Lấy danh sách người dùng theo từ khóa tìm kiếm
   getUsersBySearch: (searchQuery, callback) => {
-    const sql = "SELECT * FROM users WHERE name LIKE ?";
+    const sql = "SELECT * FROM user WHERE name LIKE ?";
     const values = [`%${searchQuery}%`];
     db.query(sql, values, (err, results) => {
       if (err) return callback(err, null);
@@ -31,7 +31,7 @@ const User = {
 
   // Lấy người dùng theo ID
   getUserById: (userId, callback) => {
-    const sql = "SELECT * FROM users WHERE id = ?";
+    const sql = "SELECT * FROM user WHERE id = ?";
     db.query(sql, [userId], (err, results) => {
       if (err) return callback(err, null);
       callback(null, results);
@@ -39,18 +39,18 @@ const User = {
   },
   //Tìm tên tài khoản người dùng theo Name
   findByUsername: (username, callback) => {
-    const sql = "SELECT * FROM users WHERE username = ?";
+    const sql = "SELECT * FROM user WHERE username = ?";
     db.query(sql, [username], callback);
   },
 
   findByUsernameAndEmail: (username, email, callback) => {
-    const sql = "SELECT * FROM users WHERE username = ? AND email = ?";
+    const sql = "SELECT * FROM user WHERE username = ? AND email = ?";
     db.query(sql, [username, email], callback);
   },
   // thêm tài khoản người dùng
   createAccount: (data, callback) => {
     const sql = `
-      INSERT INTO users (name, email, username, password) 
+      INSERT INTO user (name, email, username, password) 
       VALUES (?, ?, ?, ?)`;
     db.query(
       sql,
