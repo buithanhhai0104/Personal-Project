@@ -15,30 +15,33 @@ const app = express();
 const port = process.env.PORTDB_PORT || 4000;
 
 const allowedOrigins = [
-  "https://personal-project-rlxh.vercel.app",
-  "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app",
-  "https://localhost:3000",
+  "https://personal-project-rlxh.vercel.app", // Dự án frontend
+  "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app", // Server backend
+  "https://localhost:3000", // Localhost (nếu cần)
 ];
 
+// Cấu hình CORS
 app.use(
   cors({
     origin: function (origin, callback) {
+      console.log("Origin:", origin); // Ghi lại origin cho mục đích debug
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("Không được phép từ origin này"));
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+    credentials: true, // Quan trọng nếu bạn gửi cookies từ client
   })
 );
 
+// Các middleware khác
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
+// Các route của ứng dụng
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/api", tripRoutes);
@@ -46,6 +49,7 @@ app.use("/tickets", ticketsRoutes);
 app.use("/news", newsRoutes);
 app.use("/paypal", paypalRoutes);
 
+// Endpoint lấy thông tin người dùng sau khi xác thực
 app.get("/userinfo", authController.verifyToken, (req, res) => {
   res.status(200).json({
     message: "Thông tin người dùng",
@@ -57,9 +61,10 @@ app.get("/userinfo", authController.verifyToken, (req, res) => {
   });
 });
 
+// Job xử lý vé hết hạn
 startExpireTicketsJob();
 
-// Server listening
+// Lắng nghe trên cổng
 app.listen(port, () => {
   console.log(`Server đang chạy tại http://localhost:${port}`);
 });
