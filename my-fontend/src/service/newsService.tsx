@@ -12,7 +12,7 @@ export const getNewsById = async (url: string) => {
 export const getNewsAll = async () => {
   try {
     const res = await axios.get(
-      "https://server-personal-project-dgoctsqto-thanh-hais-projects-0e39a8d1.vercel.app/news"
+      "https://server-personal-project.vercel.app/news"
     );
     return res.data;
   } catch (err) {
@@ -22,7 +22,7 @@ export const getNewsAll = async () => {
 export const createNews = async (newsData: INews) => {
   try {
     const res = await axios.post(
-      "https://server-personal-project-dgoctsqto-thanh-hais-projects-0e39a8d1.vercel.app/news",
+      "https://server-personal-project.vercel.app/news",
       newsData,
       {
         headers: {
