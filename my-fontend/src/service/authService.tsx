@@ -14,7 +14,7 @@ interface IRegisterData {
 export const apiLogin = async (loginData: ILoginData) => {
   try {
     const response = await axios.post(
-      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/auth/login",
+      "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/auth/login",
       loginData,
       {
         withCredentials: true,
@@ -44,7 +44,7 @@ export const apiLogin = async (loginData: ILoginData) => {
 export const apiRegister = async (registerData: IRegisterData) => {
   try {
     const respone = await axios.post(
-      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/auth/register",
+      "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/auth/register",
       registerData,
       {
         withCredentials: true,
@@ -58,7 +58,7 @@ export const apiRegister = async (registerData: IRegisterData) => {
 export const apiLogout = async () => {
   try {
     const respone = await axios.post(
-      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/auth/logout",
+      "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/auth/logout",
       {},
       {
         withCredentials: true,
@@ -73,7 +73,7 @@ export const apiLogout = async () => {
 export const getUser = async () => {
   try {
     const response = await axios.get(
-      "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app/userinfo",
+      "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/userinfo",
       {
         withCredentials: true,
       }

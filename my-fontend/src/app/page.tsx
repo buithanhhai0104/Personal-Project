@@ -15,12 +15,12 @@ export function generateMetadata(): Metadata {
 
 export default async function Home() {
   const getTrips = await fetch(
-    "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/api/trips"
+    "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/api/trips"
   );
   console.log(getTrips);
-  const tripsData: ITrips[] = await getTrips.json()
+  const tripsData: ITrips[] = await getTrips.json();
   const getNews = await fetch(
-    "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
+    "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/news"
   );
   const newsData: INews[] = await getNews.json();
   console.log(getNews);
