@@ -31,18 +31,6 @@ app.use(
   })
 );
 
-// Xử lý request OPTIONS trước khi đến các route khác
-app.options("*", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(200);
-});
-
 app.use(bodyParser.json());
 app.use(cookieParser());
 
