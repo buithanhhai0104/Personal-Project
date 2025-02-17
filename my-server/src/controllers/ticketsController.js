@@ -5,6 +5,11 @@ const moment = require("moment");
 const db = require("../config/db");
 const ticketsController = {
   bookTicket: (req, res) => {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://personal-project-rlxh.vercel.app"
+    );
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     const {
       user_id,
       trip_id,
