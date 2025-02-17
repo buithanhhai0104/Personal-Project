@@ -14,16 +14,30 @@ export function generateMetadata(): Metadata {
 }
 
 export default async function Home() {
-  const getTrips = await fetch(
-    "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/api/trips"
-  );
-  console.log(getTrips);
-  const tripsData: ITrips[] = await getTrips.json();
-  const getNews = await fetch(
-    "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/news"
-  );
-  const newsData: INews[] = await getNews.json();
-  console.log(getNews);
+  let tripsData: ITrips[] = [];
+  let newsData: INews[] = [];
+
+  try {
+    const getTrips = await fetch(
+      "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/api/trips"
+    );
+    if (!getTrips.ok) {
+      throw new Error("Failed to fetch trips data");
+    }
+    tripsData = await getTrips.json();
+
+    const getNews = await fetch(
+      "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/news"
+    );
+    if (!getNews.ok) {
+      throw new Error("Failed to fetch news data");
+    }
+    newsData = await getNews.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    // Bạn có thể trả về giá trị mặc định hoặc thông báo lỗi cho người dùng
+  }
+
   return (
     <>
       <div className="">

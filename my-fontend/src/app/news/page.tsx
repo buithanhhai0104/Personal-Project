@@ -1,15 +1,27 @@
-import { INews } from "@/types/news";
-import React from "react";
+"use client"; // Đánh dấu là Client Component
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Allnews from "@/components/news/allnews";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation"; // Chỉ sử dụng ở Client Component
+import { INews } from "@/types/news";
 
-interface NewsPageProps {
-  newsData: INews[];
-}
-
-const NewsPage: React.FC<NewsPageProps> = ({ newsData }) => {
+export default function NewsPage() {
   const router = useRouter();
+  const [newsData, setNewsData] = useState<INews[]>([]);
+
+  useEffect(() => {
+    // Fetch dữ liệu trong useEffect để chạy ở client
+    async function fetchNews() {
+      const getNews = await fetch(
+        "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
+      );
+      const data: INews[] = await getNews.json();
+      setNewsData(data);
+    }
+
+    fetchNews();
+  }, []);
 
   const handleGetNewsById = (newsId: number, newsTitle: string) => {
     const unsignedTitle = newsTitle
@@ -23,7 +35,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ newsData }) => {
   };
 
   return (
-    <div className="mt-16 mb-10 w-[90%] sm:w-[70%] m-auto text-black">
+    <div className="mt-16 mb-10  w-[90%] sm:w-[70%] m-auto text-black">
       <div className="flex justify-center items-center gap-5">
         <h2 className="text-3xl text-[#00613d]">Tin tức nổi bật</h2>
         <div className="h-[2px] mt-1 w-full flex-1 bg-[#00613d]"></div>
@@ -33,14 +45,14 @@ const NewsPage: React.FC<NewsPageProps> = ({ newsData }) => {
           <div className="flex w-full flex-col">
             <Image
               className="rounded-xl"
-              src={newsData[0].image || ""}
-              alt={newsData[0].title}
+              src={newsData[0]?.image || ""}
+              alt={newsData[0]?.title || "News Image"}
               width={100}
               height={100}
               layout="responsive"
             />
             <h2 className="line_clamp font-medium text-[#111111] hover:opacity-90 mt-5 text-xl leading-6">
-              {newsData[0].title}
+              {newsData[0]?.title || "News Title"}
             </h2>
           </div>
         </div>
@@ -80,19 +92,4 @@ const NewsPage: React.FC<NewsPageProps> = ({ newsData }) => {
       <Allnews newsData={newsData} />
     </div>
   );
-};
-
-export async function getServerSideProps() {
-  const getNews = await fetch(
-    "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/news"
-  );
-  const newsData: INews[] = await getNews.json();
-
-  return {
-    props: {
-      newsData, // Trả về data dưới dạng props
-    },
-  };
 }
-
-export default NewsPage;
