@@ -1,6 +1,5 @@
 const express = require("express");
 require("dotenv").config();
-const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const userRoutes = require("./src/routes/userRoutes");
@@ -11,6 +10,7 @@ const ticketsRoutes = require("./src/routes/ticketsRoutes");
 const newsRoutes = require("./src/routes/newsRoutes");
 const paypalRoutes = require("./src/routes/paypalRoutes");
 const startExpireTicketsJob = require("./jobs/expireTicketsJob");
+
 const app = express();
 const port = process.env.PORTDB_PORT || 4000;
 
@@ -18,7 +18,6 @@ const allowedOrigins = [
   "https://personal-project-rlxh.vercel.app",
   "https://server-penal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app",
   "https://localhost:3000",
-  "*", // Cho phép mọi nguồn (có thể dùng cho môi trường phát triển)
 ];
 
 app.use(
@@ -36,7 +35,7 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
+app.use(express.json()); // Thay thế body-parser
 app.use(cookieParser());
 
 // Routes
