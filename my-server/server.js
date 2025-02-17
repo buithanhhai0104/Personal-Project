@@ -16,7 +16,7 @@ const port = process.env.PORTDB_PORT || 4000;
 
 const allowedOrigins = [
   "https://personal-project-rlxh.vercel.app",
-  "https://server-penal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app",
+  "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app",
   "https://localhost:3000",
 ];
 
