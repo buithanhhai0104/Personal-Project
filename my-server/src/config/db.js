@@ -17,7 +17,7 @@ db.getConnection((err, connection) => {
     console.error("❌ Lỗi kết nối MySQL:", err);
     setTimeout(() => {
       console.log("🔄 Đang thử kết nối lại...");
-      pool.getConnection((retryErr, retryConnection) => {
+      db.getConnection((retryErr, retryConnection) => {
         if (retryErr) {
           console.error("🚨 Thử kết nối lại thất bại:", retryErr);
         } else {
@@ -29,7 +29,39 @@ db.getConnection((err, connection) => {
     return;
   }
   console.log("✅ Kết nối MySQL thành công!");
-  connection.release(); // Giải phóng kết nối sau khi kiểm tra
+
+  // Sử dụng giao dịch
+  connection.beginTransaction((err) => {
+    if (err) {
+      connection.release();
+      console.error("❌ Lỗi bắt đầu giao dịch:", err);
+      return;
+    }
+
+    // Thực hiện các truy vấn trong giao dịch
+    connection.query("YOUR SQL QUERY HERE", (queryErr, results) => {
+      if (queryErr) {
+        connection.rollback(() => {
+          console.error("❌ Lỗi trong giao dịch, rollback:", queryErr);
+          connection.release();
+        });
+        return;
+      }
+
+      // Nếu truy vấn thành công, commit giao dịch
+      connection.commit((commitErr) => {
+        if (commitErr) {
+          connection.rollback(() => {
+            console.error("❌ Lỗi commit giao dịch, rollback:", commitErr);
+            connection.release();
+          });
+          return;
+        }
+        console.log("✅ Giao dịch thành công!");
+        connection.release();
+      });
+    });
+  });
 });
 
 module.exports = db;
