@@ -33,13 +33,18 @@ app.use(
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Các phương thức được phép
-    allowedHeaders: ["Content-Type", "Authorization"], // Các header được phép
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "Origin",
+      "X-Requested-With",
+      "Access-Control-Allow-Credentials",
+    ],
+
     credentials: true, // Quan trọng nếu sử dụng cookies
   })
 );
-
-// Xử lý preflight requests (OPTIONS)
-app.options("*", cors());
 
 // Middleware khác
 app.use(express.json());
