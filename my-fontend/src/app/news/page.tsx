@@ -14,7 +14,7 @@ export default function NewsPage() {
     // Fetch dữ liệu trong useEffect để chạy ở client
     async function fetchNews() {
       const getNews = await fetch(
-        "https://server-personal-project.vercel.app/news"
+        "https://backend-personal-project.vercel.app/news"
       );
       const data: INews[] = await getNews.json();
       setNewsData(data);

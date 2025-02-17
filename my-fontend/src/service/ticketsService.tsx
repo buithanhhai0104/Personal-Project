@@ -4,7 +4,7 @@ import axios from "axios";
 export const bookTickets = async (bookticketData: IBookTicket) => {
   try {
     const response = await axios.post(
-      "https://server-personal-project.vercel.app/tickets/book-ticket",
+      "https://backend-personal-project.vercel.app/tickets/book-ticket",
       bookticketData,
       {
         withCredentials: true,
@@ -19,7 +19,7 @@ export const bookTickets = async (bookticketData: IBookTicket) => {
 export const checkTickets = async (id: string) => {
   try {
     const response = await axios.get(
-      `https://server-personal-project.vercel.app/tickets/${id}`
+      `https://backend-personal-project.vercel.app/tickets/${id}`
     );
     return response.data;
   } catch (err) {
@@ -53,7 +53,7 @@ export const updateTicketStatus = async (
 export const getTickets = async () => {
   try {
     const response = await axios.get(
-      "https://server-personal-project.vercel.app/tickets"
+      "https://backend-personal-project.vercel.app/tickets"
     );
     return response.data;
   } catch (err) {
@@ -63,7 +63,7 @@ export const getTickets = async () => {
 export const deleteTicketById = async (id: string) => {
   try {
     const response = await axios.delete(
-      `https://server-personal-project.vercel.app/tickets/${id}`
+      `https://backend-personal-project.vercel.app/tickets/${id}`
     );
     return response.data;
   } catch (err) {

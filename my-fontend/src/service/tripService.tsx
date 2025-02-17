@@ -10,7 +10,7 @@ interface IParams {
 export const getAllTrips = async () => {
   try {
     const response = await axios.get(
-      "https://server-personal-project.vercel.app/api/trips"
+      "https://backend-personal-project.vercel.app/api/trips"
     );
     return response.data;
   } catch (err) {
@@ -21,7 +21,7 @@ export const getAllTrips = async () => {
 export const createTrip = async (createTripForm: ICreateTrip) => {
   try {
     const response = await axios.post(
-      "https://server-personal-project.vercel.app/api/trips",
+      "https://backend-personal-project.vercel.app/api/trips",
       createTripForm,
       {
         headers: {
@@ -38,7 +38,7 @@ export const createTrip = async (createTripForm: ICreateTrip) => {
 export const deleteTrip = async (id: number) => {
   try {
     const response = await axios.delete(
-      `https://server-personal-project.vercel.app/api/trips/${id}`,
+      `https://backend-personal-project.vercel.app/api/trips/${id}`,
       {
         withCredentials: true,
       }
@@ -61,7 +61,7 @@ export const UpdateTripbyId = async (
         .replace("T", " ");
     }
     const respone = await axios.put(
-      `https://server-personal-project.vercel.app/api/trips/${id}`,
+      `https://backend-personal-project.vercel.app/api/trips/${id}`,
       modifiedTrip,
       {
         headers: {
@@ -79,7 +79,7 @@ export const UpdateTripbyId = async (
 export const getTripById = async (id: number) => {
   try {
     const response = await axios.get(
-      `https://server-personal-project.vercel.app/api/trips/${id}`,
+      `https://backend-personal-project.vercel.app/api/trips/${id}`,
       {
         withCredentials: true,
       }
@@ -93,7 +93,7 @@ export const getTripById = async (id: number) => {
 export const apiTripsSearch = async (params: IParams) => {
   try {
     const response = await axios.get(
-      "https://server-personal-project.vercel.app/api/search",
+      "https://backend-personal-project.vercel.app/api/search",
       {
         params,
       }

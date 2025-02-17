@@ -19,7 +19,7 @@ export default async function Home() {
 
   try {
     const getTrips = await fetch(
-      "https://server-personal-project.vercel.app/api/trips"
+      "https://backend-personal-project.vercel.app/api/trips"
     );
     if (!getTrips.ok) {
       throw new Error("Failed to fetch trips data");
@@ -27,7 +27,7 @@ export default async function Home() {
     tripsData = await getTrips.json();
 
     const getNews = await fetch(
-      "https://server-personal-project.vercel.app/news"
+      "https://backend-personal-project.vercel.app/news"
     );
     if (!getNews.ok) {
       throw new Error("Failed to fetch news data");

@@ -3,7 +3,7 @@ import axios from "axios";
 export const getUsers = async () => {
   try {
     const response = await axios.get(
-      "https://server-personal-project.vercel.app/users",
+      "https://backend-personal-project.vercel.app/users",
       {
         withCredentials: true,
       }
@@ -17,7 +17,7 @@ export const getUsers = async () => {
 export const deleteUser = async (id: number) => {
   try {
     const response = await axios.delete(
-      `https://server-personal-project.vercel.app/users/${id}`,
+      `https://backend-personal-project.vercel.app/users/${id}`,
       {
         withCredentials: true,
       }
