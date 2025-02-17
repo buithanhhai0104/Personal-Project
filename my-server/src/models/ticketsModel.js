@@ -24,43 +24,61 @@ const Ticket = {
     console.log("Executing query with values:", values);
     db.query(query, [values], callback);
   },
+
   getTicketByTicketId: (ticket_id, callback) => {
     const query = `SELECT * FROM tickets WHERE ticket_id = ?`;
     db.query(query, [ticket_id], callback);
   },
 
   updateMultipleTicketStatus: (tickets, callback) => {
-    const queries = tickets.map(
-      (ticket) =>
-        `UPDATE tickets SET status = '${ticket.status}' WHERE ticket_id = '${ticket.ticket_id}';`
-    );
+    db.getConnection((err, connection) => {
+      if (err) {
+        return callback(err);
+      }
 
-    db.beginTransaction((err) => {
-      if (err)
-        return callback && typeof callback === "function" && callback(err);
+      const queries = tickets.map(
+        (ticket) =>
+          `UPDATE tickets SET status = '${ticket.status}' WHERE ticket_id = '${ticket.ticket_id}';`
+      );
 
-      queries.forEach((query, index) => {
-        db.query(query, (err) => {
-          if (err) {
-            return db.rollback(() => {
-              if (callback && typeof callback === "function") {
-                callback(new Error(`Failed at query #${index + 1}`));
-              }
+      connection.beginTransaction(async (err) => {
+        if (err) {
+          connection.release();
+          return callback(err);
+        }
+
+        try {
+          // Sử dụng vòng lặp async/await để xử lý các truy vấn bất đồng bộ
+          for (let index = 0; index < queries.length; index++) {
+            const query = queries[index];
+            await new Promise((resolve, reject) => {
+              connection.query(query, (err) => {
+                if (err) {
+                  reject(new Error(`Failed at query #${index + 1}`));
+                } else {
+                  resolve();
+                }
+              });
             });
           }
-        });
-      });
 
-      db.commit((err) => {
-        if (err) {
-          return db.rollback(() => {
-            if (callback && typeof callback === "function") {
-              callback(new Error("Transaction failed."));
+          // Commit giao dịch
+          connection.commit((err) => {
+            if (err) {
+              return connection.rollback(() => {
+                connection.release();
+                callback(new Error("Transaction failed."));
+              });
             }
+            connection.release();
+            callback(null);
           });
-        }
-        if (callback && typeof callback === "function") {
-          callback(null);
+        } catch (err) {
+          // Nếu có lỗi trong vòng lặp, rollback và giải phóng kết nối
+          return connection.rollback(() => {
+            connection.release();
+            callback(err);
+          });
         }
       });
     });
@@ -72,6 +90,7 @@ const Ticket = {
       callback
     );
   },
+
   updateTicketStatus: (ticketId, status, callback) => {
     const query = "UPDATE tickets SET status = ? WHERE ticket_id = ?";
     db.query(query, [status, ticketId], (err, result) => {
