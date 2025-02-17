@@ -14,7 +14,10 @@ const startExpireTicketsJob = require("./jobs/expireTicketsJob");
 const app = express();
 const port = process.env.PORTDB_PORT || 4000;
 
-const allowedOrigins = ["https://personal-project-rlxh.vercel.app"];
+const allowedOrigins = [
+  "https://personal-project-rlxh.vercel.app",
+  "https://server-personal-project-git-e4d4fd-thanh-hais-projects-0e39a8d1.vercel.app",
+];
 
 app.use(
   cors({
@@ -53,11 +56,6 @@ app.get("/userinfo", authController.verifyToken, (req, res) => {
   });
 });
 
-app.use((req, res, next) => {
-  console.log(`📢 Received request: ${req.method} ${req.url}`);
-  console.log("Headers:", req.headers);
-  next();
-});
 startExpireTicketsJob();
 
 // Server listening
