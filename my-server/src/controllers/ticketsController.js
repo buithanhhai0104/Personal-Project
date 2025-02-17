@@ -3,7 +3,6 @@ const Ticket = require("../models/ticketsModel");
 const Trip = require("../models/tripsModel");
 const moment = require("moment");
 const db = require("../config/db");
-
 const ticketsController = {
   bookTicket: (req, res) => {
     const {
@@ -17,6 +16,7 @@ const ticketsController = {
       from_location,
     } = req.body;
     console.log(req.body);
+    // Các bước kiểm tra đầu vào đã được thực hiện ở trên
 
     // Truy vấn dữ liệu chuyến đi
     Trip.getTripById(trip_id, (err, results) => {
@@ -47,20 +47,16 @@ const ticketsController = {
         return res.status(400).json({ message: "Ghế đã được đặt" });
       }
 
-      // Cập nhật trạng thái ghế
       seats = seats.map((seat) => {
         if (seat_numbers.includes(seat.seat_number)) {
           seat.status = "booked";
         }
         return seat;
       });
-
-      // Thời gian hết hạn (10 phút)
       const expires_at = moment()
         .add(10, "minutes")
         .format("YYYY-MM-DD HH:mm:ss");
       console.log("Expires at:", expires_at);
-
       // Tạo dữ liệu vé
       const ticketData = seat_numbers.map((seat_number) => ({
         ticket_id: uuidv4(),
@@ -129,33 +125,20 @@ const ticketsController = {
     });
   },
 
-  updateMultipleTicketStatus: (req, res) => {
+  updateMultipleTicketStatus: async (req, res) => {
     const { changeTicketStatus } = req.body;
 
     if (!Array.isArray(changeTicketStatus) || changeTicketStatus.length === 0) {
       return res.status(400).json({ error: "Dữ liệu vé không hợp lệ." });
     }
 
-    const query = `
-      UPDATE tickets 
-      SET status = CASE ticket_id
-        ${changeTicketStatus
-          .map((ticket) => `WHEN '${ticket.ticket_id}' THEN '${ticket.status}'`)
-          .join(" ")}
-      END
-      WHERE ticket_id IN (${changeTicketStatus
-        .map((ticket) => `'${ticket.ticket_id}'`)
-        .join(", ")});
-    `;
-
-    db.query(query, (err) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ error: "Không thể cập nhật trạng thái vé." });
-      }
+    try {
+      // Sử dụng async/await trong model nếu có thể
+      await Ticket.updateMultipleTicketStatus(changeTicketStatus);
       res.status(200).json({ message: "Cập nhật trạng thái vé thành công." });
-    });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
   },
 
   getAllTickets: (req, res) => {
@@ -167,6 +150,7 @@ const ticketsController = {
     });
   },
 
+  // Xóa vé theo ID
   deleteTicketById: (req, res) => {
     const { ticket_id } = req.params;
     Ticket.deleteTicketById(ticket_id, (err, result) => {
