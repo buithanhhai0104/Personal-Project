@@ -82,31 +82,49 @@ const ticketsController = {
           expires_at,
         }));
 
-        db.beginTransaction((err) => {
+        // Lấy kết nối từ pool
+        db.getConnection((err, connection) => {
           if (err)
             return res.status(500).json({ error: "Lỗi bắt đầu giao dịch." });
 
-          Trip.updateTripSeats(trip_id, seats, (err) => {
-            if (err)
-              return db.rollback(() =>
-                res.status(500).json({ error: "Không thể cập nhật ghế." })
-              );
+          // Bắt đầu giao dịch
+          connection.beginTransaction((err) => {
+            if (err) {
+              connection.release();
+              return res.status(500).json({ error: "Lỗi bắt đầu giao dịch." });
+            }
 
-            Ticket.createMultipleTickets(ticketData, (err) => {
-              if (err)
-                return db.rollback(() =>
-                  res.status(500).json({ error: "Không thể tạo vé." })
+            // Cập nhật thông tin ghế trong chuyến đi
+            Trip.updateTripSeats(trip_id, seats, (err) => {
+              if (err) {
+                return connection.rollback(() =>
+                  res.status(500).json({ error: "Không thể cập nhật ghế." })
                 );
+              }
 
-              db.commit((err) => {
-                if (err)
-                  return db.rollback(() =>
-                    res.status(500).json({ error: "Lỗi khi commit giao dịch." })
+              // Tạo vé
+              Ticket.createMultipleTickets(ticketData, (err) => {
+                if (err) {
+                  return connection.rollback(() =>
+                    res.status(500).json({ error: "Không thể tạo vé." })
                   );
-                res.status(201).json({
-                  message: "Đặt vé thành công",
-                  tickets: ticketData,
-                  updatedSeats: seats,
+                }
+
+                // Commit giao dịch
+                connection.commit((err) => {
+                  if (err) {
+                    return connection.rollback(() =>
+                      res
+                        .status(500)
+                        .json({ error: "Lỗi khi commit giao dịch." })
+                    );
+                  }
+                  connection.release(); // Giải phóng kết nối khi thành công
+                  res.status(201).json({
+                    message: "Đặt vé thành công",
+                    tickets: ticketData,
+                    updatedSeats: seats,
+                  });
                 });
               });
             });
