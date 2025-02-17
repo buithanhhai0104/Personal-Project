@@ -16,9 +16,9 @@ const port = process.env.PORT || 4000;
 
 // Các domain được phép truy cập vào backend
 const allowedOrigins = [
-  "https://personal-project-rlxh.vercel.app", // Frontend của bạn trên Vercel
-  "https://server-personal-project-dgoctsqto-thanh-hais-projects-0e39a8d1.vercel.app", // Backend trên Vercel
-  "https://localhost:3000", // Nếu chạy trên localhost
+  "https://personal-project-rlxh.vercel.app",
+  "https://server-personal-project.vercel.app",
+  "https://localhost:3000",
 ];
 
 // Cấu hình CORS
