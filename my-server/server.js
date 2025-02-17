@@ -12,32 +12,36 @@ const paypalRoutes = require("./src/routes/paypalRoutes");
 const startExpireTicketsJob = require("./jobs/expireTicketsJob");
 
 const app = express();
-const port = process.env.PORTDB_PORT || 4000;
+const port = process.env.PORT || 4000;
 
+// Các domain được phép truy cập vào backend
 const allowedOrigins = [
-  "https://personal-project-rlxh.vercel.app", // Dự án frontend
-  "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app", // Server backend
-  "https://localhost:3000", // Localhost (nếu cần)
+  "https://personal-project-rlxh.vercel.app", // Frontend của bạn trên Vercel
+  "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app", // Backend trên Vercel
+  "https://localhost:3000", // Nếu chạy trên localhost
 ];
 
 // Cấu hình CORS
 app.use(
   cors({
     origin: function (origin, callback) {
-      console.log("Origin:", origin); // Ghi lại origin cho mục đích debug
+      // Chấp nhận yêu cầu từ các origin trong danh sách allowedOrigins
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Không được phép từ origin này"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Quan trọng nếu bạn gửi cookies từ client
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Các phương thức được phép
+    allowedHeaders: ["Content-Type", "Authorization"], // Các header được phép
+    credentials: true, // Quan trọng nếu sử dụng cookies
   })
 );
 
-// Các middleware khác
+// Xử lý preflight requests (OPTIONS)
+app.options("*", cors());
+
+// Middleware khác
 app.use(express.json());
 app.use(cookieParser());
 
