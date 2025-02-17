@@ -6,106 +6,116 @@ const db = require("../config/db");
 
 const ticketsController = {
   bookTicket: (req, res) => {
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      "https://personal-project-rlxh.vercel.app"
-    );
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
-
-    const {
-      user_id,
-      trip_id,
-      seat_numbers,
-      email,
-      name,
-      phone,
-      to_location,
-      from_location,
-    } = req.body;
-
-    Trip.getTripById(trip_id, (err, results) => {
-      if (err)
-        return res.status(500).json({ error: "Không thể kiểm tra chuyến đi." });
-      if (results.length === 0)
-        return res.status(404).json({ message: "Chuyến đi không tồn tại" });
-
-      const trip = results[0];
-      let seats;
-      try {
-        seats = JSON.parse(trip.seats);
-      } catch (e) {
-        return res.status(500).json({ error: "Lỗi phân tích dữ liệu ghế." });
-      }
-
-      const unavailableSeats = seat_numbers.filter(
-        (seat) =>
-          !seats.some((s) => s.seat_number === seat && s.status === "available")
+    try {
+      res.setHeader(
+        "Access-Control-Allow-Origin",
+        "https://personal-project-rlxh.vercel.app"
       );
-      if (unavailableSeats.length > 0)
-        return res.status(400).json({ message: "Ghế đã được đặt." });
-
-      seats = seats.map((seat) =>
-        seat_numbers.includes(seat.seat_number)
-          ? { ...seat, status: "booked" }
-          : seat
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS"
       );
-      const expires_at = moment()
-        .add(10, "minutes")
-        .format("YYYY-MM-DD HH:mm:ss");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization"
+      );
 
-      const ticketData = seat_numbers.map((seat) => ({
-        ticket_id: uuidv4(),
+      const {
         user_id,
         trip_id,
-        seat_number: seat,
+        seat_numbers,
         email,
         name,
         phone,
         to_location,
         from_location,
-        status: "Chưa thanh toán",
-        expires_at,
-      }));
+      } = req.body;
 
-      db.beginTransaction((err) => {
+      Trip.getTripById(trip_id, (err, results) => {
         if (err)
-          return res.status(500).json({ error: "Lỗi bắt đầu giao dịch." });
+          return res
+            .status(500)
+            .json({ error: "Không thể kiểm tra chuyến đi." });
+        if (results.length === 0)
+          return res.status(404).json({ message: "Chuyến đi không tồn tại" });
 
-        Trip.updateTripSeats(trip_id, seats, (err) => {
+        let seats;
+        try {
+          seats =
+            typeof results[0].seats === "string"
+              ? JSON.parse(results[0].seats)
+              : results[0].seats;
+        } catch (e) {
+          return res.status(500).json({ error: "Lỗi phân tích dữ liệu ghế." });
+        }
+
+        const unavailableSeats = seat_numbers.filter(
+          (seat) =>
+            !seats.some(
+              (s) => s.seat_number === seat && s.status === "available"
+            )
+        );
+        if (unavailableSeats.length > 0)
+          return res.status(400).json({ message: "Ghế đã được đặt." });
+
+        seats = seats.map((seat) =>
+          seat_numbers.includes(seat.seat_number)
+            ? { ...seat, status: "booked" }
+            : seat
+        );
+        const expires_at = moment()
+          .add(10, "minutes")
+          .format("YYYY-MM-DD HH:mm:ss");
+
+        const ticketData = seat_numbers.map((seat) => ({
+          ticket_id: uuidv4(),
+          user_id,
+          trip_id,
+          seat_number: seat,
+          email,
+          name,
+          phone,
+          to_location,
+          from_location,
+          status: "Chưa thanh toán",
+          expires_at,
+        }));
+
+        db.beginTransaction((err) => {
           if (err)
-            return db.rollback(() =>
-              res.status(500).json({ error: "Không thể cập nhật ghế." })
-            );
+            return res.status(500).json({ error: "Lỗi bắt đầu giao dịch." });
 
-          Ticket.createMultipleTickets(ticketData, (err) => {
+          Trip.updateTripSeats(trip_id, seats, (err) => {
             if (err)
               return db.rollback(() =>
-                res.status(500).json({ error: "Không thể tạo vé." })
+                res.status(500).json({ error: "Không thể cập nhật ghế." })
               );
 
-            db.commit((err) => {
+            Ticket.createMultipleTickets(ticketData, (err) => {
               if (err)
                 return db.rollback(() =>
-                  res.status(500).json({ error: "Lỗi khi commit giao dịch." })
+                  res.status(500).json({ error: "Không thể tạo vé." })
                 );
-              res.status(201).json({
-                message: "Đặt vé thành công",
-                tickets: ticketData,
-                updatedSeats: seats,
+
+              db.commit((err) => {
+                if (err)
+                  return db.rollback(() =>
+                    res.status(500).json({ error: "Lỗi khi commit giao dịch." })
+                  );
+                res.status(201).json({
+                  message: "Đặt vé thành công",
+                  tickets: ticketData,
+                  updatedSeats: seats,
+                });
               });
             });
           });
         });
       });
-    });
+    } catch (error) {
+      res.status(500).json({ error: "Đã xảy ra lỗi không mong muốn." });
+    }
   },
 
   getTicketByTicketId: (req, res) => {
