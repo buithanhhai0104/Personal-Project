@@ -1,12 +1,11 @@
 const db = require("../config/db");
 
 const Ticket = {
-  // Hàm tạo nhiều vé cùng lúc
   createMultipleTickets: (ticketData, callback) => {
     const query = `
-    INSERT INTO tickets (ticket_id, user_id, trip_id, seat_number, email, name, phone, status, expires_at, to_location, from_location)
-    VALUES ?;
-  `;
+      INSERT INTO tickets (ticket_id, user_id, trip_id, seat_number, email, name, phone, status, expires_at, to_location, from_location)
+      VALUES ?;
+    `;
     const values = ticketData.map((ticket) => [
       ticket.ticket_id,
       ticket.user_id,
@@ -24,46 +23,25 @@ const Ticket = {
     console.log("Executing query with values:", values);
     db.query(query, [values], callback);
   },
+
   getTicketByTicketId: (ticket_id, callback) => {
     const query = `SELECT * FROM tickets WHERE ticket_id = ?`;
     db.query(query, [ticket_id], callback);
   },
 
   updateMultipleTicketStatus: (tickets, callback) => {
-    const queries = tickets.map(
-      (ticket) =>
-        `UPDATE tickets SET status = '${ticket.status}' WHERE ticket_id = '${ticket.ticket_id}';`
-    );
-
-    db.beginTransaction((err) => {
-      if (err)
-        return callback && typeof callback === "function" && callback(err);
-
-      queries.forEach((query, index) => {
-        db.query(query, (err) => {
-          if (err) {
-            return db.rollback(() => {
-              if (callback && typeof callback === "function") {
-                callback(new Error(`Failed at query #${index + 1}`));
-              }
-            });
-          }
-        });
-      });
-
-      db.commit((err) => {
-        if (err) {
-          return db.rollback(() => {
-            if (callback && typeof callback === "function") {
-              callback(new Error("Transaction failed."));
-            }
-          });
-        }
-        if (callback && typeof callback === "function") {
-          callback(null);
-        }
-      });
-    });
+    const query = `
+      UPDATE tickets 
+      SET status = CASE ticket_id
+        ${tickets
+          .map((ticket) => `WHEN '${ticket.ticket_id}' THEN '${ticket.status}'`)
+          .join(" ")}
+      END
+      WHERE ticket_id IN (${tickets
+        .map((ticket) => `'${ticket.ticket_id}'`)
+        .join(", ")});
+    `;
+    db.query(query, callback);
   },
 
   getUnpaidTickets: (callback) => {
@@ -72,14 +50,10 @@ const Ticket = {
       callback
     );
   },
+
   updateTicketStatus: (ticketId, status, callback) => {
     const query = "UPDATE tickets SET status = ? WHERE ticket_id = ?";
-    db.query(query, [status, ticketId], (err, result) => {
-      if (err) {
-        return callback(err);
-      }
-      callback(null, result);
-    });
+    db.query(query, [status, ticketId], callback);
   },
 
   getAllTickets: (callback) => {
@@ -87,7 +61,6 @@ const Ticket = {
     db.query(query, callback);
   },
 
-  // Hàm xóa vé
   deleteTicketById: (ticketId, callback) => {
     const query = `DELETE FROM tickets WHERE ticket_id = ?`;
     db.query(query, [ticketId], callback);
