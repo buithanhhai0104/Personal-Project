@@ -35,7 +35,7 @@ app.use(
   })
 );
 
-app.use(express.json()); // Thay thế body-parser
+app.use(express.json());
 app.use(cookieParser());
 
 // Routes
