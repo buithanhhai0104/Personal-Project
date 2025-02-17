@@ -73,7 +73,7 @@ export const apiLogout = async () => {
 export const getUser = async () => {
   try {
     const response = await axios.get(
-      "https://server-personal-project-67d0v7vmx-thanh-hais-projects-0e39a8d1.vercel.app/userinfo",
+      "https://server-personal-project-dgoctsqto-thanh-hais-projects-0e39a8d1.vercel.app/userinfo",
       {
         withCredentials: true,
       }
