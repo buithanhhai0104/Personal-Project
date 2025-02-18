@@ -69,9 +69,15 @@ app.get("/userinfo", authController.verifyToken, (req, res) => {
     },
   });
 });
-
-// Job xử lý vé hết hạn
-startExpireTicketsJob();
+app.get("/api/run-cron", (req, res) => {
+  try {
+    startExpireTicketsJob();
+    res.status(200).json({ message: "Cron job đã được kích hoạt thành công" });
+  } catch (error) {
+    console.error("Lỗi khi chạy cron job:", error);
+    res.status(500).json({ error: "Lỗi khi chạy cron job" });
+  }
+});
 
 // Lắng nghe trên cổng
 app.listen(port, () => {
