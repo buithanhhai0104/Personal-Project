@@ -26,7 +26,11 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
     }
     console.log(result, details);
   };
-
+  if (bookTicketsData && bookTicketsData.length > 0) {
+    console.log(bookTicketsData[0].expires_at);
+  } else {
+    console.log("Dữ liệu không có hoặc không hợp lệ");
+  }
   return (
     <div className="min-h-screen w-[90%] sm:w-[60%] flex items-center justify-center">
       {successfulPayment ? (
