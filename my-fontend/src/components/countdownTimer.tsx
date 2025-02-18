@@ -7,7 +7,7 @@ interface CountdownProps {
 
 const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-
+  console.log(seatExpiresAt);
   useEffect(() => {
     if (seatExpiresAt) {
       // Chuyển seatExpiresAt thành thời gian UTC
