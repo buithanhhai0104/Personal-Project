@@ -56,7 +56,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
       alert("Vui lòng nhập đầy đủ thông tin đặt vé");
       return;
     }
-    const bookTicketData = {
+    const ticketData = {
       user_id: user?.id,
       trip_id: id,
       from_location: trip?.from_location,
@@ -67,7 +67,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
       email: bookTicketEmail,
     };
     try {
-      const bookTicket = await bookTickets(bookTicketData);
+      const bookTicket = await bookTickets(ticketData);
       setBookTicketData(bookTicket.tickets);
       setBookingSuccess(true);
       setBookTicketEmail("");
