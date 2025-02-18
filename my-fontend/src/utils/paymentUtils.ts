@@ -27,7 +27,7 @@ export const handlePaymentSuccess = async (
   try {
     // Gửi yêu cầu cập nhật trạng thái vé
     const updatePaymentStatus = await updateTicketStatus(
-      "https://my-server-3exfcj6u4-thanh-hais-projects-0e39a8d1.vercel.app/tickets/status",
+      "https://backend-personal-project.vercel.app/tickets/status",
       changeTicketStatus
     );
     if (updatePaymentStatus) {
