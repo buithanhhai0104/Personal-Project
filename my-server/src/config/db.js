@@ -10,6 +10,7 @@ const db = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 5,
   queueLimit: 0,
+  connectTimeout: 10000,
 });
 
 db.getConnection((err, connection) => {
