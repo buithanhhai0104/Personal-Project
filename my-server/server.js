@@ -17,7 +17,7 @@ const port = process.env.PORT || 4000;
 // Các domain được phép truy cập vào backend
 const allowedOrigins = [
   "https://personal-project-rlxh.vercel.app",
-  "https://server-personal-project.vercel.app",
+  "https://backend-personal-project.vercel.app",
   "https://localhost:3000",
 ];
 
