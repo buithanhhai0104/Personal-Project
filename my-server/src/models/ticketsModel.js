@@ -86,7 +86,8 @@ const Ticket = {
 
   getUnpaidTickets: (callback) => {
     db.query(
-      'SELECT * FROM tickets WHERE status = "Chưa thanh toán"',
+      "SELECT * FROM tickets WHERE status = ?",
+      ["Chưa thanh toán"],
       callback
     );
   },
