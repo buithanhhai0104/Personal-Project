@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 interface CountdownProps {
   seatExpiresAt: string | undefined;
 }
@@ -9,9 +10,16 @@ const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
   useEffect(() => {
     if (seatExpiresAt) {
       const expiresAt = new Date(seatExpiresAt).getTime();
+      const currentTime = Date.now();
+
+      // Kiểm tra nếu thời gian hết hạn ngay lập tức
+      if (expiresAt <= currentTime) {
+        setTimeLeft(0);
+        return;
+      }
+
       const interval = setInterval(() => {
-        const currentTime = Date.now();
-        const remaining = expiresAt - currentTime;
+        const remaining = expiresAt - Date.now();
 
         if (remaining <= 0) {
           clearInterval(interval);
