@@ -6,14 +6,11 @@ interface CountdownProps {
 
 const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  console.log("seatExpiresAt: ", seatExpiresAt);
-  console.log(Date.now());
   useEffect(() => {
     if (seatExpiresAt) {
       const expiresAt = new Date(seatExpiresAt).getTime();
       const currentTime = Date.now();
 
-      // Kiểm tra nếu thời gian hết hạn ngay lập tức
       if (expiresAt <= currentTime) {
         setTimeLeft(0);
         return;
