@@ -29,9 +29,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
         const sendEmailForm: ISendEmail = {
           to: bookTicketsData[0].email,
           subject: "Mã thông tin đặt vé ",
-          tickets_id: bookTicketsData
-            ?.map((item) => item.ticket_id?.toString())
-            .filter(Boolean) as string[],
+          tickets: bookTicketsData,
         };
         const sendEmail = await apisendEmail(sendEmailForm);
         if (sendEmail) {

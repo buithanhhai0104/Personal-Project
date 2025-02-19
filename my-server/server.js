@@ -55,18 +55,60 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.post("/send-email", async (req, res) => {
   try {
-    const { to, subject, tickets_id } = req.body;
+    const { to, subject, bookTicketData } = req.body;
+
+    if (!Array.isArray(bookTicketData) || bookTicketData.length === 0) {
+      return res.status(400).json({ error: "Dữ liệu vé không hợp lệ" });
+    }
+
+    // Tạo nội dung email bằng cách map dữ liệu bookTicketData
+    const ticketHTML = bookTicketData
+      .map(
+        (ticket) => `
+      <div style="padding: 16px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background-color: #f9f9f9; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 14px; font-weight: 500; color: #000;">
+            Mã vé: <b>${
+              ticket.ticket_id
+            }</b> (có thể dùng mã vé để tra cứu vé trên hệ thống)
+          </span>
+        </div>
+        <div style="margin-top: 8px; color: #4a4a4a;">
+          <p><strong>Điểm đi:</strong> ${ticket.from_location}</p>
+          <p><strong>Điểm đến:</strong> ${ticket.to_location}</p>
+          <p><strong>Mã chuyến đi:</strong> ${ticket.trip_id}</p>
+          <p><strong>Họ và tên:</strong> ${ticket.name}</p>
+          <p><strong>Số điện thoại:</strong> ${ticket.phone}</p>
+          <p><strong>Email:</strong> ${ticket.email}</p>
+          <p><strong>Số ghế:</strong> ${ticket.seat_number}</p>
+          <p><strong>Trạng thái thanh toán:</strong> 
+            <span style="color: ${
+              ticket.status === "Đã thanh toán" ? "green" : "red"
+            }; font-weight: bold;">
+              ${ticket.status}
+            </span>
+          </p>
+        </div>
+      </div>
+    `
+      )
+      .join(""); // Nối tất cả nội dung email thành một chuỗi HTML
 
     const data = await resend.emails.send({
-      from: "onbording@resend.dev",
+      from: "onboarding@resend.dev",
       to: [to],
       subject: subject,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
           <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px;">
-            <h2 style="color: #007bff;">Đây là mã vé xe bạn đã đặt, để xem thông tin chi tiết vui lòng điền mã vé xe vào đường dẫn bên dưới</h2>
-            <p style="display:flex ; flex-direction:column">${tickets_id}</p>
-            <a href="https://personal-project-rlxh.vercel.app/check" style="display: inline-block; padding: 10px 20px; color: white; background: #007bff; text-decoration: none; border-radius: 5px;">Nhấn vào đây</a>
+            <h2 style="color: #007bff; text-align: center;">Thông tin đặt vé</h2>
+            ${ticketHTML}
+            <p style="text-align: center; margin-top: 20px;">
+              <a href="https://personal-project-rlxh.vercel.app/check" 
+                style="display: inline-block; padding: 10px 20px; color: white; background: #007bff; text-decoration: none; border-radius: 5px;">
+                Kiểm tra vé tại đây
+              </a>
+            </p>
           </div>
         </div>
       `,
@@ -77,6 +119,7 @@ app.post("/send-email", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 // Các route của ứng dụng
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
