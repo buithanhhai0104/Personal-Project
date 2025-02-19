@@ -88,7 +88,7 @@ app.post("/send-email", async (req, res) => {
     const { to, subject, tickets_id } = req.body;
 
     const data = await resend.emails.send({
-      from: "noreply@yourdomain.com",
+      from: "onbording@resend.dev",
       to: [to],
       subject: subject,
       html: `
