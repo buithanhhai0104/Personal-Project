@@ -36,6 +36,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
         const sendEmail = await apisendEmail(sendEmailForm);
         if (sendEmail) {
           console.log("Đã gửi thông tin vé đến Email người đặt");
+          console.log(sendEmailForm);
         }
       }
       console.log(result, details);
