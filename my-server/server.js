@@ -79,6 +79,34 @@ app.get("/api/run-cron", (req, res) => {
   }
 });
 
+// Khởi tạo Resend với API Key
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+app.post("/send-email", async (req, res) => {
+  try {
+    const { to, subject, tickets_id } = req.body;
+
+    const data = await resend.emails.send({
+      from: "noreply@yourdomain.com",
+      to: [to],
+      subject: subject,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+          <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px;">
+            <h2 style="color: #007bff;">Đây là mã vé xe bạn đã đặt, để xem thông tin chi tiết vui lòng điền mã vé xe vào đường dẫn bên dưới</h2>
+            <p style="display:flex ; flex-direction:column">${tickets_id}</p>
+            <a href="https://personal-project-rlxh.vercel.app/check" style="display: inline-block; padding: 10px 20px; color: white; background: #007bff; text-decoration: none; border-radius: 5px;">Nhấn vào đây</a>
+          </div>
+        </div>
+      `,
+    });
+
+    res.json({ message: "Email sent successfully!", data });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Lắng nghe trên cổng
 app.listen(port, () => {
   console.log(`Server đang chạy tại http://localhost:${port}`);

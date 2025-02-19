@@ -15,7 +15,7 @@ const extractId = (slug: string): string => {
 const fetchNewsData = async (id: string): Promise<INews | null> => {
   try {
     const response = await fetch(
-      `https://server-personal-project.vercel.app/news/${id}`
+      `https://backend-personal-project.vercel.app/news/${id}`
     );
 
     if (!response.ok) {

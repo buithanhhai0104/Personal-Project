@@ -6,6 +6,8 @@ import CountdownTimer from "./countdownTimer";
 import { handlePaymentSuccess } from "@/utils/paymentUtils";
 import { ITrips } from "@/types/trips";
 import moment from "moment-timezone";
+import { apisendEmail } from "@/service/sendEmailService";
+import { ISendEmail } from "@/types/sendEmail";
 
 interface IBookingSuccessProps {
   bookTicketsData: IBookTicket[] | null;
@@ -22,11 +24,24 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
   const [successfulPayment, setSuccessfulPayment] = useState<boolean>(false);
 
   const handlePayment = async (details: unknown) => {
-    const result = await handlePaymentSuccess(bookTicketsData);
-    if (result) {
-      setSuccessfulPayment(true);
+    if (bookTicketsData) {
+      const result = await handlePaymentSuccess(bookTicketsData);
+      if (result) {
+        setSuccessfulPayment(true);
+        const sendEmailForm: ISendEmail = {
+          to: bookTicketsData[0].email,
+          subject: "Mã thông tin đặt vé ",
+          tickets_id: bookTicketsData
+            ?.map((item) => item.ticket_id?.toString())
+            .filter(Boolean) as string[],
+        };
+        const sendEmail = await apisendEmail(sendEmailForm);
+        if (sendEmail) {
+          console.log("Đã gửi thông tin vé đến Email người đặt");
+        }
+      }
+      console.log(result, details);
     }
-    console.log(result, details);
   };
 
   const convertToTimezone = (dateString: string) => {
@@ -53,7 +68,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
                   Vui lòng thanh toán trong:
                   <span className="text-red-600">
                     <CountdownTimer
-                      seatExpiresAt={convertToTimezone(ticket.expires_at)}
+                      seatExpiresAt={convertToTimezone(ticket.expires_at ?? "")}
                     />
                   </span>
                 </div>

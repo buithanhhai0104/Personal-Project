@@ -19,7 +19,6 @@ db.getConnection((err, connection) => {
     setTimeout(() => {
       console.log("🔄 Đang thử kết nối lại...");
       db.getConnection((retryErr, retryConnection) => {
-        // Sửa lại từ pool.getConnection thành db.getConnection
         if (retryErr) {
           console.error("🚨 Thử kết nối lại thất bại:", retryErr);
         } else {
@@ -27,7 +26,7 @@ db.getConnection((err, connection) => {
           retryConnection.release();
         }
       });
-    }, 5000); // Thử lại sau 5 giây
+    }, 5000);
     return;
   }
   console.log("✅ Kết nối MySQL thành công!");
