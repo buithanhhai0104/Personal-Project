@@ -78,13 +78,6 @@ app.post("/send-email", async (req, res) => {
         <p><strong>Số điện thoại:</strong> ${ticket.phone}</p>
         <p><strong>Email:</strong> ${ticket.email}</p>
         <p><strong>Số ghế:</strong> ${ticket.seat_number}</p>
-        <p><strong>Trạng thái thanh toán:</strong> 
-          <span style="color: ${
-            ticket.status === "Đã thanh toán" ? "green" : "red"
-          };">
-            ${ticket.status}
-          </span>
-        </p>
       </div>
       `
       )
