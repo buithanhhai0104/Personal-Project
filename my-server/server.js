@@ -57,6 +57,8 @@ app.post("/send-email", async (req, res) => {
   try {
     const { to, subject, bookTicketData } = req.body;
 
+    console.log("Request Body:", req.body);
+
     if (!Array.isArray(bookTicketData) || bookTicketData.length === 0) {
       return res.status(400).json({ error: "Dữ liệu vé không hợp lệ" });
     }
