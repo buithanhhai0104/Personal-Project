@@ -12,7 +12,7 @@ const RelatedNews: React.FC = () => {
     const fetchNewsAll = async () => {
       try {
         const res = await getNewsAll();
-        setNewsAll(res);
+        setNewsAll(res.data);
       } catch (err) {
         console.log("Lỗi khi lấy dữ liệu của tất cả news", err);
       }
