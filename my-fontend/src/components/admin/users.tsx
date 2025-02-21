@@ -3,6 +3,7 @@
 import { deleteUser, getUsers } from "@/service/userService";
 import { IUser } from "@/types/user";
 import React, { useEffect, useState } from "react";
+import LoadingSpinner from "../loadingSpinner";
 
 const Users: React.FC = () => {
   const [users, setUsers] = useState<IUser[] | null>(null);
@@ -42,7 +43,7 @@ const Users: React.FC = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid mb-4"></div>
           <p className="text-gray-600 text-lg">
-            Đang tải danh sách người dùng...
+            <LoadingSpinner />
           </p>
         </div>
       </div>
@@ -97,7 +98,6 @@ const Users: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleDeleteUser(user.id)}
-                  //   onClick={() => handleDelete(user.id)}
                   className="px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition-colors"
                 >
                   Xóa

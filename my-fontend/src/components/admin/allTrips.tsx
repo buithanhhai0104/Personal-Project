@@ -5,6 +5,7 @@ import { ITrips } from "@/types/trips";
 import React, { useEffect, useState } from "react";
 import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
 
+import LoadingSpinner from "../loadingSpinner";
 const AllTrips = () => {
   const [trips, setTrips] = useState<ITrips[] | null>(null);
   const [tripsFillter, setTripsFillter] = useState<ITrips[] | null>(null);
@@ -129,7 +130,7 @@ const AllTrips = () => {
   };
 
   if (loading) {
-    return <div>Đang tải dữ liệu...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

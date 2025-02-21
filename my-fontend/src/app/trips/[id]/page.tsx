@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getTripById } from "@/service/tripService";
 import { ITrips } from "@/types/trips";
 import Seats from "@/components/seat/seats";
@@ -9,34 +8,42 @@ import { useUser } from "@/context/authContext";
 import { bookTickets } from "@/service/ticketsService";
 import { IBookTicket } from "@/types/bookTickets";
 import BookingSuccess from "@/components/bookingSuccess";
+import LoadingSpinner from "@/components/loadingSpinner";
 
 const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
   const [trip, setTrip] = useState<ITrips | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // ✅ Thêm state loading
   const [bookTicketsData, setBookTicketData] = useState<IBookTicket[] | null>(
     null
   );
-  // dữ liệu người dùng nhập để book
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [bookTicketName, setBookTicketName] = useState<string>("");
   const [bookTicketPhone, setBookTicketPhone] = useState<string>("");
   const [bookTicketEmail, setBookTicketEmail] = useState<string>("");
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
-  // lấy user từ context
+  // Lấy user từ context
   const { user } = useUser();
-
   const resolvedParams = React.use(params);
   const { id } = resolvedParams || {};
+
   useEffect(() => {
     const fetchTripById = async () => {
+      setLoading(true); // ✅ Bắt đầu loading
       try {
         const res = await getTripById(id);
-        setTrip(res);
+        if (res) {
+          setTrip(res);
+        } else {
+          setTrip(null);
+        }
       } catch (err) {
         console.error("Lỗi khi lấy dữ liệu", err);
+        setTrip(null);
+      } finally {
+        setLoading(false); // ✅ Kết thúc loading
       }
     };
-
     fetchTripById();
   }, [id, bookingSuccess]);
 
@@ -44,13 +51,12 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
     setSelectedSeats(seats);
   };
 
-  // hàm dùng để book ticket
   const handleBookTicket = async () => {
     if (
       !user ||
-      bookTicketName === "" ||
-      bookTicketPhone === "" ||
-      bookTicketEmail === "" ||
+      !bookTicketName ||
+      !bookTicketPhone ||
+      !bookTicketEmail ||
       selectedSeats.length === 0
     ) {
       alert("Vui lòng nhập đầy đủ thông tin đặt vé");
@@ -78,13 +84,19 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
     }
   };
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   if (!trip) {
-    return <div>Không tìm thấy chuyến đi!</div>;
+    return (
+      <div className="text-center text-red-500">Không tìm thấy chuyến đi!</div>
+    );
   }
 
   return bookingSuccess ? (
-    <div className=" flex flex-col mt-16 mb-10 text-black">
-      <div className=" flex flex-col items-center">
+    <div className="flex flex-col mt-16 mb-10 text-black">
+      <div className="flex flex-col items-center">
         <BookingSuccess
           bookTicketsData={bookTicketsData}
           selectedSeats={selectedSeats}
@@ -108,57 +120,24 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
           </h2>
         </div>
         <div className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-gray-600 text-sm font-medium"
-            >
-              Họ và tên *
-            </label>
-            <input
-              value={bookTicketName}
-              onChange={(e) => setBookTicketName(e.target.value)}
-              type="text"
-              id="name"
-              name="name"
-              required
-              className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="phone"
-              className="block text-gray-600 text-sm font-medium"
-            >
-              Số điện thoại *
-            </label>
-            <input
-              value={bookTicketPhone}
-              onChange={(e) => setBookTicketPhone(e.target.value)}
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-gray-600 text-sm font-medium"
-            >
-              Email *
-            </label>
-            <input
-              value={bookTicketEmail}
-              onChange={(e) => setBookTicketEmail(e.target.value)}
-              type="email"
-              id="email"
-              name="email"
-              required
-              className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
+          <InputField
+            label="Họ và tên *"
+            value={bookTicketName}
+            onChange={setBookTicketName}
+            type="text"
+          />
+          <InputField
+            label="Số điện thoại *"
+            value={bookTicketPhone}
+            onChange={setBookTicketPhone}
+            type="tel"
+          />
+          <InputField
+            label="Email *"
+            value={bookTicketEmail}
+            onChange={setBookTicketEmail}
+            type="email"
+          />
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -181,17 +160,41 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
         <div className="mt-6 text-gray-600 text-sm">
           <p className="text-red-500 font-semibold">Điều khoản & lưu ý</p>
           <p>
-            (*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít nhất
-            30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán.
+            (*) Quý khách vui lòng có mặt tại bến xuất phát trước ít nhất 30
+            phút.
           </p>
           <p>
-            (*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài
-            trung chuyển 1900 **** trước khi đặt vé.
+            (*) Nếu cần trung chuyển, vui lòng liên hệ Tổng đài 1900 **** trước
+            khi đặt vé.
           </p>
         </div>
       </div>
     </div>
   );
 };
+
+// ✅ Component Input chung để tái sử dụng
+const InputField = ({
+  label,
+  value,
+  onChange,
+  type,
+}: {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  type: string;
+}) => (
+  <div>
+    <label className="block text-gray-600 text-sm font-medium">{label}</label>
+    <input
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      type={type}
+      required
+      className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+    />
+  </div>
+);
 
 export default TripPage;

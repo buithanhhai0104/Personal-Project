@@ -35,7 +35,6 @@ export default async function Home() {
     newsData = await getNews.json();
   } catch (error) {
     console.error("Error fetching data:", error);
-    // Bạn có thể trả về giá trị mặc định hoặc thông báo lỗi cho người dùng
   }
 
   return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { deleteTicketById, getTickets } from "@/service/ticketsService";
 import { IBookTicket } from "@/types/bookTickets";
 import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
-import { ClipLoader } from "react-spinners";
+import LoadingSpinner from "../loadingSpinner";
 type AllTicketsProps = {
   type: "Tất cả vé" | "Vé đã thanh toán" | "Vé chưa thanh toán" | "Vé đã hủy";
 };
@@ -68,7 +68,7 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
   };
 
   if (loading) {
-    return <ClipLoader color="#007bff" size={50} />;
+    return <LoadingSpinner />;
   }
   if (error) {
     return <div className="text-center py-4 text-red-500">{error}</div>;
