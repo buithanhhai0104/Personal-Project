@@ -11,12 +11,14 @@ const extractId = (slug: string): string => {
   return match ? match[0] : "";
 };
 
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://backend-personal-project.vercel.app";
+
 // hàm để dùng id gọi api
 const fetchNewsData = async (id: string): Promise<INews | null> => {
   try {
-    const response = await fetch(
-      `https://backend-personal-project.vercel.app/news/${id}`
-    );
+    const response = await fetch(`${apiUrl}/news/${id}`);
 
     if (!response.ok) {
       console.error("Failed to fetch news data");

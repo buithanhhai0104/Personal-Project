@@ -1,4 +1,5 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+
 interface ILoginData {
   username: string;
   password: string;
@@ -11,75 +12,113 @@ interface IRegisterData {
   password: string;
 }
 
+// Lấy URL API từ biến môi trường (mặc định là production)
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://backend-personal-project.vercel.app";
+
+/**
+ * Đăng nhập
+ */
 export const apiLogin = async (loginData: ILoginData) => {
   try {
-    const response = await axios.post(
-      "https://backend-personal-project.vercel.app/auth/login",
-      loginData,
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await axios.post(`${apiUrl}/auth/login`, loginData, {
+      withCredentials: true,
+    });
+
     return {
       success: true,
-      data: response.data, // Trả về dữ liệu từ API
+      data: response.data,
     };
   } catch (error) {
-    // Kiểm tra lỗi Axios
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError;
       return {
         success: false,
-        error: axiosError.response?.data || "Lỗi không xác định từ server",
+        error: error.response?.data || "Lỗi từ server",
       };
     }
 
-    // Xử lý các lỗi khác (không phải Axios)
     return {
       success: false,
       error: "Đã xảy ra lỗi không xác định",
     };
   }
 };
+
+/**
+ * Đăng ký
+ */
 export const apiRegister = async (registerData: IRegisterData) => {
   try {
-    const respone = await axios.post(
-      "https://backend-personal-project.vercel.app/auth/register",
-      registerData,
-      {
-        withCredentials: true,
-      }
-    );
-    return respone.data;
-  } catch (err) {
-    console.log(err);
+    const response = await axios.post(`${apiUrl}/auth/register`, registerData, {
+      withCredentials: true,
+    });
+
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        success: false,
+        error: error.response?.data || "Lỗi từ server",
+      };
+    }
+
+    return {
+      success: false,
+      error: "Đã xảy ra lỗi không xác định",
+    };
   }
 };
+
+/**
+ * Đăng xuất
+ */
 export const apiLogout = async () => {
   try {
-    const respone = await axios.post(
-      "https://backend-personal-project.vercel.app/auth/logout",
+    const response = await axios.post(
+      `${apiUrl}/auth/logout`,
       {},
       {
         withCredentials: true,
       }
     );
-    return respone.data;
-  } catch (err) {
-    console.log("Lỗi đăng xuất", err);
+
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("Lỗi đăng xuất:", error);
+
+    return {
+      success: false,
+      error: "Đăng xuất thất bại",
+    };
   }
 };
 
+/**
+ * Lấy thông tin người dùng
+ */
 export const getUser = async () => {
   try {
-    const response = await axios.get(
-      "https://backend-personal-project.vercel.app/userinfo",
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data;
-  } catch (err) {
-    console.log("Xác thực không thành công", err);
+    const response = await axios.get(`${apiUrl}/userinfo`, {
+      withCredentials: true,
+    });
+
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("Xác thực không thành công:", error);
+
+    return {
+      success: false,
+      error: "Không thể lấy thông tin người dùng",
+    };
   }
 };

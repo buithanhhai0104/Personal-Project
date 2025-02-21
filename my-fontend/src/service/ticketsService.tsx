@@ -1,10 +1,13 @@
 import { IBookTicket } from "@/types/bookTickets";
 import axios from "axios";
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://backend-personal-project.vercel.app";
 
 export const bookTickets = async (bookticketData: IBookTicket) => {
   try {
     const response = await axios.post(
-      "https://backend-personal-project.vercel.app/tickets/book-ticket",
+      `${apiUrl}/tickets/book-ticket`,
       bookticketData,
       {
         withCredentials: true,
@@ -18,9 +21,7 @@ export const bookTickets = async (bookticketData: IBookTicket) => {
 
 export const checkTickets = async (id: string) => {
   try {
-    const response = await axios.get(
-      `https://backend-personal-project.vercel.app/tickets/${id}`
-    );
+    const response = await axios.get(`${apiUrl}/tickets/${id}`);
     return response.data;
   } catch (err) {
     console.log("Error check tickets", err);
@@ -52,9 +53,7 @@ export const updateTicketStatus = async (
 
 export const getTickets = async () => {
   try {
-    const response = await axios.get(
-      "https://backend-personal-project.vercel.app/tickets"
-    );
+    const response = await axios.get(`${apiUrl}/tickets`);
     return response.data;
   } catch (err) {
     console.log("Lỗi khi lấy dữ liệu tất cả vé", err);
@@ -62,9 +61,7 @@ export const getTickets = async () => {
 };
 export const deleteTicketById = async (id: string) => {
   try {
-    const response = await axios.delete(
-      `https://backend-personal-project.vercel.app/tickets/${id}`
-    );
+    const response = await axios.delete(`${apiUrl}/tickets/${id}`);
     return response.data;
   } catch (err) {
     console.log("Lỗi xóa vé theo id", err);

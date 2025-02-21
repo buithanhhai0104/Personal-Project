@@ -5,6 +5,10 @@ interface IChangeTicketStatus {
   status: string;
   expires_at: string | null;
 }
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://backend-personal-project.vercel.app";
+
 //  xử lý khi thanh toán thành công
 export const handlePaymentSuccess = async (
   bookTicketsData: IBookTicket[] | null
@@ -27,7 +31,7 @@ export const handlePaymentSuccess = async (
   try {
     // Gửi yêu cầu cập nhật trạng thái vé
     const updatePaymentStatus = await updateTicketStatus(
-      "https://backend-personal-project.vercel.app/tickets/status",
+      `${apiUrl}/tickets/status`,
       changeTicketStatus
     );
     if (updatePaymentStatus) {

@@ -1,5 +1,5 @@
 "use client";
-import { getTickets } from "@/service/ticketsService";
+
 import { deleteTrip, getAllTrips, UpdateTripbyId } from "@/service/tripService";
 import { ITrips } from "@/types/trips";
 import React, { useEffect, useState } from "react";
@@ -18,12 +18,11 @@ const AllTrips = () => {
     setLoading(true);
     try {
       const res = await getAllTrips();
-      const resp = await getTickets();
+
       if (res) {
         setTrips(res);
         setTripsFillter(res);
       }
-      console.log(resp);
     } catch (err) {
       console.error("Lỗi lấy tất cả chuyến đi:", err);
     } finally {

@@ -5,6 +5,9 @@ import Image from "next/image";
 import Allnews from "@/components/news/allnews";
 import { useRouter } from "next/navigation"; // Chỉ sử dụng ở Client Component
 import { INews } from "@/types/news";
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://backend-personal-project.vercel.app";
 
 export default function NewsPage() {
   const router = useRouter();
@@ -13,9 +16,7 @@ export default function NewsPage() {
   useEffect(() => {
     // Fetch dữ liệu trong useEffect để chạy ở client
     async function fetchNews() {
-      const getNews = await fetch(
-        "https://backend-personal-project.vercel.app/news"
-      );
+      const getNews = await fetch(`${apiUrl}/news`);
       const data: INews[] = await getNews.json();
       setNewsData(data);
     }

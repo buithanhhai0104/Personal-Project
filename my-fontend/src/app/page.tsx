@@ -7,6 +7,10 @@ import { ITrips } from "@/types/trips";
 
 import type { Metadata } from "next";
 
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://backend-personal-project.vercel.app";
+
 export function generateMetadata(): Metadata {
   return {
     title: "Trang chủ",
@@ -18,17 +22,13 @@ export default async function Home() {
   let newsData: INews[] = [];
 
   try {
-    const getTrips = await fetch(
-      "https://backend-personal-project.vercel.app/api/trips"
-    );
+    const getTrips = await fetch(`${apiUrl}/api/trips`);
     if (!getTrips.ok) {
       throw new Error("Failed to fetch trips data");
     }
     tripsData = await getTrips.json();
 
-    const getNews = await fetch(
-      "https://backend-personal-project.vercel.app/news"
-    );
+    const getNews = await fetch(`${apiUrl}/news`);
     if (!getNews.ok) {
       throw new Error("Failed to fetch news data");
     }

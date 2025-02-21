@@ -7,6 +7,9 @@ interface PayPalButtonProps {
   currency?: string;
   onSuccess: (details: unknown) => void;
 }
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://backend-personal-project.vercel.app";
 
 const PayPalButton: React.FC<PayPalButtonProps> = ({
   amount,
@@ -31,7 +34,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
           setLoading(true);
           try {
             const response = await axios.post(
-              "https://backend-personal-project.vercel.app/paypal/create-payment",
+              `${apiUrl}/paypal/create-payment`,
               {
                 total: amount,
                 currency,
@@ -50,7 +53,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({
           setLoading(true);
           try {
             const response = await axios.post(
-              `https://backend-personal-project.vercel.app/paypal/capture-payment/${data.orderID}`
+              `${apiUrl}/paypal/capture-payment/${data.orderID}`
             );
             setLoading(false);
             onSuccess(response.data);
