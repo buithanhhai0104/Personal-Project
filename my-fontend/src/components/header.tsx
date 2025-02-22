@@ -37,7 +37,7 @@ const Header: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const res = await getUser();
-        setUser(res.data);
+        setUser(res.data.userdata);
       } catch (err) {
         console.log(err);
       }
