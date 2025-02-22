@@ -46,6 +46,7 @@ const Popular: React.FC<IPopularProps> = ({ tripsData }) => {
             const filteredTrips = tripsData.filter(
               (trip) => trip.from_location === item.location
             );
+            console.log(filteredTrips);
             return (
               <div
                 onClick={() => handleTripSearch(item.title)}
