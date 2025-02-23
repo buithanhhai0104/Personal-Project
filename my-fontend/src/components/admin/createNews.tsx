@@ -25,7 +25,7 @@ const CreateNews: React.FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [loading, setLoading] = useState(false);
   const isMounted = useRef(true);
-
+  const [previewImage, setPreviewImage] = useState<string>("");
   useEffect(() => {
     isMounted.current = true;
     return () => {
@@ -52,8 +52,9 @@ const CreateNews: React.FC = () => {
     if (file) {
       setFormData((prev) => ({
         ...prev,
-        image: file, // Lưu ảnh dưới dạng `File`
+        image: file, // Lưu file
       }));
+      setPreviewImage(URL.createObjectURL(file)); // Lưu URL tạm thời để hiển thị trước
     }
   };
 
@@ -93,11 +94,6 @@ const CreateNews: React.FC = () => {
     }
   };
 
-  const getImageSrc = (image: string | File | null) => {
-    if (!image) return "/images/logo.png"; // Ảnh mặc định nếu không có ảnh
-    if (typeof image === "string") return image; // Nếu là URL, trả về luôn
-    return URL.createObjectURL(image); // Nếu là File, tạo URL tạm thời
-  };
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md">
       <h1 className="text-2xl font-semibold text-gray-700 mb-6">
@@ -176,13 +172,11 @@ const CreateNews: React.FC = () => {
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
-        {formData.image instanceof File && (
+        {previewImage && (
           <div className="mt-2">
             <Image
-              src={getImageSrc(formData.image)}
+              src={previewImage} // Luôn là string hợp lệ
               alt={formData.title || "Ảnh tin tức"}
-              layout="responsive"
               width={500}
               height={300}
             />
