@@ -11,12 +11,12 @@ const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
     if (seatExpiresAt) {
       const expiresAt = new Date(seatExpiresAt).getTime();
       const currentTime = Date.now();
-
+      console.log(seatExpiresAt, currentTime, expiresAt);
       if (expiresAt <= currentTime) {
         setTimeLeft(0);
         return;
       }
-      console.log(seatExpiresAt, currentTime, expiresAt);
+
       const interval = setInterval(() => {
         const remaining = expiresAt - Date.now();
 
