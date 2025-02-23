@@ -60,16 +60,20 @@ const NewNews: React.FC<INewNewsProps> = ({ newsData }) => {
         ref={sliderRef}
         className=" w-[95%] m-auto overflow-auto overflow-x sm:overflow-hidden sm:w-[78%] flex gap-8 text-black mt-4"
       >
-        {newsData.map((news) => {
+        {newsData.map((news, index) => {
           const date = new Date(news.created_at);
           const formattedDate = date.toLocaleDateString("vi-VN");
 
           return (
-            <div className="h-[278px]" key={news.id}>
+            <div className="h-[278px]" key={index}>
               <div className=" relative w-full h-[190px]">
                 <Image
                   className="rounded-xl"
-                  src={news.image}
+                  src={
+                    typeof news.image === "string"
+                      ? news.image
+                      : "/images/logo.png"
+                  }
                   layout="fill"
                   objectFit="cover"
                   alt={news.title}
@@ -81,7 +85,11 @@ const NewNews: React.FC<INewNewsProps> = ({ newsData }) => {
               <div className="flex justify-between">
                 {formattedDate}
                 <button
-                  onClick={() => handleGetNewsById(news.id, news.title)}
+                  onClick={() => {
+                    if (news.id !== undefined) {
+                      handleGetNewsById(news.id, news.title);
+                    }
+                  }}
                   className="flex items-center text-orange-600 cursor-pointer"
                 >
                   Chi tiết <GrNext />

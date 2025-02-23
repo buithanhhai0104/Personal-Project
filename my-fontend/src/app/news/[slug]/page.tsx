@@ -75,11 +75,15 @@ export default async function NewsContent({ params }: Props) {
         <p className="text-sm">Ngày đăng: {formattedDate}</p>
         <div className="w-[100%] m-auto my-5">
           <Image
-            src={newsContent.image || "/images/logo.png"}
+            src={
+              typeof newsContent.image === "string"
+                ? newsContent.image
+                : "/images/logo.png"
+            }
             alt={newsContent.title || "ảnh mặc định"}
-            layout="responsive"
             width={500}
             height={500}
+            unoptimized // Tránh tối ưu ảnh khi dùng ảnh local
           />
         </div>
         <div dangerouslySetInnerHTML={{ __html: formattedContent || "" }} />

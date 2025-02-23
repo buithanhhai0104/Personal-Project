@@ -1,11 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { EditorState } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
+
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { apiCreateNews } from "@/service/newsService";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(
+  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+  { ssr: false }
+);
 interface INews {
   id?: string;
   title: string;
@@ -25,7 +31,7 @@ const CreateNews: React.FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [loading, setLoading] = useState(false);
   const isMounted = useRef(true);
-  const [previewImage, setPreviewImage] = useState<string>("");
+
   useEffect(() => {
     isMounted.current = true;
     return () => {
@@ -52,9 +58,8 @@ const CreateNews: React.FC = () => {
     if (file) {
       setFormData((prev) => ({
         ...prev,
-        image: file, // Lưu file
+        image: file, // Lưu file trực tiếp
       }));
-      setPreviewImage(URL.createObjectURL(file)); // Lưu URL tạm thời để hiển thị trước
     }
   };
 
@@ -72,10 +77,7 @@ const CreateNews: React.FC = () => {
     data.append("created_at", formData.created_at);
 
     if (formData.image instanceof File) {
-      // Đảm bảo image là File
       data.append("image", formData.image);
-    } else {
-      console.warn("Không có file ảnh hợp lệ, bỏ qua image");
     }
 
     setLoading(true);
@@ -131,19 +133,6 @@ const CreateNews: React.FC = () => {
           </div>
         </div>
 
-        {formData.content && (
-          <div className="bg-gray-100 p-4 rounded-md">
-            <h3 className="text-gray-700 font-semibold mb-2">
-              Xem trước nội dung:
-            </h3>
-            {formData.content.split("\n").map((line, index) => (
-              <p key={index} className="text-gray-800">
-                {line}
-              </p>
-            ))}
-          </div>
-        )}
-
         <div>
           <label
             htmlFor="created_at"
@@ -172,15 +161,15 @@ const CreateNews: React.FC = () => {
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        {previewImage && (
-          <div className="mt-2">
-            <Image
-              src={previewImage} // Luôn là string hợp lệ
-              alt={formData.title || "Ảnh tin tức"}
-              width={500}
-              height={300}
-            />
-          </div>
+
+        {formData.image && typeof formData.image === "string" && (
+          <Image
+            src={formData.image}
+            alt={formData.title || "Ảnh tin tức"}
+            width={500}
+            height={300}
+            unoptimized
+          />
         )}
 
         <div className="text-right">

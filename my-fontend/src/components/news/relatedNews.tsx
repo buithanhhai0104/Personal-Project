@@ -39,7 +39,11 @@ const RelatedNews: React.FC = () => {
               <div className="w-full ">
                 <Image
                   className="rounded-xl"
-                  src={news.image}
+                  src={
+                    typeof news.image === "string"
+                      ? news.image
+                      : "/images/logo.png"
+                  }
                   alt={news.title}
                   layout="responsive"
                   width={500}

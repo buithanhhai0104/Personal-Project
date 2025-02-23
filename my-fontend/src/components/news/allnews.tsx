@@ -21,12 +21,14 @@ const Allnews: React.FC<INewsProps> = ({ newsData }) => {
   return (
     <div className="p-4">
       <div className="grid grid-cols-2 gap-4">
-        {paginatedItems.map((news) => (
-          <div key={news.id} className="border p-3 rounded-lg shadow">
+        {paginatedItems.map((news, index) => (
+          <div key={index} className="border p-3 rounded-lg shadow">
             <Image
               className="rounded-xl"
-              src={news.image || ""}
-              alt={news.title}
+              src={
+                typeof news.image === "string" ? news.image : "/images/logo.png"
+              }
+              alt={news.title || "Ảnh bài báo"}
               width={500}
               height={500}
               layout="responsive"

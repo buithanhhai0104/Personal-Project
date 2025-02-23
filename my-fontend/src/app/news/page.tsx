@@ -1,9 +1,9 @@
-"use client"; // Đánh dấu là Client Component
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Allnews from "@/components/news/allnews";
-import { useRouter } from "next/navigation"; // Chỉ sử dụng ở Client Component
+import { useRouter } from "next/navigation";
 import { INews } from "@/types/news";
 const apiUrl =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -44,32 +44,46 @@ export default function NewsPage() {
       <div className="grid grid-cols-4 gap-4">
         <div className="flex cursor-pointer flex-col col-span-4 row-span-2 sm:col-span-2">
           <div className="flex w-full flex-col">
-            <Image
-              className="rounded-xl"
-              src={newsData[0]?.image || ""}
-              alt={newsData[0]?.title || "News Image"}
-              width={100}
-              height={100}
-              layout="responsive"
-            />
+            {newsData.length > 0 && (
+              <Image
+                className="rounded-xl"
+                src={
+                  typeof newsData[0].image === "string"
+                    ? newsData[0].image
+                    : "/images/logo.png"
+                }
+                alt={newsData[0]?.title || "News Image"}
+                width={100}
+                height={100}
+                layout="responsive"
+              />
+            )}
             <h2 className="line_clamp font-medium text-[#111111] hover:opacity-90 mt-5 text-xl leading-6">
               {newsData[0]?.title || "News Title"}
             </h2>
           </div>
         </div>
-        {newsData.slice(1, 4).map((news) => {
+        {newsData.slice(1, 4).map((news, index) => {
           const date = new Date(news.created_at);
           const formattedDate = date.toLocaleDateString("vi-VN");
           return (
             <div
-              onClick={() => handleGetNewsById}
-              key={news.id}
+              onClick={() => {
+                if (news.id !== undefined) {
+                  handleGetNewsById(news.id, news.title);
+                }
+              }}
+              key={index}
               className="flex cursor-pointer flex-col col-span-2 sm:col-span-1"
             >
               <div className="w-full flex flex-1">
                 <Image
                   className="rounded-xl"
-                  src={news.image || ""}
+                  src={
+                    typeof news.image === "string"
+                      ? news.image
+                      : "/images/logo.png"
+                  }
                   alt={news.title}
                   width={500}
                   height={500}
