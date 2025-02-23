@@ -34,7 +34,7 @@ const newsController = {
       if (!title || !content) {
         return res.status(400).json({ error: "Missing required fields" });
       }
-
+      console.log("🔥 Debug: req.file = ", req.file); // Kiểm tra file nhận được
       // Nếu có file, upload lên Cloudinary
       let imageUrl = null;
       if (req.file) {

@@ -8,6 +8,7 @@ import { ReactNode } from "react";
 import { BsChevronDown, BsChevronRight } from "react-icons/bs";
 import { useUser } from "@/context/authContext";
 import { useRouter } from "next/navigation";
+import CreateNews from "@/components/admin/createNews";
 type ActiveComponent =
   | "createTrip"
   | "allTrips"
@@ -29,7 +30,7 @@ const Manage = () => {
     createTrip: <CreateTrip />,
     allTrips: <AllTrips />,
     users: <Users />,
-    news: <div>1231</div>,
+    news: <CreateNews />,
     allTickets: <AllTickets type="Tất cả vé" />,
     paidTickets: <AllTickets type="Vé đã thanh toán" />,
     unpaidTickets: <AllTickets type="Vé chưa thanh toán" />,

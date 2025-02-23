@@ -1,4 +1,4 @@
-import { INews } from "@/types/news";
+
 import axios from "axios";
 
 // Lấy URL API từ biến môi trường (mặc định là production)
@@ -49,13 +49,13 @@ export const getNewsAll = async () => {
 /**
  * Tạo bài báo mới
  */
-export const createNews = async (newsData: INews) => {
+export const apiCreateNews = async (newsData: FormData) => {
   try {
     const res = await axios.post(`${apiUrl}/news`, newsData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
       withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
     return {
