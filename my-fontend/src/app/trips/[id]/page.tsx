@@ -95,7 +95,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
   }
 
   return bookingSuccess ? (
-    <div className="flex flex-col mt-16 mb-10 text-black">
+    <div className="flex flex-col mt-20 mb-10 text-black">
       <div className="flex flex-col items-center">
         <BookingSuccess
           bookTicketsData={bookTicketsData}
@@ -105,7 +105,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
       </div>
     </div>
   ) : (
-    <div className="w-[95%] sm:w-[70%] m-auto mt-16 mb-10 pt-5 flex flex-col md:flex-row gap-6">
+    <div className="w-[95%] sm:w-[70%] m-auto mt-20 mb-10 pt-5 flex flex-col md:flex-row gap-6">
       {/* Phần danh sách ghế và thông tin chuyến đi */}
       <div className="flex-1 flex flex-col gap-4">
         <Seats seats={trip.seats} onSeatsChange={handleSelectedSeats} />

@@ -81,7 +81,7 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header className="fixed z-10 w-full bg-black bg-opacity-70 h-16">
+    <header className="fixed z-10 w-full bg-black bg-opacity-70 h-20">
       <div className="flex justify-between gap-2 items-center w-[95%] m-auto">
         {/* Nút mở Sidebar */}
         <div
@@ -91,7 +91,13 @@ const Header: React.FC = () => {
           <IoReorderThreeSharp />
         </div>
 
-        <Image width={60} height={60} src="/images/logo2.png" alt="logo" />
+        <Image
+          className="mt-[2px]"
+          width={80}
+          height={80}
+          src="/images/logo5.png"
+          alt="logo"
+        />
 
         <nav className="hidden md:flex gap-10">
           {navPage.map((item, index) => (

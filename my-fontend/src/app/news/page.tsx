@@ -44,7 +44,7 @@ export default function NewsPage() {
   };
 
   return (
-    <div className="mt-16 mb-10 w-[90%] sm:w-[70%] m-auto text-black">
+    <div className="mt-20 mb-10 w-[90%] sm:w-[70%] m-auto text-black">
       <div className="flex justify-center items-center gap-5">
         <h2 className="text-3xl text-[#00613d]">Tin tức nổi bật</h2>
         <div className="h-[2px] mt-1 w-full flex-1 bg-[#00613d]"></div>

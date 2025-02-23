@@ -57,7 +57,7 @@ export default async function NewsContent({ params }: Props) {
 
   if (!newsContent) {
     return (
-      <div className="mt-16 w-[90%] sm:w-[70%] m-auto text-black pb-6">
+      <div className="mt-20 w-[90%] sm:w-[70%] m-auto text-black pb-6">
         Không thể tải dữ liệu tin tức
       </div>
     );
@@ -69,7 +69,7 @@ export default async function NewsContent({ params }: Props) {
     : "";
 
   return (
-    <div className="mt-16 w-[90%] sm:w-[70%] m-auto text-black pb-6">
+    <div className="mt-20 w-[90%] sm:w-[70%] m-auto text-black pb-6">
       <div>
         <h1 className="text-xl font-bold py-5">{newsContent.title}</h1>
         <p className="text-sm">Ngày đăng: {formattedDate}</p>
