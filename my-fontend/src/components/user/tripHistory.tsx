@@ -33,7 +33,7 @@ const TripHistory = () => {
 
   return (
     <div className="container mx-auto p-4 text-black">
-      <h1 className="text-2xl font-bold mb-6 text-center">Danh Sách Vé</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Lịch sử đặt vé</h1>
 
       {/* Dạng Bảng trên Màn hình Lớn */}
       <div className="hidden sm:block overflow-x-auto">

@@ -8,7 +8,7 @@ type ActiveComponent = "infomation" | "tripHistory";
 
 const User = () => {
   const [activeComponent, setActiveComponent] =
-    useState<ActiveComponent>("infomation");
+    useState<ActiveComponent>("tripHistory");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const componentMap: Record<ActiveComponent, ReactNode> = {
