@@ -6,7 +6,7 @@ interface CountdownProps {
 
 const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  console.log(seatExpiresAt);
+
   useEffect(() => {
     if (seatExpiresAt) {
       const expiresAt = new Date(seatExpiresAt).getTime();
@@ -16,7 +16,7 @@ const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
         setTimeLeft(0);
         return;
       }
-
+      console.log(seatExpiresAt, currentTime, expiresAt);
       const interval = setInterval(() => {
         const remaining = expiresAt - Date.now();
 
