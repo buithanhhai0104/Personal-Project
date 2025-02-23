@@ -94,8 +94,8 @@ const CreateNews: React.FC = () => {
   };
 
   const getImageSrc = (image: string | File | null) => {
-    if (!image) return "/images/logo.png"; // Ảnh mặc định
-    if (typeof image === "string") return image; // Nếu đã là URL, dùng trực tiếp
+    if (!image) return "/images/logo.png"; // Ảnh mặc định nếu không có ảnh
+    if (typeof image === "string") return image; // Nếu là URL, trả về luôn
     return URL.createObjectURL(image); // Nếu là File, tạo URL tạm thời
   };
   return (
