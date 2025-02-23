@@ -5,7 +5,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { apiCreateNews } from "@/service/newsService";
-
+import Image from "next/image";
 interface INews {
   id?: string;
   title: string;
@@ -93,6 +93,11 @@ const CreateNews: React.FC = () => {
     }
   };
 
+  const getImageSrc = (image: string | File | null) => {
+    if (!image) return "/images/logo.png"; // Ảnh mặc định
+    if (typeof image === "string") return image; // Nếu đã là URL, dùng trực tiếp
+    return URL.createObjectURL(image); // Nếu là File, tạo URL tạm thời
+  };
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md">
       <h1 className="text-2xl font-semibold text-gray-700 mb-6">
@@ -174,10 +179,12 @@ const CreateNews: React.FC = () => {
 
         {formData.image instanceof File && (
           <div className="mt-2">
-            <img
-              src={URL.createObjectURL(formData.image)}
-              alt="Preview"
-              className="w-full h-64 object-cover rounded-md"
+            <Image
+              src={getImageSrc(formData.image)}
+              alt={formData.title || "Ảnh tin tức"}
+              layout="responsive"
+              width={500}
+              height={300}
             />
           </div>
         )}
