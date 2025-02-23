@@ -63,7 +63,7 @@ export default function NewsPage() {
             </h2>
           </div>
         </div>
-        {newsData.slice(1, 4).map((news, index) => {
+        {newsData.slice(1, 5).map((news, index) => {
           const date = new Date(news.created_at);
           const formattedDate = date.toLocaleDateString("vi-VN");
           return (
