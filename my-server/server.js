@@ -127,9 +127,6 @@ app.get("/api/run-cron", (req, res) => {
   }
 });
 
-// Khởi tạo Resend với API Key
-
-// Lắng nghe trên cổng
 app.listen(port, () => {
   console.log(`Server đang chạy tại http://localhost:${port}`);
 });
