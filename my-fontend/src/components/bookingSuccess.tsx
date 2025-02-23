@@ -108,7 +108,9 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
           {/* Danh sách vé */}
           <div className="flex flex-col gap-3">
             {bookTicketsData?.map((ticket, index) => {
-              console.log(ticket.expires_at);
+              const expiresAtLocal = new Date(
+                ticket.expires_at + " UTC"
+              ).toLocaleString();
               return (
                 <div
                   key={index}
@@ -157,9 +159,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
                     <div className="text-sm font-medium flex flex-col sm:flex-row gap-2">
                       Vui lòng thanh toán trong:
                       <span className="text-red-600 flex gap-2">
-                        <CountdownTimer
-                          seatExpiresAt={ticket.expires_at || ""}
-                        />{" "}
+                        <CountdownTimer seatExpiresAt={expiresAtLocal || ""} />{" "}
                         (Nếu không thanh toán trong thời gian quy định vé sẽ
                         hủy)
                       </span>

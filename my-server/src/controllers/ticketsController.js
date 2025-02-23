@@ -64,7 +64,8 @@ const ticketsController = {
             ? { ...seat, status: "booked" }
             : seat
         );
-        const expires_at = moment()
+        const expires_at = moment
+          .utc()
           .add(10, "minutes")
           .format("YYYY-MM-DD HH:mm:ss");
 
