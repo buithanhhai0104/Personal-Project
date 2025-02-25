@@ -14,11 +14,11 @@ const apiUrl =
 export default function NewsPage() {
   const router = useRouter();
   const [newsData, setNewsData] = useState<INews[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // State để kiểm soát loading
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchNews() {
-      setIsLoading(true); // Bắt đầu loading
+      setIsLoading(true);
       try {
         const getNews = await fetch(`${apiUrl}/news`);
         const data: INews[] = await getNews.json();
@@ -26,7 +26,7 @@ export default function NewsPage() {
       } catch (error) {
         console.error("Lỗi khi tải tin tức:", error);
       } finally {
-        setIsLoading(false); // Dừng loading
+        setIsLoading(false);
       }
     }
     fetchNews();

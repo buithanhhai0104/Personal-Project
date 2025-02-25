@@ -12,14 +12,10 @@ interface IRegisterData {
   password: string;
 }
 
-// Lấy URL API từ biến môi trường (mặc định là production)
 const apiUrl =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://backend-personal-project.vercel.app";
 
-/**
- * Đăng nhập
- */
 export const apiLogin = async (loginData: ILoginData) => {
   try {
     const response = await axios.post(`${apiUrl}/auth/login`, loginData, {
@@ -45,9 +41,6 @@ export const apiLogin = async (loginData: ILoginData) => {
   }
 };
 
-/**
- * Đăng ký
- */
 export const apiRegister = async (registerData: IRegisterData) => {
   try {
     const response = await axios.post(`${apiUrl}/auth/register`, registerData, {
@@ -73,9 +66,6 @@ export const apiRegister = async (registerData: IRegisterData) => {
   }
 };
 
-/**
- * Đăng xuất
- */
 export const apiLogout = async () => {
   try {
     const response = await axios.post(
@@ -100,9 +90,6 @@ export const apiLogout = async () => {
   }
 };
 
-/**
- * Lấy thông tin người dùng
- */
 export const getUser = async () => {
   try {
     const response = await axios.get(`${apiUrl}/userinfo`, {

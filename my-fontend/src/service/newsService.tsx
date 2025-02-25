@@ -1,14 +1,9 @@
-
 import axios from "axios";
 
-// Lấy URL API từ biến môi trường (mặc định là production)
 const apiUrl =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://backend-personal-project.vercel.app";
 
-/**
- * Lấy bài báo theo ID
- */
 export const getNewsById = async (newsId: string) => {
   try {
     const res = await axios.get(`${apiUrl}/news/${newsId}`);
@@ -26,9 +21,6 @@ export const getNewsById = async (newsId: string) => {
   }
 };
 
-/**
- * Lấy tất cả bài báo
- */
 export const getNewsAll = async () => {
   try {
     const res = await axios.get(`${apiUrl}/news`);
@@ -46,9 +38,6 @@ export const getNewsAll = async () => {
   }
 };
 
-/**
- * Tạo bài báo mới
- */
 export const apiCreateNews = async (newsData: FormData) => {
   try {
     const res = await axios.post(`${apiUrl}/news`, newsData, {

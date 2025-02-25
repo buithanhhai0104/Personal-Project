@@ -249,7 +249,7 @@ const AllTrips = () => {
                   {formatCurrency(trip.price)}
                 </div>
 
-                {/* Nút hành động */}
+                {/* nút sửa và xóaxóa */}
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(trip)}

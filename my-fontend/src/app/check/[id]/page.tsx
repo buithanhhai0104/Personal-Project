@@ -20,7 +20,7 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
       try {
         const res = await checkTickets(id);
         if (res && res.ticket_id) {
-          setTicketData(res); // ✅ Gán trực tiếp object thay vì mảng []
+          setTicketData(res);
         } else {
           setTicketData(null);
         }
@@ -43,12 +43,12 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-orange-50 py-10">
       {loading ? (
-        // ✅ Hiển thị spinner khi đang tải dữ liệu
+      
         <div className="flex justify-center items-center">
           <ClipLoader color="#007bff" size={50} />
         </div>
       ) : ticketData ? (
-        // ✅ Hiển thị thông tin vé nếu có dữ liệu
+      
         <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
           <h1 className="text-2xl font-bold text-orange-600 text-center mb-6">
             Chi tiết vé
@@ -104,14 +104,13 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       ) : (
-        // ✅ Hiển thị thông báo nếu không có dữ liệu vé
+       
         <p className="text-red-600">Không tìm thấy thông tin vé.</p>
       )}
     </div>
   );
 };
 
-// ✅ Tạo component nhỏ để hiển thị từng dòng thông tin (Giúp code gọn hơn)
 const InfoRow = ({
   label,
   value,

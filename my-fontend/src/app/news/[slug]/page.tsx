@@ -83,7 +83,7 @@ export default async function NewsContent({ params }: Props) {
             alt={newsContent.title || "ảnh mặc định"}
             width={500}
             height={500}
-            unoptimized // Tránh tối ưu ảnh khi dùng ảnh local
+            unoptimized
           />
         </div>
         <div dangerouslySetInnerHTML={{ __html: formattedContent || "" }} />

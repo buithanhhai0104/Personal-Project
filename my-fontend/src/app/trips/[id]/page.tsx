@@ -29,7 +29,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
 
   useEffect(() => {
     const fetchTripById = async () => {
-      setLoading(true); // ✅ Bắt đầu loading
+      setLoading(true);
       try {
         const res = await getTripById(id);
         if (res) {
@@ -41,7 +41,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
         console.error("Lỗi khi lấy dữ liệu", err);
         setTrip(null);
       } finally {
-        setLoading(false); // ✅ Kết thúc loading
+        setLoading(false);
       }
     };
     fetchTripById();
@@ -173,7 +173,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
   );
 };
 
-// ✅ Component Input chung để tái sử dụng
+// ✅ Component đung để tái sử dụng
 const InputField = ({
   label,
   value,

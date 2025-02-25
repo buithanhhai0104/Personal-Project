@@ -64,7 +64,7 @@ const Login: React.FC = () => {
       </h2>
 
       <form onSubmit={handleSubmit} className="w-[90%] m-auto text-black">
-        {/* Username Input */}
+        {/* Username */}
         <div className="mb-4">
           <label
             htmlFor="username"
@@ -88,7 +88,7 @@ const Login: React.FC = () => {
           )}
         </div>
 
-        {/* Password Input */}
+        {/* Password */}
         <div className="mb-4">
           <label
             htmlFor="password"
