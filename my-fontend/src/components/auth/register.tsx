@@ -9,7 +9,7 @@ const Register = () => {
   const [email, setEmail] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const [notification, setNotification] = useState<string | null>(null);
   const validate = () => {
     const newErrors: Record<string, string> = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,7 +47,9 @@ const Register = () => {
 
     try {
       const register = await apiRegister(registerData);
-      console.log("Đăng ký thành công:", register);
+      if (register) {
+        setNotification("Đăng ký thành công");
+      }
     } catch (err) {
       console.log("Lỗi đăng ký:", err);
     }
@@ -152,6 +154,7 @@ const Register = () => {
             Đăng ký
           </button>
         </div>
+        <b className="text-center w-full">{notification}</b>
       </form>
     </div>
   );
