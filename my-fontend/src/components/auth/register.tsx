@@ -154,7 +154,8 @@ const Register = () => {
             Đăng ký
           </button>
         </div>
-        <b className="text-center w-full">{notification}</b>
+
+        <div className="text-center w-full text-red-600">{notification}</div>
       </form>
     </div>
   );
