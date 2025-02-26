@@ -81,7 +81,7 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header className="fixed z-10 w-full bg-black bg-opacity-70 h-20">
+    <header className="fixed z-10 w-full bg-orange-600 bg-opacity-90 h-20 ">
       <div className="flex justify-between gap-2 items-center w-[95%] m-auto">
         {/* Nút mở Sidebar */}
         <div
@@ -102,12 +102,12 @@ const Header: React.FC = () => {
         <nav className="hidden md:flex gap-10">
           {navPage.map((item, index) => (
             <Link
-              className="flex flex-col p-3 font-medium group"
+              className="flex flex-col p-3 font-medium group text-lg"
               key={index}
               href={item.to}
             >
               {item.title}
-              <span className="h-[1px] w-0 bg-white transition-all duration-300 group-hover:w-full"></span>
+              <span className="h-[1px] w-0 bg-white  transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
         </nav>

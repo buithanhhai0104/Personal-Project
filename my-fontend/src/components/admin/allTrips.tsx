@@ -4,7 +4,7 @@ import { deleteTrip, getAllTrips, UpdateTripbyId } from "@/service/tripService";
 import { ITrips } from "@/types/trips";
 import React, { useEffect, useState } from "react";
 import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
-
+import { allAddress } from "@/staticData/addresses";
 import LoadingSpinner from "../loadingSpinner";
 const AllTrips = () => {
   const [trips, setTrips] = useState<ITrips[] | null>(null);
@@ -14,6 +14,7 @@ const AllTrips = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [currentTrip, setCurrentTrip] = useState<ITrips | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
 
   const fetchAllTrips = async () => {
     setLoading(true);
@@ -109,6 +110,7 @@ const AllTrips = () => {
       const res = await UpdateTripbyId(id, currentTrip);
 
       if (res) {
+        alert("Sửa chuyến xe thành công");
         fetchAllTrips();
       }
     } catch (err) {
@@ -121,6 +123,8 @@ const AllTrips = () => {
     try {
       const res = await deleteTrip(id);
       if (res) {
+        alert("Xóa chuyến xe thành công");
+        setConfirmDelete(null);
         fetchAllTrips();
       }
     } catch (err) {
@@ -249,22 +253,52 @@ const AllTrips = () => {
                   {formatCurrency(trip.price)}
                 </div>
 
-                {/* nút sửa và xóaxóa */}
+                {/* nút sửa và xóa */}
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleEdit(trip)}
+                    onClick={() => {
+                      if (confirmDelete == null) return handleEdit(trip);
+                    }}
                     className="px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600 transition-colors"
                   >
                     Sửa
                   </button>
                   <button
-                    onClick={() => handleDelete(trip.id)}
-                    className="px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition-colors"
+                    onClick={() => {
+                      setEditMode(false);
+                      setConfirmDelete(trip.id);
+                    }}
+                    className="px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
                   >
                     Xóa
                   </button>
                 </div>
               </div>
+
+              {/* {Chế độ xác nhận xóa} */}
+              {confirmDelete === trip.id && (
+                <div className=" inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm">
+                  <div className="bg-white rounded-lg shadow-custom  p-7 w-100 m-5 animate-fadeIn">
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      Bạn có chắc chắn muốn xóa chuyến đi này?
+                    </h2>
+                    <div className="flex gap-4 mt-4">
+                      <button
+                        onClick={() => handleDelete(trip.id)}
+                        className="w-full px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
+                      >
+                        Xóa
+                      </button>
+                      <button
+                        onClick={() => setConfirmDelete(null)}
+                        className="w-full px-4 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition"
+                      >
+                        Hủy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Chế độ chỉnh sửa */}
               {editMode && currentTrip?.id === trip.id && (
@@ -273,34 +307,52 @@ const AllTrips = () => {
                     <label className="block text-sm text-gray-700">
                       Địa điểm đi:
                     </label>
-                    <input
-                      type="text"
-                      value={currentTrip?.from_location}
+                    <select
+                      id="from_location"
+                      name="from_location"
+                      value={currentTrip.from_location}
                       onChange={(e) =>
                         setCurrentTrip({
                           ...currentTrip!,
                           from_location: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg"
-                    />
+                      className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    >
+                      <option value="" disabled>
+                        Chọn điểm đi
+                      </option>
+                      {allAddress.map((item, index) => {
+                        return <option key={index}>{item}</option>;
+                      })}
+                    </select>
                   </div>
 
                   <div>
                     <label className="block text-sm text-gray-700">
                       Địa điểm đến:
                     </label>
-                    <input
-                      type="text"
-                      value={currentTrip?.to_location}
+                    <select
+                      id="from_location"
+                      name="from_location"
+                      value={currentTrip.to_location}
                       onChange={(e) =>
                         setCurrentTrip({
                           ...currentTrip!,
                           to_location: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg"
-                    />
+                      className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    >
+                      <option value="" disabled>
+                        Chọn điểm đi
+                      </option>
+                      {allAddress.map((item, index) => {
+                        return <option key={index}>{item}</option>;
+                      })}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm text-gray-700">

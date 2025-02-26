@@ -3,13 +3,17 @@ import { deleteTicketById, getTickets } from "@/service/ticketsService";
 import { IBookTicket } from "@/types/bookTickets";
 import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
 import LoadingSpinner from "../loadingSpinner";
+
 type AllTicketsProps = {
   type: "Tất cả vé" | "Vé đã thanh toán" | "Vé chưa thanh toán" | "Vé đã hủy";
 };
+
 const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
   const [tickets, setTickets] = useState<IBookTicket[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
   const fetchAllTickets = async () => {
     setLoading(true);
     setError(null);
@@ -52,19 +56,20 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
     return filterTickets(type, tickets);
   }, [type, tickets]);
 
-  const handleDeleteTicket = (id: string) => {
-    const deleteTicket = async () => {
+  const confirmDeleteTicket = async () => {
+    if (confirmDelete) {
       try {
-        const res = await deleteTicketById(id);
+        const res = await deleteTicketById(confirmDelete);
         if (res) {
           alert("Xóa vé thành công");
           fetchAllTickets();
         }
       } catch (err) {
         console.log("Lỗi xóa vé", err);
+      } finally {
+        setConfirmDelete(null);
       }
-    };
-    deleteTicket();
+    }
   };
 
   if (loading) {
@@ -119,9 +124,6 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
                       <div className="flex text-[12px] flex-1 justify-center items-center">
                         {ticket.from_location}
                         <FaDotCircle className="m-3" />
-                        <div className=" flex-1 h-[1px] w-6 bg-gray-300 rounded-full"></div>
-
-                        <div className=" flex-1 h-[1px] w-6 bg-gray-300 rounded-full"></div>
                         <FaMapMarkerAlt className="m-3" />
                         {ticket.to_location}
                       </div>
@@ -150,25 +152,20 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
                     ? new Date(ticket.expires_at).toLocaleString("vi-VN")
                     : "N/A"}
                 </td>
-                <td className=" flex flex-col border border-gray-300 px-4 py-2 space-y-2">
+                <td className="flex flex-col border border-gray-300 px-4 py-2 space-y-2">
                   <button
                     className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
                     onClick={() =>
                       alert(
-                        `Chi tiết khách hàng đặt vé:
-                        - Tên : ${ticket.name}
-                        - Số điện thoại: ${ticket.phone}
-                        - Email: ${ticket.email}`
+                        `Chi tiết khách hàng: \nTên: ${ticket.name} \nSĐT: ${ticket.phone} \nEmail: ${ticket.email}`
                       )
                     }
                   >
                     Chi tiết
                   </button>
                   <button
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-                    onClick={() =>
-                      handleDeleteTicket(ticket.ticket_id as string)
-                    }
+                    onClick={() => setConfirmDelete(ticket.ticket_id as string)}
+                    className="px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
                   >
                     Xóa
                   </button>
@@ -178,6 +175,29 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
           </tbody>
         </table>
       </div>
+      {confirmDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-7 w-96 animate-fadeIn">
+            <h2 className="text-lg font-semibold text-gray-800 text-center">
+              Bạn có chắc chắn muốn xóa chuyến đi này?
+            </h2>
+            <div className="flex gap-4 mt-4">
+              <button
+                onClick={confirmDeleteTicket}
+                className="w-full px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
+              >
+                Xóa
+              </button>
+              <button
+                onClick={() => setConfirmDelete(null)}
+                className="w-full px-4 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition"
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ICreateTrip } from "@/types/trips";
 import { createTrip } from "@/service/tripService";
+import { allAddress } from "@/staticData/addresses";
 
 const CreateTrip: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +47,7 @@ const CreateTrip: React.FC = () => {
 
   const convertDateToMySQLFormat = (date: string) => {
     const [day, month, year] = date.split("-");
-    return `${year}-${month}-${day}`; // Chuyển sang định dạng YYYY-MM-DD
+    return `${year}-${month}-${day}`;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -56,7 +57,7 @@ const CreateTrip: React.FC = () => {
 
     const formattedData = {
       ...formData,
-      departure_time: convertDateToMySQLFormat(formData.departure_time), // Chuyển đổi đúng định dạng
+      departure_time: convertDateToMySQLFormat(formData.departure_time),
     };
 
     const create = async () => {
@@ -101,16 +102,21 @@ const CreateTrip: React.FC = () => {
           >
             Điểm đi
           </label>
-          <input
-            type="text"
+          <select
             id="from_location"
             name="from_location"
             value={formData.from_location}
             onChange={handleChange}
             className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Nhập điểm đi"
             required
-          />
+          >
+            <option value="" disabled>
+              Chọn điểm đi
+            </option>
+            {allAddress.map((item, index) => {
+              return <option key={index}>{item}</option>;
+            })}
+          </select>
         </div>
 
         <div>
@@ -120,16 +126,21 @@ const CreateTrip: React.FC = () => {
           >
             Điểm đến
           </label>
-          <input
-            type="text"
+          <select
             id="to_location"
             name="to_location"
             value={formData.to_location}
             onChange={handleChange}
             className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Nhập điểm đến"
             required
-          />
+          >
+            <option value="" disabled>
+              Chọn điểm đến
+            </option>
+            {allAddress.map((item, index) => {
+              return <option key={index}>{item}</option>;
+            })}
+          </select>
         </div>
 
         <div>

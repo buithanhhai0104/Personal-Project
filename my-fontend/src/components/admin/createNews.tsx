@@ -58,7 +58,7 @@ const CreateNews: React.FC = () => {
     if (file) {
       setFormData((prev) => ({
         ...prev,
-        image: file, // Lưu file trực tiếp
+        image: file,
       }));
     }
   };

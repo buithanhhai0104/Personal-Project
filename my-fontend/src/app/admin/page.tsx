@@ -62,7 +62,7 @@ const Manage = () => {
   return (
     <div className="flex relative top-[60px] w-full">
       {/* Sidebar */}
-      <div className="w-[25%] sticky top-[60px] h-screen bg-white shadow-lg flex flex-col border-r border-gray-200">
+      <div className="w-[25%] sticky top-[80px] h-screen bg-white shadow-lg flex flex-col border-r border-gray-200">
         <div className="p-4 border-b border-gray-300 text-center text-xl font-semibold text-orange-600">
           Quản lý
         </div>

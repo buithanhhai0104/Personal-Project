@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/authContext";
 import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+
 const TripHistory = () => {
   const [ticketsList, setTicketList] = useState<IBookTicket[] | null>(null);
   const { user } = useUser();
