@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { getNewsAll } from "@/service/newsService";
 import Image from "next/image";
 import { GrNext } from "react-icons/gr";
-
+import { useRouter } from "next/navigation";
 const RelatedNews: React.FC = () => {
   const [newsAll, setNewsAll] = useState<INews[] | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchNewsAll = async () => {
       try {
@@ -19,13 +19,18 @@ const RelatedNews: React.FC = () => {
     };
     fetchNewsAll();
   }, []);
-
+  const handleAllNews = () => {
+    router.push("/news");
+  };
   return (
     <div className="flex flex-col">
       <div className="flex my-4 justify-center items-center gap-5">
         <h2 className="text-3xl text-[#00613d]">Tin tức liên quan</h2>
         <div className="h-[2px] mt-1 w-full flex-1 bg-[#00613d]"></div>
-        <button className="text-[#ef5222] flex justify-center items-center gap-1">
+        <button
+          onClick={handleAllNews}
+          className="text-[#ef5222] flex justify-center items-center gap-1"
+        >
           Xem tất cả <GrNext />
         </button>
       </div>

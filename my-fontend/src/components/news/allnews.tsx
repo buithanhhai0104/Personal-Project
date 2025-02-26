@@ -4,15 +4,27 @@ import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 import Image from "next/image";
 import { INews } from "@/types/news";
+import { useRouter } from "next/navigation";
 interface INewsProps {
   newsData: INews[];
 }
 const Allnews: React.FC<INewsProps> = ({ newsData }) => {
   const itemsPerPage = 4;
   const [currentPage, setCurrentPage] = useState(0);
-
+  const router = useRouter();
   const handlePageClick = (data: { selected: number }) => {
     setCurrentPage(data.selected);
+  };
+
+  const handleGetNewsById = (newsId: number, newsTitle: string) => {
+    const unsignedTitle = newsTitle
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    const formattedTitle = unsignedTitle
+      .replace(/\s+/g, "-")
+      .toLocaleLowerCase();
+    const slug = `${formattedTitle}-${newsId}`;
+    router.push(`/news/${slug}`);
   };
 
   const startIndex = currentPage * itemsPerPage;
@@ -20,9 +32,17 @@ const Allnews: React.FC<INewsProps> = ({ newsData }) => {
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4  ">
         {paginatedItems.map((news, index) => (
-          <div key={index} className="border p-3 rounded-lg shadow">
+          <div
+            key={index}
+            onClick={() => {
+              if (news.id !== undefined) {
+                handleGetNewsById(news.id, news.title);
+              }
+            }}
+            className="border p-3 rounded-lg shadow cursor-pointer"
+          >
             <Image
               className="rounded-xl"
               src={
