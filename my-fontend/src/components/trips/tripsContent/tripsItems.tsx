@@ -6,7 +6,11 @@ interface TripsItemsProps {
 }
 const TripsItems: React.FC<TripsItemsProps> = ({ newTrips }) => {
   if (!Array.isArray(newTrips) || newTrips.length === 0) {
-    return <div>No trips available</div>;
+    return (
+      <div className=" w-full flex justify-center items-center text-red-600 text-2xl">
+        Không tìn thấy chuyến đi
+      </div>
+    );
   }
   return (
     <div className="flex flex-col gap-4">

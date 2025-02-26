@@ -66,7 +66,7 @@ const TripFilter: React.FC<ITripFilterProps> = ({ setNewTrips, newTrips }) => {
   };
 
   return (
-    <div className="flex flex-col sticky top-16 bg-white shadow-custom p-3 w-full rounded-xl">
+    <div className="flex flex-col sticky top-20 bg-white shadow-custom p-3 w-full rounded-xl">
       {/* Sắp xếp */}
       <div className="border-b-[1px] border-black pb-2">
         <h3 className="text-lg font-bold">Sắp xếp</h3>
@@ -75,8 +75,8 @@ const TripFilter: React.FC<ITripFilterProps> = ({ setNewTrips, newTrips }) => {
             <li
               className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
                 activeArrange === item
-                  ? "text-orange-600 font-semibold"
-                  : "hover:text-orange-500"
+                  ? "text-[#3b82f6] font-semibold"
+                  : "hover:text-[#3b82f6]"
               }`}
               key={index}
               onClick={() => handleActiveArrange(item)}
@@ -96,8 +96,8 @@ const TripFilter: React.FC<ITripFilterProps> = ({ setNewTrips, newTrips }) => {
             <li
               className={`flex items-center px-3 py-1 border cursor-pointer transition-all rounded-lg text-sm md:text-base ${
                 activeVehicleType === item
-                  ? "border-orange-600 text-orange-600 font-semibold"
-                  : "border-gray-300 hover:border-orange-500 hover:text-orange-500"
+                  ? "border-[#3b82f6] text-[#3b82f6] font-semibold"
+                  : "border-gray-300 hover:border-[#3b82f6] hover:text-[#3b82f6]"
               }`}
               key={index}
               onClick={() => handleActiveVehicleType(item)}

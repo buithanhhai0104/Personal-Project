@@ -31,10 +31,10 @@ export default function InfoSection() {
   return (
     <div className="bg-white w-full p-10 shadow-custom">
       <div className="flex flex-col items-center mb-3">
-        <h2 className="text-3xl text-center text-[#00613D] font-bold">
+        <h2 className="text-3xl text-center text-[#3b82f6] font-bold">
           FUTA BUS LINES - CHẤT LƯỢNG LÀ DANH DỰ
         </h2>
-        <p className="text-center text-[#00613D]">
+        <p className="text-center text-[#3b82f6]">
           Được khách hàng tin tưởng và lựa chọn
         </p>
       </div>

@@ -34,10 +34,10 @@ const Popular: React.FC<IPopularProps> = ({ tripsData }) => {
 
   return (
     <div className="flex flex-col items-center overflow-auto   ">
-      <h1 className="text-3xl text-center text-[#00613D] font-bold">
+      <h1 className="text-3xl text-center text-[#3b82f6] font-bold">
         TUYẾN PHỔ BIẾN
       </h1>
-      <p className="text-center text-[#00613D]">
+      <p className="text-center text-[#3b82f6]">
         Được khách hàng tin tưởng và lựa chọn
       </p>
       <div className=" w-[90%] flex  flex-col overflow-x-scroll md:overflow-hidden ">
@@ -74,16 +74,16 @@ const Popular: React.FC<IPopularProps> = ({ tripsData }) => {
                   >
                     <div className="flex flex-col">
                       <span className="text-[#00613D] font-semibold">
-                        <div className="flex flex-1 justify-center items-center">
+                        <div className="flex flex-1 justify-center items-center text-lg">
                           {data.start_time.slice(0, -3)}
-                          <FaDotCircle className="m-3" />
+                          <FaDotCircle className="m-3 text-[#3b82f6]" />
                           <div className="flex-1 h-[1px] w-6 bg-gray-300 rounded-full" />
                           <div className="text-[12px] text-center text-gray-500">
                             {data.travel_time} <br />
                             (Asian/Ho Chi Minh)
                           </div>
                           <div className="flex-1 h-[1px] w-6 bg-gray-300 rounded-full" />
-                          <FaMapMarkerAlt className="m-3" />
+                          <FaMapMarkerAlt className="m-3 text-red-600" />
                           {data.arrival_time.slice(0, -3)}
                         </div>
                       </span>

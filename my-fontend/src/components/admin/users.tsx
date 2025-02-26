@@ -9,6 +9,7 @@ const Users: React.FC = () => {
   const [users, setUsers] = useState<IUser[] | null>(null);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   const fetchUsers = async () => {
     try {
       const res = await getUsers();
@@ -90,19 +91,48 @@ const Users: React.FC = () => {
               {/* Nút hành động */}
               <div className="flex gap-1">
                 <button
-                  onClick={() => handleEdit(user)}
+                  onClick={() => {
+                    if (confirmDelete == null) return handleEdit(user);
+                  }}
                   className="px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600 transition-colors"
                 >
                   Sửa
                 </button>
                 <button
-                  onClick={() => handleDeleteUser(user.id)}
-                  className="px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition-colors"
+                  onClick={() => {
+                    setEditMode(false);
+                    setConfirmDelete(user.id);
+                  }}
+                  className="px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
                 >
                   Xóa
                 </button>
               </div>
             </div>
+
+            {confirmDelete === user.id && (
+              <div className=" inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm">
+                <div className="bg-white rounded-lg shadow-custom  p-7 w-100 m-5 animate-fadeIn">
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    Bạn có chắc chắn muốn xóa chuyến đi này?
+                  </h2>
+                  <div className="flex gap-4 mt-4">
+                    <button
+                      onClick={() => handleDeleteUser(user.id)}
+                      className="w-full px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
+                    >
+                      Xóa
+                    </button>
+                    <button
+                      onClick={() => setConfirmDelete(null)}
+                      className="w-full px-4 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition"
+                    >
+                      Hủy
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Chế độ chỉnh sửa */}
             {editMode && currentUser?.id === user.id && (

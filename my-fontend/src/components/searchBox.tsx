@@ -77,10 +77,10 @@ const SearchBox: React.FC = () => {
   }, []);
 
   return (
-    <div className=" relative  p-6 border-[2px] border-orange-300 rounded-2xl shadow-custom bg-white text-sm lg:text-[16px]">
+    <div className=" relative  p-6 border-[2px] border-[#3b82f6] rounded-2xl shadow-custom bg-white text-sm lg:text-[16px]">
       <div className="flex justify-between mb-6">
         <div>
-          <span className="text-orange-500 text-sm">Tìm kiếm vé xe</span>
+          <span className="text-[#3b82f6] text-sm">Tìm kiếm vé xe</span>
         </div>
       </div>
       <div className="flex flex-col gap-8 justify-between pb-10 sm:flex-row">
@@ -95,7 +95,7 @@ const SearchBox: React.FC = () => {
             <select
               onChange={(e) => setDeparture(e.target.value)}
               value={departure}
-              className="mt-1 block w-full px-4 py-2 border rounded-md text-black shadow-sm "
+              className="mt-1 block w-full px-4 py-2 border-[1px] border-[#3b82f6]  rounded-md text-black shadow-sm "
               name="from_location"
             >
               <option>Chọn điểm đi</option>
@@ -118,7 +118,7 @@ const SearchBox: React.FC = () => {
             <select
               onChange={(e) => setDestination(e.target.value)}
               value={destination}
-              className="mt-1 block w-full px-4 py-2 border rounded-md text-black shadow-sm "
+              className="mt-1 block w-full px-4 py-2 border-[1px] border-[#3b82f6] rounded-md text-black shadow-sm "
               name="from_location"
             >
               <option>Chọn điểm đến</option>
@@ -147,7 +147,7 @@ const SearchBox: React.FC = () => {
               id="travelDate"
               value={travelDate}
               onChange={(e) => setTravelDate(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border rounded-md text-black shadow-sm focus:ring-orange-500 focus:border-orange-500"
+              className="mt-1 block w-full px-4 py-2 border-[1px] border-[#3b82f6] rounded-md text-black shadow-sm focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
           <div className="w-full">
@@ -162,7 +162,7 @@ const SearchBox: React.FC = () => {
               id="numTickets"
               value={numTickets}
               onChange={(e) => setNumTickets(parseInt(e.target.value, 10))}
-              className="mt-1 block w-full px-4 py-2 border rounded-md text-black shadow-sm focus:ring-orange-500 focus:border-orange-500"
+              className="mt-1 block w-full px-4 py-2 border-[1px] border-[#3b82f6] rounded-md text-black shadow-sm focus:ring-orange-500 focus:border-orange-500"
               min="1"
               max="10"
             />
@@ -173,7 +173,7 @@ const SearchBox: React.FC = () => {
       <div className=" flex justify-center">
         <button
           onClick={handleTripSearch}
-          className=" mb-[-50px] w-96 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
+          className=" mb-[-50px] w-96 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2e65bd] transition"
         >
           Tìm chuyến xe
         </button>

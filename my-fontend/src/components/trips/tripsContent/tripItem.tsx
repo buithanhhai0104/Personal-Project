@@ -42,24 +42,24 @@ const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
     }).format(amount);
 
   return (
-    <div className="border-2 border-orange-300 rounded-xl shadow-custom p-4 w-full max-w-sm sm:max-w-4xl mx-auto bg-white">
+    <div className="border-2 border-[#3b82f6] rounded-xl shadow-custom p-4 w-full max-w-sm sm:max-w-4xl mx-auto bg-white">
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 justify-between items-center">
         {/* Thông tin thời gian và bến */}
-        <div className="flex flex-col flex-1 text-center sm:text-left">
+        <div className="flex flex-col  flex-1 text-center sm:text-left">
           {/* Giờ khởi hành */}
-          <div className="flex flex-col sm:flex-row items-center sm:justify-between">
+          <div className="flex flex-col  sm:flex-row items-center sm:justify-between">
             <div className="text-black text-lg sm:text-2xl font-bold">
               {formatTime(tripItem.start_time)}
             </div>
             <div className="flex flex-1 items-center">
-              <FaDotCircle className="mx-2 sm:m-3" />
+              <FaDotCircle className="mx-2 sm:m-3 text-[#3b82f6]" />
               <div className="hidden sm:block flex-1 h-[1px] w-6 bg-gray-300 rounded-full"></div>
               <div className="flex text-center text-sm text-gray-500">
                 {tripItem.travel_time || "Không xác định"} <br /> (Asia/Ho Chi
                 Minh)
               </div>
               <div className="hidden sm:block flex-1 h-[1px] w-6 bg-gray-300 rounded-full"></div>
-              <FaMapMarkerAlt className="mx-2 sm:m-3" />
+              <FaMapMarkerAlt className="mx-2 sm:m-3 text-red-600" />
             </div>
             {/* Giờ đến nơi */}
             <div className="text-black text-lg sm:text-2xl font-bold">
@@ -96,7 +96,7 @@ const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
           disabled={emptySeats.length === 0}
           className={`px-4 sm:px-6 py-2 mt-4 sm:mt-0 rounded-lg transition ${
             emptySeats.length > 0
-              ? "bg-orange-500 text-white hover:bg-orange-600"
+              ? "bg-[#3b82f6] text-white hover:bg-[#2e64bb]"
               : "bg-gray-400 text-gray-300 cursor-not-allowed"
           }`}
         >

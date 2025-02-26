@@ -50,10 +50,10 @@ const NewNews: React.FC<INewNewsProps> = ({ newsData }) => {
 
   return (
     <div className=" w-full mb-10 ">
-      <h1 className="text-3xl text-center text-[#00613D] font-bold">
+      <h1 className="text-3xl text-center text-[#3b82f6] font-bold">
         TIN TỨC MỚI
       </h1>
-      <p className="text-center text-[#00613D]">
+      <p className="text-center text-[#3b82f6]">
         Cập nhật các thông tin về khuyến mãi
       </p>
       <div

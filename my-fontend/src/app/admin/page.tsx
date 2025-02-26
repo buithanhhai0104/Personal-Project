@@ -63,7 +63,7 @@ const Manage = () => {
     <div className="flex relative top-[60px] w-full">
       {/* Sidebar */}
       <div className="w-[25%] sticky top-[80px] h-screen bg-white shadow-lg flex flex-col border-r border-gray-200">
-        <div className="p-4 border-b border-gray-300 text-center text-xl font-semibold text-orange-600">
+        <div className="p-4 border-b border-gray-300 text-center text-xl font-semibold text-[#3b82f6]">
           Quản lý
         </div>
         <nav className="flex-grow overflow-y-auto">

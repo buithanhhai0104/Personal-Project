@@ -81,7 +81,7 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header className="fixed z-10 w-full bg-orange-600 bg-opacity-90 h-20 ">
+    <header className="fixed z-10 w-full bg-[#3b82f6] bg-opacity-90 h-20 ">
       <div className="flex justify-between gap-2 items-center w-[95%] m-auto">
         {/* Nút mở Sidebar */}
         <div
@@ -92,9 +92,9 @@ const Header: React.FC = () => {
         </div>
 
         <Image
-          className="mt-[2px]"
-          width={80}
-          height={80}
+          className="mt-[5px]"
+          width={70}
+          height={70}
           src="/images/logo5.png"
           alt="logo"
         />
@@ -162,7 +162,7 @@ const Header: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-5">
-              <h2 className="text-lg font-semibold">Menu</h2>
+              <h2 className="text-lg text-[#3b82f6] font-semibold">Menu</h2>
               <IoClose
                 className="text-3xl cursor-pointer"
                 onClick={() => setShowSideBar(false)}
@@ -173,7 +173,7 @@ const Header: React.FC = () => {
                 <Link
                   key={index}
                   href={item.to}
-                  className="text-lg font-medium hover:text-orange-500"
+                  className="text-lg font-medium hover:text-[#3b82f6]"
                   onClick={() => setShowSideBar(false)}
                 >
                   {item.title}

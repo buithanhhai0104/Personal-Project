@@ -84,6 +84,7 @@ const CreateNews: React.FC = () => {
     try {
       const response = await apiCreateNews(data);
       if (response.success) {
+        alert("Bài báo đã tạo thành công");
         toast.success("Bài báo đã được tạo thành công!");
       } else {
         toast.error(response.error || "Lỗi khi tạo bài báo!");
@@ -97,7 +98,7 @@ const CreateNews: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md text-black">
       <h1 className="text-2xl font-semibold text-gray-700 mb-6">
         Tạo bài báo mới
       </h1>
