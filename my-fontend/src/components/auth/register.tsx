@@ -97,7 +97,7 @@ const Register = () => {
             id="full-name"
             name="full-name"
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter your full name"
+            placeholder="Nhập họ và tên của bạn"
           />
           {errors.fullName && (
             <p className="text-red-500 text-sm">{errors.fullName}</p>
@@ -130,7 +130,7 @@ const Register = () => {
             htmlFor="password"
             className="block text-sm font-medium text-gray-700"
           >
-            Password
+            Mật khẩu
           </label>
           <input
             value={password}

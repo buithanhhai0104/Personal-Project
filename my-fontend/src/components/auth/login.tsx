@@ -20,15 +20,15 @@ const Login: React.FC = () => {
   const validate = () => {
     const newErrors: { username?: string; password?: string } = {};
     if (!username.trim()) {
-      newErrors.username = "Username không được để trống.";
+      newErrors.username = "Tài khoản không được để trống.";
     } else if (username.trim().length < 3) {
-      newErrors.username = "Username phải có ít nhất 3 ký tự.";
+      newErrors.username = "Tài khoản phải có ít nhất 3 ký tự.";
     }
 
     if (!password.trim()) {
-      newErrors.password = "Password không được để trống.";
+      newErrors.password = "Mật khẩu không được để trống.";
     } else if (password.trim().length < 6) {
-      newErrors.password = "Password phải có ít nhất 6 ký tự.";
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
     }
 
     setErrors(newErrors);

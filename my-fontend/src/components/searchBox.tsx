@@ -11,7 +11,7 @@ interface IParams {
 }
 const SearchBox: React.FC = () => {
   const router = useRouter();
-  const [departure, setDeparture] = useState<string>("Chon điểm đi");
+  const [departure, setDeparture] = useState<string>("Chọn điểm đi");
   const [destination, setDestination] = useState<string>("");
   const [travelDate, setTravelDate] = useState<string>("");
   const [numTickets, setNumTickets] = useState<number>(1);
@@ -21,8 +21,12 @@ const SearchBox: React.FC = () => {
   const { setTripsData } = useTrips();
 
   const handleTripSearch = async () => {
-    if (!departure || !travelDate) {
-      alert("Vui lòng chọn điểm đi và ngày đi.");
+    if (departure === "Chọn điểm đi") {
+      alert("Vui lòng chọn điểm đi");
+      return;
+    }
+    if (!travelDate) {
+      alert("Vui lòng chọn ngày đi.");
       return;
     }
     const params: IParams = {

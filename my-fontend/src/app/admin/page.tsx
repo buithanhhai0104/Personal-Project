@@ -9,6 +9,7 @@ import { BsChevronDown, BsChevronRight } from "react-icons/bs";
 import { useUser } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import CreateNews from "@/components/admin/createNews";
+import AllNews from "@/components/admin/allNews";
 type ActiveComponent =
   | "createTrip"
   | "allTrips"
@@ -17,11 +18,13 @@ type ActiveComponent =
   | "paidTickets"
   | "unpaidTickets"
   | "canceledTickets"
-  | "news";
+  | "createNews"
+  | "allNews";
 
 const Manage = () => {
   const [showTripsList, setShowTripsList] = useState<boolean>(false);
   const [showTicketsList, setShowTicketsList] = useState<boolean>(false);
+  const [showNewsList, setShowNewsList] = useState<boolean>(false);
   const [activeComponent, setActiveComponent] =
     useState<ActiveComponent>("allTrips");
   const user = useUser();
@@ -30,7 +33,8 @@ const Manage = () => {
     createTrip: <CreateTrip />,
     allTrips: <AllTrips />,
     users: <Users />,
-    news: <CreateNews />,
+    createNews: <CreateNews />,
+    allNews: <AllNews />,
     allTickets: <AllTickets type="Tất cả vé" />,
     paidTickets: <AllTickets type="Vé đã thanh toán" />,
     unpaidTickets: <AllTickets type="Vé chưa thanh toán" />,
@@ -50,6 +54,11 @@ const Manage = () => {
     { name: "Vé đã hủy", key: "canceledTickets" },
   ];
 
+  const newsManagementList = [
+    { name: "Tất cả bài báo", key: "allNews" },
+    { name: "Thêm bài báo", key: "createNews" },
+  ];
+
   useEffect(() => {
     if (user && user.user === null) return;
     if (!user?.user || user?.user?.role !== "admin") {
@@ -60,7 +69,7 @@ const Manage = () => {
   if (!user.user || user.user?.role !== "admin") return null;
 
   return (
-    <div className="flex relative top-[60px] w-full">
+    <div className="flex relative top-20 w-full">
       {/* Sidebar */}
       <div className="w-[25%] sticky top-[80px] h-screen bg-white shadow-lg flex flex-col border-r border-gray-200">
         <div className="p-4 border-b border-gray-300 text-center text-xl font-semibold text-[#3b82f6]">
@@ -121,15 +130,39 @@ const Manage = () => {
             {/* Users Management */}
             <li>
               <button
-                onClick={() => setActiveComponent("news")}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left text-lg font-medium text-gray-700 hover:bg-orange-100 hover:text-orange-600 transition-colors ${
-                  activeComponent === "users"
-                    ? "bg-orange-50 text-orange-600"
-                    : ""
+                onClick={() => setShowNewsList((prev) => !prev)}
+                className={`w-full flex items-center justify-between gap-3 px-4 py-3 text-left text-lg font-medium text-gray-700 hover:bg-orange-100 hover:text-orange-600 transition-colors ${
+                  showNewsList ? "bg-orange-50 text-orange-600" : ""
                 }`}
               >
                 <span>Quản lý bài báo</span>
+                <span
+                  className={`transition-transform ${
+                    showNewsList ? "rotate-180" : ""
+                  }`}
+                >
+                  {showNewsList ? <BsChevronDown /> : <BsChevronRight />}
+                </span>
               </button>
+              {showNewsList && (
+                <div className="flex flex-col items-start p-3 gap-2 transition-all">
+                  {newsManagementList.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() =>
+                        setActiveComponent(item.key as ActiveComponent)
+                      }
+                      className={`text-base px-2 py-1 rounded hover:bg-orange-100 hover:text-orange-600 ${
+                        activeComponent === item.key
+                          ? "bg-orange-50 font-medium text-orange-600"
+                          : "text-gray-700"
+                      }`}
+                    >
+                      + {item.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </li>
             {/* Tickets Management */}
             <li>

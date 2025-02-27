@@ -46,7 +46,7 @@ export default function NewsPage() {
   return (
     <div className="mt-20 mb-10 w-[90%] sm:w-[70%] m-auto text-black">
       <div className="flex justify-center items-center gap-5">
-        <h2 className="text-3xl text-[#00613d]">Tin tức nổi bật</h2>
+        <h2 className="text-3xl text-[#00613d] p-5">Tin tức nổi bật</h2>
         <div className="h-[2px] mt-1 w-full flex-1 bg-[#00613d]"></div>
       </div>
 
@@ -55,12 +55,12 @@ export default function NewsPage() {
         <LoadingSpinner />
       ) : (
         <>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-5">
             <div className="flex cursor-pointer flex-col col-span-4 row-span-2 sm:col-span-2">
-              <div className="flex w-full flex-col">
+              <div className="flex w-full flex-col shadow-custom p-5 rounded-xl">
                 {newsData.length > 0 && (
                   <Image
-                    className="rounded-xl"
+                    className="rounded-xl shadow-custom"
                     src={
                       typeof newsData[0].image === "string"
                         ? newsData[0].image
@@ -89,11 +89,11 @@ export default function NewsPage() {
                     }
                   }}
                   key={index}
-                  className="flex cursor-pointer flex-col col-span-2 sm:col-span-1"
+                  className="flex cursor-pointer flex-col col-span-2 sm:col-span-1 shadow-custom p-2 rounded-xl"
                 >
                   <div className="w-full flex flex-1">
                     <Image
-                      className="rounded-xl"
+                      className="rounded-xl shadow-custom"
                       src={
                         typeof news.image === "string"
                           ? news.image
@@ -117,7 +117,7 @@ export default function NewsPage() {
           </div>
 
           <div className="flex justify-center items-center gap-5">
-            <h2 className="text-3xl text-[#00613d]">Tất cả tin tức</h2>
+            <h2 className="text-3xl text-[#00613d] p-5">Tất cả tin tức</h2>
             <div className="h-[2px] mt-1 w-full flex-1 bg-[#00613d]"></div>
           </div>
           <Allnews newsData={newsData} />

@@ -65,7 +65,7 @@ const NewNews: React.FC<INewNewsProps> = ({ newsData }) => {
           const formattedDate = date.toLocaleDateString("vi-VN");
 
           return (
-            <div className="h-[278px] " key={index}>
+            <div className="h-[278px]  " key={index}>
               <div className=" relative w-full h-[190px]">
                 <Image
                   className="rounded-xl shadow-custom"

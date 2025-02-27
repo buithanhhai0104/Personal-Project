@@ -14,9 +14,12 @@ const Auth: React.FC = () => {
   };
   return (
     <div className=" w-[90%] m-auto flex justify-center items-center bg-login-background h-[100vh]">
-      <div className=" w-96 flex flex-col justify-center items-center shadow-md">
+      <div className=" w-96 flex flex-col justify-center items-center shadow-custom bg-white rounded-lg">
         {form === "Register" ? <Login /> : <Register />}
-        <button className="text-blue-400 underline" onClick={handleSetForm}>
+        <button
+          className="text-blue-400 underline text-xl p-2 "
+          onClick={handleSetForm}
+        >
           {form}
         </button>
       </div>

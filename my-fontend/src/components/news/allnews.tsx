@@ -44,7 +44,7 @@ const Allnews: React.FC<INewsProps> = ({ newsData }) => {
             className="border p-3 rounded-lg shadow cursor-pointer"
           >
             <Image
-              className="rounded-xl"
+              className="rounded-xl shadow-custom"
               src={
                 typeof news.image === "string" ? news.image : "/images/logo.png"
               }

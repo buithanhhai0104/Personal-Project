@@ -114,7 +114,7 @@ const Users: React.FC = () => {
               <div className=" inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm">
                 <div className="bg-white rounded-lg shadow-custom  p-7 w-100 m-5 animate-fadeIn">
                   <h2 className="text-lg font-semibold text-gray-800">
-                    Bạn có chắc chắn muốn xóa chuyến đi này?
+                    Bạn có chắc chắn muốn xóa người dùng này?
                   </h2>
                   <div className="flex gap-4 mt-4">
                     <button

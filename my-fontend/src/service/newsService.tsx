@@ -1,3 +1,4 @@
+import { INews } from "@/types/news";
 import axios from "axios";
 
 const apiUrl =
@@ -20,8 +21,24 @@ export const getNewsById = async (newsId: string) => {
     };
   }
 };
+export const updateNewsById = async (newsData: INews, newsId: number) => {
+  try {
+    const res = await axios.put(`${apiUrl}/news/${newsId}`, newsData);
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (error) {
+    console.error("Lỗi sửa dữ liệu bài báo theo ID:", error);
 
-export const getNewsAll = async () => {
+    return {
+      success: false,
+      error: "Không thể thay đổi dữ liệu bài báo",
+    };
+  }
+};
+
+export const getAllNews = async () => {
   try {
     const res = await axios.get(`${apiUrl}/news`);
     return {
@@ -35,6 +52,15 @@ export const getNewsAll = async () => {
       success: false,
       error: "Không thể lấy danh sách bài báo",
     };
+  }
+};
+
+export const deleteNewsById = async (id: number) => {
+  try {
+    const response = await axios.delete(`${apiUrl}/news/${id}`);
+    return response.data;
+  } catch (err) {
+    console.log("Lỗi xóa bài báo theo id", err);
   }
 };
 

@@ -179,7 +179,7 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg p-7 w-96 animate-fadeIn">
             <h2 className="text-lg font-semibold text-gray-800 text-center">
-              Bạn có chắc chắn muốn xóa chuyến đi này?
+              Bạn có chắc chắn muốn xóa vé này?
             </h2>
             <div className="flex gap-4 mt-4">
               <button

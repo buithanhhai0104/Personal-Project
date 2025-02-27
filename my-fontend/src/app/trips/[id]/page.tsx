@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { getTripById } from "@/service/tripService";
 import { ITrips } from "@/types/trips";
@@ -12,7 +13,7 @@ import LoadingSpinner from "@/components/loadingSpinner";
 
 const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
   const [trip, setTrip] = useState<ITrips | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // ✅ Thêm state loading
+  const [loading, setLoading] = useState<boolean>(true);
   const [bookTicketsData, setBookTicketData] = useState<IBookTicket[] | null>(
     null
   );
@@ -21,6 +22,11 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
   const [bookTicketPhone, setBookTicketPhone] = useState<string>("");
   const [bookTicketEmail, setBookTicketEmail] = useState<string>("");
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [errors, setErrors] = useState<{
+    name?: string;
+    phone?: string;
+    email?: string;
+  }>({});
 
   // Lấy user từ context
   const { user } = useUser();
@@ -51,17 +57,22 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
     setSelectedSeats(seats);
   };
 
+  const validateFields = () => {
+    const newErrors: { name?: string; phone?: string; email?: string } = {};
+
+    if (!bookTicketName.trim()) newErrors.name = "Vui lòng nhập họ và tên!";
+    if (!bookTicketPhone.match(/^\d{10}$/))
+      newErrors.phone = "Số điện thoại phải có 10 chữ số!";
+    if (!bookTicketEmail.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))
+      newErrors.email = "Email không hợp lệ!";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleBookTicket = async () => {
-    if (
-      !user ||
-      !bookTicketName ||
-      !bookTicketPhone ||
-      !bookTicketEmail ||
-      selectedSeats.length === 0
-    ) {
-      alert("Vui lòng nhập đầy đủ thông tin đặt vé");
-      return;
-    }
+    if (!validateFields()) return;
+
     const ticketData = {
       user_id: user?.id,
       trip_id: id,
@@ -125,18 +136,21 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
             value={bookTicketName}
             onChange={setBookTicketName}
             type="text"
+            error={errors.name}
           />
           <InputField
             label="Số điện thoại *"
             value={bookTicketPhone}
             onChange={setBookTicketPhone}
             type="tel"
+            error={errors.phone}
           />
           <InputField
             label="Email *"
             value={bookTicketEmail}
             onChange={setBookTicketEmail}
             type="email"
+            error={errors.email}
           />
           <div className="flex items-center">
             <input
@@ -179,11 +193,13 @@ const InputField = ({
   value,
   onChange,
   type,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (val: string) => void;
   type: string;
+  error?: string;
 }) => (
   <div>
     <label className="block text-gray-600 text-sm font-medium">{label}</label>
@@ -194,6 +210,7 @@ const InputField = ({
       required
       className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
     />
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}{" "}
   </div>
 );
 
