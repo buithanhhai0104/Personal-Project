@@ -7,9 +7,9 @@ import {
 import { INews } from "@/types/news";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, ContentState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-
+import htmlToDraft from "html-to-draftjs";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
@@ -46,13 +46,37 @@ const AllNews = () => {
     fetchNews();
   }, []);
 
+  useEffect(() => {
+    if (currentNews?.content) {
+      const blocksFromHtml = htmlToDraft(currentNews?.content || "<p></p>");
+
+      if (blocksFromHtml?.contentBlocks.length > 0) {
+        const contentState = ContentState.createFromBlockArray(
+          blocksFromHtml.contentBlocks
+        );
+        setEditorState(EditorState.createWithContent(contentState));
+      } else {
+        setEditorState(EditorState.createEmpty());
+      }
+    } else {
+      setEditorState(EditorState.createEmpty());
+    }
+  }, [currentNews]);
+
   const handleEditorChange = (newEditorState: EditorState) => {
     setEditorState(newEditorState);
 
     const rawContent = convertToRaw(newEditorState.getCurrentContent());
     const htmlContent = draftToHtml(rawContent).trim();
 
-    setCurrentNews({ ...currentNews!, content: htmlContent });
+    setCurrentNews((prev) => {
+      if (!prev) return null; // Tránh lỗi khi `prev` là null
+      return {
+        ...prev,
+        content:
+          htmlContent === "<p></p>" || htmlContent === "" ? "" : htmlContent,
+      };
+    });
   };
 
   const handleDelete = async (id: number) => {
