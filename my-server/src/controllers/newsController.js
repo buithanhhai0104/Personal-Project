@@ -75,10 +75,6 @@ const newsController = {
       if (req.file) {
         imageUrl = req.file.path; // URL từ Cloudinary
       }
-      if (!req.file) {
-        imageUrl = image;
-      }
-
       const newsData = { title, content, image: imageUrl };
 
       News.updateNewsById(id, newsData, (err, result) => {
