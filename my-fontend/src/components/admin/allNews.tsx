@@ -184,9 +184,7 @@ const AllNews = () => {
                       placeholder="Nhập nội dung bài báo"
                     />
                   </div>
-                  <button onClick={() => setChangeImage((prev) => !prev)}>
-                    Chỉnh sửa ảnh
-                  </button>
+
                   <input
                     type="file"
                     accept="image/*"
