@@ -1,4 +1,5 @@
 "use client";
+
 import {
   getAllNews,
   deleteNewsById,
@@ -24,6 +25,7 @@ const AllNews = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [currentNews, setCurrentNews] = useState<INews | null>(null);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [changeImage, setChangeImage] = useState<boolean>(false);
   // Lấy danh sách tất cả bài báo
   const fetchNews = async () => {
     try {
@@ -45,23 +47,20 @@ const AllNews = () => {
     fetchNews();
   }, []);
 
+  // để hiển thị chỉnh sửa content theo kiểu editor text
   useEffect(() => {
     if (currentNews?.content) {
       import("html-to-draftjs").then(({ default: htmlToDraft }) => {
-        const blocksFromHtml = htmlToDraft(currentNews?.content || "<p></p>");
-        if (blocksFromHtml?.contentBlocks.length > 0) {
-          const contentState = ContentState.createFromBlockArray(
-            blocksFromHtml.contentBlocks
-          );
-          setEditorState(EditorState.createWithContent(contentState));
-        } else {
-          setEditorState(EditorState.createEmpty());
-        }
+        const blocksFromHtml = htmlToDraft(currentNews.content || "<p></p>");
+        const contentState = ContentState.createFromBlockArray(
+          blocksFromHtml.contentBlocks
+        );
+        setEditorState(EditorState.createWithContent(contentState));
       });
     } else {
       setEditorState(EditorState.createEmpty());
     }
-  }, [currentNews]);
+  }, [currentNews?.content]);
 
   const handleEditorChange = (newEditorState: EditorState) => {
     setEditorState(newEditorState);
@@ -70,15 +69,27 @@ const AllNews = () => {
     const htmlContent = draftToHtml(rawContent).trim();
 
     setCurrentNews((prev) => {
-      if (!prev) return null; // Tránh lỗi khi `prev` là null
+      if (!prev) return null;
       return {
         ...prev,
         content:
           htmlContent === "<p></p>" || htmlContent === "" ? "" : htmlContent,
       };
     });
+
+    if (htmlContent === "<p></p>" || htmlContent === "") {
+      setEditorState(EditorState.createEmpty());
+    }
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCurrentNews({ ...currentNews!, image: file });
+    }
+  };
+
+  // xóa bài báo
   const handleDelete = async (id: number) => {
     try {
       await deleteNewsById(id);
@@ -88,6 +99,7 @@ const AllNews = () => {
     }
   };
 
+  // Mở chế độ chỉnh sửa
   const handleEdit = async (id: number, news: INews) => {
     setEditingId(id);
     if (news) {
@@ -96,22 +108,29 @@ const AllNews = () => {
     console.log(currentNews);
   };
 
+  // Lưu chỉnh sửa
   const handleSave = async (id: number) => {
     try {
       if (currentNews) {
-        await updateNewsById(currentNews, id);
+        const res = await updateNewsById(currentNews, id);
+        if (res) {
+          setEditingId(null);
+          fetchNews();
+        }
       }
-      setEditingId(null);
     } catch (err) {
       console.error("Lỗi cập nhật bài báo:", err);
     }
   };
+
   if (loading) return <p>Đang tải...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Danh sách bài báo</h2>
+      <h2 className="text-3xl font-semibold text-blue-800 p-5">
+        Danh sách bài báo
+      </h2>
       {newsData.length === 0 ? (
         <p>Không có bài báo nào.</p>
       ) : (
@@ -159,8 +178,8 @@ const AllNews = () => {
                 </div>
               </div>
 
+              {/* {form chỉnh sửa bài báo} */}
               {editingId === news.id && (
-                // Form chỉnh sửa bài báo
                 <div className="w-[90%] m-auto p-3 text-black flex flex-col gap-4">
                   <div>
                     <label className="block text-sm text-gray-700">
@@ -191,6 +210,25 @@ const AllNews = () => {
                       />
                     </div>
                   </div>
+                  <button onClick={() => setChangeImage((prev) => !prev)}>
+                    {" "}
+                    Chỉnh sửa ảnh{" "}
+                  </button>
+                  {changeImage ? (
+                    <div>
+                      <label className="block text-gray-600 font-medium mb-2">
+                        Tải ảnh lên
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
 
                   <div className="flex gap-4">
                     <button

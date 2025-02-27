@@ -23,7 +23,12 @@ export const getNewsById = async (newsId: string) => {
 };
 export const updateNewsById = async (newsData: INews, newsId: number) => {
   try {
-    const res = await axios.put(`${apiUrl}/news/${newsId}`, newsData);
+    const res = await axios.put(`${apiUrl}/news/${newsId}`, newsData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return {
       success: true,
       data: res.data,
