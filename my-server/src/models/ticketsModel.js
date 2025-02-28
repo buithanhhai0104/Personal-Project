@@ -48,7 +48,6 @@ const Ticket = {
         }
 
         try {
-          // Sử dụng vòng lặp async/await để xử lý các truy vấn bất đồng bộ
           for (let index = 0; index < queries.length; index++) {
             const query = queries[index];
             await new Promise((resolve, reject) => {
@@ -74,7 +73,6 @@ const Ticket = {
             callback(null);
           });
         } catch (err) {
-          // Nếu có lỗi trong vòng lặp, rollback và giải phóng kết nối
           return connection.rollback(() => {
             connection.release();
             callback(err);

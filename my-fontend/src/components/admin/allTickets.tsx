@@ -1,7 +1,7 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { deleteTicketById, getTickets } from "@/service/ticketsService";
 import { IBookTicket } from "@/types/bookTickets";
-import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
 import LoadingSpinner from "../loadingSpinner";
 
 type AllTicketsProps = {
@@ -71,7 +71,7 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
       }
     }
   };
-
+  console.log(currentTickets);
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -80,7 +80,7 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
   }
   if (!currentTickets || currentTickets.length === 0) {
     return (
-      <div className=" text-2xl text-center py-4 text-red-600">
+      <div className="text-2xl text-center py-4 text-red-600">
         Không có vé nào để hiển thị.
       </div>
     );
@@ -88,8 +88,29 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
   return (
     <div className="container mx-auto p-4 text-black">
       <h1 className="text-2xl font-bold mb-6 text-center">Danh Sách Vé</h1>
+      {confirmDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p className="mb-4">Bạn có chắc chắn muốn xóa vé này không?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                onClick={confirmDeleteTicket}
+              >
+                Xác nhận
+              </button>
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                onClick={() => setConfirmDelete(null)}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border-collapse border border-gray-300 text-sm">
+        <table className="hidden lg:table table-auto w-full border-collapse border border-gray-300 text-sm">
           <thead>
             <tr className="bg-gray-200 text-center">
               <th className="border border-gray-300 px-4 py-2">ID</th>
@@ -97,11 +118,8 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
               <th className="border border-gray-300 px-4 py-2">Chuyến đi từ</th>
               <th className="border border-gray-300 px-4 py-2">Số ghế</th>
               <th className="border border-gray-300 px-4 py-2">Trạng thái</th>
-              <th className="hidden lg:table-cell border border-gray-300 px-4 py-2">
-                Thời gian đặt
-              </th>
-              <th className="hidden lg:table-cell border border-gray-300 px-4 py-2">
-                Hết hạn
+              <th className="border border-gray-300 px-4 py-2">
+                Thời gian đặt vé
               </th>
               <th className="border border-gray-300 px-4 py-2">Thao tác</th>
             </tr>
@@ -119,20 +137,12 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
                   {ticket.trip_id}
                 </td>
                 <td className="border border-gray-300 px-2 py-2">
-                  <div className="flex flex-col text-black">
-                    <span className="text-[#00613D] font-semibold ">
-                      <div className="flex text-[12px] flex-1 justify-center items-center">
-                        {ticket.from_location}
-                        <FaDotCircle className="m-3" />
-                        <FaMapMarkerAlt className="m-3" />
-                        {ticket.to_location}
-                      </div>
-                    </span>
-                  </div>
+                  {ticket.from_location} → {ticket.to_location}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {ticket.seat_number}
                 </td>
+
                 <td
                   className={`border border-gray-300 px-4 py-2 ${
                     ticket.status === "Hủy đặt vé do chưa thanh toán"
@@ -142,25 +152,11 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
                 >
                   {ticket.status}
                 </td>
-                <td className="hidden lg:table-cell border border-gray-300 px-4 py-2">
-                  {ticket.booking_time
-                    ? new Date(ticket.booking_time).toLocaleString("vi-VN")
-                    : "N/A"}
+                <td className="border border-gray-300 px-4 py-2">
+                  {ticket.booking_time}
                 </td>
-                <td className="hidden lg:table-cell border border-gray-300 px-4 py-2">
-                  {ticket.expires_at
-                    ? new Date(ticket.expires_at).toLocaleString("vi-VN")
-                    : "N/A"}
-                </td>
-                <td className="flex flex-col border border-gray-300 px-4 py-2 space-y-2">
-                  <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-                    onClick={() =>
-                      alert(
-                        `Chi tiết khách hàng: \nTên: ${ticket.name} \nSĐT: ${ticket.phone} \nEmail: ${ticket.email}`
-                      )
-                    }
-                  >
+                <td className="border border-gray-300 px-4 py-2 flex flex-col gap-2">
+                  <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
                     Chi tiết
                   </button>
                   <button
@@ -174,30 +170,60 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
             ))}
           </tbody>
         </table>
-      </div>
-      {confirmDelete && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-7 w-96 animate-fadeIn">
-            <h2 className="text-lg font-semibold text-gray-800 text-center">
-              Bạn có chắc chắn muốn xóa vé này?
-            </h2>
-            <div className="flex gap-4 mt-4">
-              <button
-                onClick={confirmDeleteTicket}
-                className="w-full px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
+        <div className="lg:hidden space-y-4">
+          {currentTickets?.map((ticket) => (
+            <div
+              key={ticket.ticket_id}
+              className="border p-4 rounded-lg shadow"
+            >
+              <p>
+                <strong>ID:</strong> {ticket.ticket_id}
+              </p>
+              <p>
+                <strong>Mã số xe:</strong> {ticket.trip_id}
+              </p>
+              <p>
+                <strong>Chuyến đi:</strong> {ticket.from_location} →{" "}
+                {ticket.to_location}
+              </p>
+              <p>
+                <strong>Số ghế:</strong> {ticket.seat_number}
+              </p>
+              <p>
+                <strong>Thời gian đặt:</strong> {ticket.booking_time}
+              </p>
+              <p
+                className={
+                  ticket.status === "Hủy đặt vé do chưa thanh toán"
+                    ? "text-red-500"
+                    : "text-green-500"
+                }
               >
-                Xóa
-              </button>
-              <button
-                onClick={() => setConfirmDelete(null)}
-                className="w-full px-4 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition"
-              >
-                Hủy
-              </button>
+                <strong>Trạng thái:</strong> {ticket.status}
+              </p>
+
+              <div className="flex gap-2 mt-2">
+                <button
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                  onClick={() =>
+                    alert(
+                      `Chi tiết khách hàng:\nTên: ${ticket.name}\nSĐT: ${ticket.phone}\nEmail: ${ticket.email}`
+                    )
+                  }
+                >
+                  Chi tiết
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(ticket.ticket_id as string)}
+                  className="px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 transition"
+                >
+                  Xóa
+                </button>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };

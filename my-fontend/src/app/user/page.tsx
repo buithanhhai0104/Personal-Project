@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TripHistory from "@/components/user/tripHistory";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { ReactNode } from "react";
@@ -18,19 +18,23 @@ const User = () => {
 
   const renderComponent = () => componentMap[activeComponent] || null;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeComponent]);
+
   return (
-    <div className="flex mt-[60px] w-full">
+    <div className=" flex relative top-20 w-full">
       {/* Nút mở sidebar trên mobile */}
       <button
         className="md:hidden fixed z-50 top-4 left-3 bg-orange-500 text-white p-2 rounded-full shadow-md "
         onClick={() => setIsSidebarOpen(true)}
       >
-        <FaBars size={20} />
+        <FaBars size={30} />
       </button>
 
       {/* Sidebar */}
       <div
-        className={` mt-[60px] sm:mt-0 bg-white shadow-lg border-r border-gray-200 
+        className={` mt-[80px] z-50 sm:mt-0 bg-white shadow-lg border-r border-gray-200 
     w-[70%] sm:w-[50%] md:w-[25%] 
     transition-transform duration-300 ease-in-out 
     fixed top-0 left-0 bottom-0 md:sticky md:top-[60px] md:h-[calc(100vh-60px)] 
@@ -38,13 +42,13 @@ const User = () => {
   `}
       >
         <div className="p-4 border-b border-gray-300 text-center text-xl font-semibold text-orange-600 flex justify-between items-center">
-          <span>Hồ sơ</span>
+          <span className="flex-1">Hồ sơ</span>
           {/* Nút đóng sidebar trên mobile */}
           <button
-            className="md:hidden text-gray-700"
+            className="md:hidden text-red-600"
             onClick={() => setIsSidebarOpen(false)}
           >
-            <FaTimes size={20} />
+            <FaTimes size={25} />
           </button>
         </div>
         <nav className="flex-grow overflow-y-auto">

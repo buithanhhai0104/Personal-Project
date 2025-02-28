@@ -6,9 +6,10 @@ import React, { useEffect, useState } from "react";
 import { FaDotCircle, FaMapMarkerAlt } from "react-icons/fa";
 import { allAddress } from "@/staticData/addresses";
 import LoadingSpinner from "../loadingSpinner";
+
 const AllTrips = () => {
   const [trips, setTrips] = useState<ITrips[] | null>(null);
-  const [tripsFillter, setTripsFillter] = useState<ITrips[] | null>(null);
+  const [tripsFillter, setTripsFillter] = useState<ITrips[]>([]);
   const [activeArrange, setActiveArrange] = useState<string>("Mặc định");
   const [activeLocation, setActiveLocation] = useState<string>("Tất cả");
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -59,8 +60,11 @@ const AllTrips = () => {
           )
         );
         break;
-      case "Giá tăng dần":
+      case "Giá giảm dần":
         setTripsFillter([...tripsFillter].sort((a, b) => b.price - a.price));
+        break;
+      case "Giá tăng dần":
+        setTripsFillter([...tripsFillter].sort((a, b) => a.price - b.price));
         break;
       case "Tất cả":
         setTripsFillter(trips);
@@ -138,59 +142,72 @@ const AllTrips = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1  px-5 py-10 bg-gray-100 min-h-screen">
+    <div className="flex flex-col flex-1   py-10 bg-gray-100  min-h-screen">
       <div className="flex  flex-col  gap-10 justify-between mb-4">
         <h2 className="text-3xl font-semibold text-blue-800">
           Danh sách chuyến đi
         </h2>
-        <div className="flex gap-4 items-center">
-          <select
-            id="form_location"
-            name="form_location"
-            value={activeLocation}
-            onChange={(e) => handleFilterLocation(e.target.value)}
-            className={`px-4 py-2 rounded-full text-black  border-[3px] border-blue-500 `}
-            required
-          >
-            <option value="Tất cả">Tất cả</option>
-            {trips
-              ?.filter(
-                (item, index, self) =>
-                  index ===
-                  self.findIndex((t) => t.from_location === item.from_location)
-              )
-              .map((item, index) => {
-                return (
+        <div className="w-full  shadow-custom p-6  rounded-xl m-auto  flex flex-col gap-2 md:gap-4 md:w-full md:justify-start ">
+          <span className=" flex justify-start text-blue-600 text-lg font-bold">
+            Sắp xếp
+          </span>
+          <div className="flex flex-wrap gap-4">
+            <select
+              id="form_location"
+              name="form_location"
+              value={activeLocation}
+              onChange={(e) => handleFilterLocation(e.target.value)}
+              className="px-4 py-2 rounded-full text-black border-[3px] border-blue-500 w-full md:w-auto"
+              required
+            >
+              <option value="Tất cả">Tất cả</option>
+              {trips
+                ?.filter(
+                  (item, index, self) =>
+                    index ===
+                    self.findIndex(
+                      (t) => t.from_location === item.from_location
+                    )
+                )
+                .map((item, index) => (
                   <option key={index} value={item.from_location}>
                     {item.from_location}
                   </option>
-                );
-              })}
-          </select>
-          <button
-            onClick={() => handleActiveArrange("Chuyến xe sớm nhất")}
-            className={`px-4 py-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors ${
-              activeArrange === "Chuyến xe sớm nhất" && "bg-blue-700"
-            }`}
-          >
-            Chuyến xe sớm nhất
-          </button>
-          <button
-            onClick={() => handleActiveArrange("Chuyến xe muộn nhất")}
-            className={`px-4 py-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors ${
-              activeArrange === "Chuyến xe muộn nhất" && "bg-blue-700"
-            }`}
-          >
-            Chuyến xe muộn nhất
-          </button>
-          <button
-            onClick={() => handleActiveArrange("Giá tăng dần")}
-            className={`px-4 py-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors ${
-              activeArrange === "Giá tăng dần" && "bg-blue-700"
-            }`}
-          >
-            Giá giảm dần
-          </button>
+                ))}
+            </select>
+            <button
+              onClick={() => handleActiveArrange("Chuyến xe sớm nhất")}
+              className={`px-4 py-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors w-full md:w-auto ${
+                activeArrange === "Chuyến xe sớm nhất" && "bg-blue-700"
+              }`}
+            >
+              Chuyến xe sớm nhất
+            </button>
+            <button
+              onClick={() => handleActiveArrange("Chuyến xe muộn nhất")}
+              className={`px-4 py-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors w-full md:w-auto ${
+                activeArrange === "Chuyến xe muộn nhất" && "bg-blue-700"
+              }`}
+            >
+              Chuyến xe muộn nhất
+            </button>
+            <button
+              onClick={() => handleActiveArrange("Giá giảm dần")}
+              className={`px-4 py-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors w-full md:w-auto ${
+                activeArrange === "Giá tăng dần" && "bg-blue-700"
+              }`}
+            >
+              Giá giảm dần
+            </button>
+            <button
+              onClick={() => handleActiveArrange("Giá tăng dần")}
+              className={`px-4 py-2 rounded-full text-white bg-blue-500 hover:bg-blue-600 transition-colors w-full md:w-auto ${
+                activeArrange === "Giá tăng dần" && "bg-blue-700"
+              }`}
+            >
+              Giá tăng dần
+            </button>
+          </div>
         </div>
       </div>
 
@@ -209,9 +226,9 @@ const AllTrips = () => {
           return (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow transform overflow-hidden"
+              className="bg-white  rounded-lg shadow-md hover:shadow-lg transition-shadow transform overflow-hidden"
             >
-              <div className="p-5 flex items-center justify-between gap-4">
+              <div className="p-5 flex  flex-col md:flex-row items-center justify-between gap-4">
                 {/* Thời gian và giá vé */}
                 <div className="flex flex-col text-black">
                   <span className="text-[#00613D] font-semibold ">
@@ -233,23 +250,23 @@ const AllTrips = () => {
                     <p className="text-sm">{trip.to_location}</p>
                   </div>
                 </div>
-                <div className="flex gap-1 items-start text-gray-600">
+                <div className="flex   gap-1 items-start text-gray-600">
                   <span> Mã số xe:</span>
                   {trip.id}
                 </div>
                 {/* Ngày khởi hành */}
-                <div className="flex flex-col items-start text-gray-600">
+                <div className="flex   md:flex-col items-start text-gray-600">
                   <span>Ngày:</span>
                   {formattedDate}
                 </div>
 
                 {/* Thông tin ghế */}
-                <div className=" hidden lg:block text-gray-700">
+                <div className=" lg:block text-gray-700">
                   Ghế: {reservedSeats.length}/{trip.seats.length}
                 </div>
 
                 {/* Giá vé */}
-                <div className="hidden lg:block text-xl font-semibold text-teal-600">
+                <div className=" lg:block text-xl flex font-semibold text-teal-600">
                   {formatCurrency(trip.price)}
                 </div>
 

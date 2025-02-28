@@ -33,6 +33,10 @@ const CreateNews: React.FC = () => {
   const isMounted = useRef(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;

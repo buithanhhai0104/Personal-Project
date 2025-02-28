@@ -90,7 +90,7 @@ const CreateTrip: React.FC = () => {
   };
 
   return (
-    <div className="w-[75%] mx-auto p-6 bg-gray-100 shadow-md rounded-lg text-black">
+    <div className="w-[95%] md:w-[85%] mx-auto p-6 bg-gray-100 shadow-custom rounded-lg text-black">
       <h1 className="text-2xl font-bold text-blue-800 mb-4">Tạo Chuyến Đi</h1>
       {isLoading && <p className="text-blue-600">Đang xử lý...</p>}
       {error && <p className="text-red-600">{error}</p>}

@@ -13,6 +13,7 @@ import {
 import { INews } from "@/types/news";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "../loadingSpinner";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -116,7 +117,7 @@ const AllNews = () => {
     }
   };
 
-  if (loading) return <p>Đang tải...</p>;
+  if (loading) return <LoadingSpinner />;
   if (error) return <p>{error}</p>;
 
   return (
@@ -131,21 +132,23 @@ const AllNews = () => {
           {newsData.map((news) => (
             <li
               key={news.id}
-              className="border p-4 rounded-lg shadow text-black"
+              className=" border p-4 rounded-lg shadow-custom text-black"
             >
-              <div className="flex items-center justify-between gap-4">
-                <Image
-                  className="rounded-xl shadow h-[120px]"
-                  src={
-                    typeof news.image === "string"
-                      ? news.image
-                      : "/images/logo.png"
-                  }
-                  alt={news.title || "Ảnh bài báo"}
-                  width={200}
-                  height={100}
-                />
-                <p className="flex-1 text-sm line-clamp-2">{news.title}</p>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex flex-col items-center gap-4  md:flex-row">
+                  <Image
+                    className="rounded-xl shadow h-[200px] md:h-[120px] w-full md:w-[200px]"
+                    src={
+                      typeof news.image === "string"
+                        ? news.image
+                        : "/images/logo.png"
+                    }
+                    alt={news.title || "Ảnh bài báo"}
+                    width={200}
+                    height={100}
+                  />
+                  <p className="flex-1 text-sm line-clamp-2">{news.title}</p>
+                </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => {

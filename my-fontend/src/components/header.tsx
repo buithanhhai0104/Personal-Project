@@ -91,13 +91,9 @@ const Header: React.FC = () => {
           <IoReorderThreeSharp />
         </div>
 
-        <Image
-          className="mt-[5px]"
-          width={70}
-          height={70}
-          src="/images/logo5.png"
-          alt="logo"
-        />
+        <Link href={"/"} className="mt-[5px]">
+          <Image width={70} height={70} src="/images/logo5.png" alt="logo" />
+        </Link>
 
         <nav className="hidden md:flex gap-10">
           {navPage.map((item, index) => (

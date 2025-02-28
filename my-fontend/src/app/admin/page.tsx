@@ -10,6 +10,7 @@ import { useUser } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import CreateNews from "@/components/admin/createNews";
 import AllNews from "@/components/admin/allNews";
+import { FaBars, FaTimes } from "react-icons/fa";
 type ActiveComponent =
   | "createTrip"
   | "allTrips"
@@ -24,6 +25,7 @@ type ActiveComponent =
 const Manage = () => {
   const [showTripsList, setShowTripsList] = useState<boolean>(false);
   const [showTicketsList, setShowTicketsList] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showNewsList, setShowNewsList] = useState<boolean>(false);
   const [activeComponent, setActiveComponent] =
     useState<ActiveComponent>("allTrips");
@@ -59,6 +61,12 @@ const Manage = () => {
     { name: "Thêm bài báo", key: "createNews" },
   ];
 
+  // Chuyển lên đầu trang khi render component
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeComponent]);
+
+  // Xác thực nếu là admin mới có quyền truy cập trang
   useEffect(() => {
     if (user && user.user === null) return;
     if (!user?.user || user?.user?.role !== "admin") {
@@ -70,10 +78,29 @@ const Manage = () => {
 
   return (
     <div className="flex relative top-20 w-full">
+      <button
+        className="md:hidden fixed z-50 top-4 left-3 bg-orange-500 text-white p-2 rounded-full shadow-md "
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        <FaBars size={30} />
+      </button>
       {/* Sidebar */}
-      <div className="w-[25%] sticky top-[80px] h-screen bg-white shadow-lg flex flex-col border-r border-gray-200">
-        <div className="p-4 border-b border-gray-300 text-center text-xl font-semibold text-[#3b82f6]">
-          Quản lý
+      <div
+        className={` mt-[80px] z-30 sm:mt-0 bg-white shadow-lg border-r border-gray-200 
+    w-[70%] sm:w-[50%] md:w-[25%] 
+    transition-transform duration-300 ease-in-out 
+    fixed top-0 left-0 bottom-0 md:sticky md:top-[80px] md:h-[calc(100vh-60px)] 
+    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+  `}
+      >
+        <div className=" flex justify-between md:justify-center  p-4 border-b border-gray-300 text-center text-xl font-semibold text-[#3b82f6]">
+          <span className="flex-1">Quản lý</span>
+          <button
+            className="md:hidden text-red-600"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <FaTimes size={25} />
+          </button>
         </div>
         <nav className="flex-grow overflow-y-auto">
           <ul className="flex flex-col">
@@ -99,9 +126,10 @@ const Manage = () => {
                   {tripManagementList.map((item, index) => (
                     <button
                       key={index}
-                      onClick={() =>
-                        setActiveComponent(item.key as ActiveComponent)
-                      }
+                      onClick={() => {
+                        setActiveComponent(item.key as ActiveComponent);
+                        setIsSidebarOpen(false);
+                      }}
                       className={`text-base px-2 py-1 rounded hover:bg-orange-100 hover:text-orange-600 ${
                         activeComponent === item.key
                           ? "bg-orange-50 font-medium text-orange-600"
@@ -149,9 +177,10 @@ const Manage = () => {
                   {newsManagementList.map((item, index) => (
                     <button
                       key={index}
-                      onClick={() =>
-                        setActiveComponent(item.key as ActiveComponent)
-                      }
+                      onClick={() => {
+                        setActiveComponent(item.key as ActiveComponent);
+                        setIsSidebarOpen(false);
+                      }}
                       className={`text-base px-2 py-1 rounded hover:bg-orange-100 hover:text-orange-600 ${
                         activeComponent === item.key
                           ? "bg-orange-50 font-medium text-orange-600"
@@ -186,9 +215,10 @@ const Manage = () => {
                   {ticketManagementList.map((item, index) => (
                     <button
                       key={index}
-                      onClick={() =>
-                        setActiveComponent(item.key as ActiveComponent)
-                      }
+                      onClick={() => {
+                        setActiveComponent(item.key as ActiveComponent);
+                        setIsSidebarOpen(false);
+                      }}
                       className={`text-base px-2 py-1 rounded hover:bg-orange-100 hover:text-orange-600 ${
                         activeComponent === item.key
                           ? "bg-orange-50 font-medium text-orange-600"
@@ -206,7 +236,7 @@ const Manage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-grow bg-gray-50 p-6">
+      <div className="flex-grow bg-gray-100 p-3 md:p-10">
         {renderComponent() || (
           <div className="text-center text-gray-500">
             Chọn một mục để xem nội dung
