@@ -5,24 +5,28 @@ const Ticket = {
   createMultipleTickets: (ticketData, callback) => {
     const query = `
     INSERT INTO tickets (ticket_id, user_id, trip_id, seat_number, email, name, phone, status, expires_at, to_location, from_location)
-    VALUES ?;
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `;
-    const values = ticketData.map((ticket) => [
-      ticket.ticket_id,
-      ticket.user_id,
-      ticket.trip_id,
-      ticket.seat_number,
-      ticket.email,
-      ticket.name,
-      ticket.phone,
-      ticket.status,
-      ticket.expires_at,
-      ticket.to_location,
-      ticket.from_location,
-    ]);
+
+    // Chuyển mảng seat_number thành chuỗi ghép bằng dấu phẩy
+    const seatNumbers = ticketData.seat_numbers.join(",");
+
+    const values = [
+      ticketData.ticket_id,
+      ticketData.user_id,
+      ticketData.trip_id,
+      seatNumbers,
+      ticketData.email,
+      ticketData.name,
+      ticketData.phone,
+      ticketData.status,
+      ticketData.expires_at,
+      ticketData.to_location,
+      ticketData.from_location,
+    ];
 
     console.log("Executing query with values:", values);
-    db.query(query, [values], callback);
+    db.query(query, values, callback);
   },
 
   getTicketByTicketId: (ticket_id, callback) => {

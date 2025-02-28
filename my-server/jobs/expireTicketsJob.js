@@ -1,18 +1,22 @@
 const Ticket = require("../src/models/ticketsModel");
 const Trip = require("../src/models/tripsModel");
 const moment = require("moment");
+const db = require("../src/config/db");
 
 function startExpireTicketsJob() {
-  console.log("Kiểm tra vé hết hạn...");
+  console.log("🔄 Kiểm tra vé hết hạn...");
 
-  // Lấy các vé chưa thanh toán
   Ticket.getUnpaidTickets((err, tickets) => {
     if (err) {
-      console.error("Lỗi khi lấy vé chưa thanh toán:", err);
+      console.error("❌ Lỗi khi lấy vé chưa thanh toán:", err);
       return;
     }
 
-    // Nhóm vé theo trip_id để xử lý một lần
+    if (!tickets.length) {
+      console.log("✅ Không có vé hết hạn.");
+      return;
+    }
+
     const tripsToUpdate = {};
 
     tickets.forEach((ticket) => {
@@ -20,9 +24,8 @@ function startExpireTicketsJob() {
       const expiresAt = moment(ticket.expires_at);
 
       if (currentTime.isAfter(expiresAt)) {
-        console.log(`Vé ${ticket.ticket_id} hết hạn`);
+        console.log(`⚠️ Vé ${ticket.ticket_id} hết hạn`);
 
-        // Nhóm vé theo trip_id để xử lý tất cả ghế cùng một chuyến
         if (!tripsToUpdate[ticket.trip_id]) {
           tripsToUpdate[ticket.trip_id] = [];
         }
@@ -31,61 +34,84 @@ function startExpireTicketsJob() {
       }
     });
 
-    // Xử lý từng chuyến xe
     Object.keys(tripsToUpdate).forEach((tripId) => {
-      Trip.getTripById(tripId, (err, results) => {
+      db.getConnection((err, connection) => {
         if (err) {
-          console.error(`Lỗi khi lấy thông tin chuyến đi: ${tripId}`, err);
+          console.error("❌ Lỗi kết nối MySQL:", err);
           return;
         }
 
-        if (!results || results.length === 0) {
-          console.error(`Không tìm thấy chuyến đi: ${tripId}`);
-          return;
-        }
+        connection.beginTransaction((err) => {
+          if (err) {
+            connection.release();
+            console.error("❌ Lỗi bắt đầu giao dịch:", err);
+            return;
+          }
 
-        const trip = results[0];
-        const seats = Array.isArray(trip.seats)
-          ? trip.seats
-          : JSON.parse(trip.seats || "[]");
-
-        // Cập nhật ghế cho tất cả vé của chuyến
-        tripsToUpdate[tripId].forEach((ticket) => {
-          const updatedSeats = seats.map((seat) => {
-            if (seat.seat_number === ticket.seat_number) {
-              seat.status = "available"; // Cập nhật trạng thái ghế
-            }
-            return seat;
-          });
-
-          // Cập nhật ghế trong chuyến xe
-          Trip.updateTripSeats(tripId, updatedSeats, (err) => {
-            if (err) {
-              console.error(
-                `Lỗi khi cập nhật ghế cho chuyến đi ${tripId}:`,
-                err
-              );
+          Trip.getTripById(tripId, (err, results) => {
+            if (err || !results.length) {
+              connection.rollback(() => {
+                connection.release();
+                console.error(`❌ Lỗi lấy chuyến đi ${tripId}:`, err);
+              });
               return;
             }
 
-            // Cập nhật vé thành hết hạn
-            Ticket.updateTicketStatus(
-              ticket.ticket_id,
-              "Hủy đặt vé do chưa thanh toán",
-              (err) => {
-                if (err) {
+            let seats = Array.isArray(results[0].seats)
+              ? results[0].seats
+              : JSON.parse(results[0].seats || "[]");
+
+            tripsToUpdate[tripId].forEach((ticket) => {
+              const seatNumbers = ticket.seat_number.split(",");
+
+              seats = seats.map((seat) => {
+                if (seatNumbers.includes(seat.seat_number)) {
+                  seat.status = "available";
+                }
+                return seat;
+              });
+            });
+
+            Trip.updateTripSeats(tripId, seats, (err) => {
+              if (err) {
+                return connection.rollback(() => {
+                  connection.release();
                   console.error(
-                    `Lỗi khi cập nhật trạng thái vé ${ticket.ticket_id}:`,
+                    `❌ Lỗi cập nhật ghế cho chuyến ${tripId}:`,
                     err
                   );
-                  return;
-                }
-
-                console.log(
-                  `Ghế ${ticket.seat_number} trên chuyến đi ${tripId} đã được cập nhật thành "available"`
-                );
+                });
               }
-            );
+
+              const ticketIds = tripsToUpdate[tripId].map((t) => t.ticket_id);
+
+              Ticket.updateMultipleTicketStatus(
+                ticketIds,
+                "Hủy đặt vé do chưa thanh toán",
+                (err) => {
+                  if (err) {
+                    return connection.rollback(() => {
+                      connection.release();
+                      console.error(`❌ Lỗi cập nhật trạng thái vé:`, err);
+                    });
+                  }
+
+                  connection.commit((err) => {
+                    if (err) {
+                      return connection.rollback(() => {
+                        connection.release();
+                        console.error("❌ Lỗi khi commit giao dịch:", err);
+                      });
+                    }
+
+                    connection.release();
+                    console.log(
+                      `✅ Đã hủy ${ticketIds.length} vé trên chuyến đi ${tripId}`
+                    );
+                  });
+                }
+              );
+            });
           });
         });
       });
