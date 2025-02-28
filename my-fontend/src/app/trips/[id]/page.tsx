@@ -14,7 +14,7 @@ import LoadingSpinner from "@/components/loadingSpinner";
 const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
   const [trip, setTrip] = useState<ITrips | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [bookTicketsData, setBookTicketData] = useState<IBookTicket[] | null>(
+  const [bookTicketsData, setBookTicketData] = useState<IBookTicket | null>(
     null
   );
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
@@ -83,9 +83,11 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
       phone: bookTicketPhone,
       email: bookTicketEmail,
     };
+    console.log(selectedSeats);
     try {
       const bookTicket = await bookTickets(ticketData);
-      setBookTicketData(bookTicket.tickets);
+      console.log(bookTicket);
+      setBookTicketData(bookTicket.ticket);
       setBookingSuccess(true);
       setBookTicketEmail("");
       setBookTicketPhone("");

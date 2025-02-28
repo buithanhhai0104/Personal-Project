@@ -36,19 +36,17 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const handlePayment = async (details: unknown) => {
     if (!ticketData) return;
-    const result = await handlePaymentSuccess([ticketData]);
+    const result = await handlePaymentSuccess(ticketData);
     console.log(result, details);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-orange-50 py-10">
       {loading ? (
-      
         <div className="flex justify-center items-center">
           <ClipLoader color="#007bff" size={50} />
         </div>
       ) : ticketData ? (
-      
         <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
           <h1 className="text-2xl font-bold text-orange-600 text-center mb-6">
             Chi tiết vé
@@ -104,7 +102,6 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       ) : (
-       
         <p className="text-red-600">Không tìm thấy thông tin vé.</p>
       )}
     </div>

@@ -11,21 +11,18 @@ const apiUrl =
 
 //  xử lý khi thanh toán thành công
 export const handlePaymentSuccess = async (
-  bookTicketsData: IBookTicket[] | null
+  bookTicketsData: IBookTicket | null
 ) => {
-  if (!bookTicketsData || bookTicketsData.length === 0) {
+  if (!bookTicketsData) {
     console.error("No tickets available.");
     return;
   }
 
-  const changeTicketStatus: IChangeTicketStatus[] = bookTicketsData.map(
-    ({ ticket_id }) => ({
-      ticket_id: ticket_id || "",
-      status: "Đã thanh toán",
-      expires_at: null,
-    })
-  );
-
+  const changeTicketStatus: IChangeTicketStatus = {
+    ticket_id: bookTicketsData.ticket_id || "",
+    status: "Đã thanh toán",
+    expires_at: null,
+  };
   console.log("Change ticket status:", changeTicketStatus);
 
   try {

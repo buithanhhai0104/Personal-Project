@@ -8,7 +8,7 @@ import { ITrips } from "@/types/trips";
 import { ISendEmail } from "@/types/sendEmail";
 import { apisendEmail } from "@/service/sendEmailService";
 interface IBookingSuccessProps {
-  bookTicketsData: IBookTicket[] | null;
+  bookTicketsData: IBookTicket | null;
   selectedSeats: string[];
   detailTrip: ITrips;
 }
@@ -27,7 +27,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
       if (result) {
         setSuccessfulPayment(true);
         const sendEmailForm: ISendEmail = {
-          to: bookTicketsData[0].email,
+          to: bookTicketsData.email,
           subject: "Mã thông tin đặt vé ",
           tickets: bookTicketsData,
         };
@@ -40,7 +40,9 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
       console.log(result, details);
     }
   };
-
+  const expiresAtLocal = new Date(
+    bookTicketsData?.expires_at + " UTC"
+  ).toLocaleString();
   return (
     <div className="min-h-screen w-[90%] sm:w-[60%] flex items-center justify-center">
       {successfulPayment ? (
@@ -54,44 +56,45 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
             </p>
           </div>
           <div className="flex flex-col gap-3">
-            {bookTicketsData?.map((ticket, index) => (
-              <div
-                key={index}
-                className="p-4 border border-gray-200 rounded-lg shadow-custom bg-gray-50"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-black">
-                    Mã vé: <b>{ticket.ticket_id}</b> (có thể dùng mã vế để tra
-                    cứu vé trên hệ thống)
-                  </span>
-                </div>
-                <div className="mt-2 text-gray-700 space-y-1">
-                  <p>
-                    <span className="font-medium">Họ và tên:</span>{" "}
-                    {ticket.name}
-                  </p>
-                  <p>
-                    <span className="font-medium">Số điện thoại:</span>{" "}
-                    {ticket.phone}
-                  </p>
-                  <p>
-                    <span className="font-medium">Email:</span> {ticket.email}
-                  </p>
-                  <p>
-                    <span className="font-medium">Số ghế:</span>{" "}
-                    {ticket.seat_number}
-                  </p>
-                  <p>
-                    <span className="font-medium">Chuyến đi:</span>{" "}
-                    {ticket.trip_id}
-                  </p>
-                  <p>
-                    <span className="font-medium">Trạng thái thanh toán:</span>{" "}
-                    <span className="text-green-600">Đã thanh toán</span>
-                  </p>
-                </div>
+            <div className="p-4 border border-gray-200 rounded-lg shadow-custom bg-gray-50">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-black">
+                  Mã vé: <b>{bookTicketsData?.ticket_id}</b> (có thể dùng mã vế
+                  để tra cứu vé trên hệ thống)
+                </span>
               </div>
-            ))}
+              <div className="mt-2 text-gray-700 space-y-1">
+                <p>
+                  <span className="font-medium">Họ và tên:</span>{" "}
+                  {bookTicketsData?.name}
+                </p>
+                <p>
+                  <span className="font-medium">Số điện thoại:</span>{" "}
+                  {bookTicketsData?.phone}
+                </p>
+                <p>
+                  <span className="font-medium">Email:</span>{" "}
+                  {bookTicketsData?.email}
+                </p>
+                <p>
+                  <span className="font-medium">Số ghế:</span>{" "}
+                  {bookTicketsData?.seat_numbers?.map((seat, index) => (
+                    <span key={index} className="mr-2">
+                      {seat}
+                    </span>
+                  )) ?? []}
+                </p>
+
+                <p>
+                  <span className="font-medium">Chuyến đi:</span>{" "}
+                  {bookTicketsData?.trip_id}
+                </p>
+                <p>
+                  <span className="font-medium">Trạng thái thanh toán:</span>{" "}
+                  <span className="text-green-600">Đã thanh toán</span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
@@ -107,67 +110,57 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
 
           {/* Danh sách vé */}
           <div className="flex flex-col gap-3">
-            {bookTicketsData?.map((ticket, index) => {
-              const expiresAtLocal = new Date(
-                ticket.expires_at + " UTC"
-              ).toLocaleString();
-              return (
-                <div
-                  key={index}
-                  className="p-4 border border-gray-200 rounded-lg shadow-custom bg-gray-50"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-black">
-                      Mã vé: <b>{ticket.ticket_id}</b> (có thể dùng mã vé để tra
-                      cứu vé trên hệ thống)
-                    </span>
-                  </div>
-                  <div className="mt-2 text-gray-700 space-y-1">
-                    <p>
-                      <span className="font-medium">Điểm đi:</span>{" "}
-                      {ticket.from_location}
-                    </p>
-                    <p>
-                      <span className="font-medium">Điểm đến:</span>{" "}
-                      {ticket.to_location}
-                    </p>
-                    <p>
-                      <span className="font-medium">Mã chuyến đi:</span>{" "}
-                      {ticket.trip_id}
-                    </p>
-                    <p>
-                      <span className="font-medium">Họ và tên:</span>{" "}
-                      {ticket.name}
-                    </p>
-                    <p>
-                      <span className="font-medium">Số điện thoại:</span>{" "}
-                      {ticket.phone}
-                    </p>
-                    <p>
-                      <span className="font-medium">Email:</span> {ticket.email}
-                    </p>
-                    <p>
-                      <span className="font-medium">Số ghế:</span>{" "}
-                      {ticket.seat_number}
-                    </p>
-                    <p>
-                      <span className="font-medium">
-                        Trạng thái thanh toán:
-                      </span>{" "}
-                      <span className="text-red-600">{ticket.status}</span>
-                    </p>
-                    <div className="text-sm font-medium flex flex-col sm:flex-row gap-2">
-                      Vui lòng thanh toán trong:
-                      <span className="text-red-600 flex gap-2">
-                        <CountdownTimer seatExpiresAt={expiresAtLocal || ""} />{" "}
-                        (Nếu không thanh toán trong thời gian quy định vé sẽ
-                        hủy)
-                      </span>
-                    </div>
-                  </div>
+            <div className="p-4 border border-gray-200 rounded-lg shadow-custom bg-gray-50">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-black">
+                  Mã vé: <b>{bookTicketsData?.ticket_id}</b> (có thể dùng mã vé
+                  để tra cứu vé trên hệ thống)
+                </span>
+              </div>
+              <div className="mt-2 text-gray-700 space-y-1">
+                <p>
+                  <span className="font-medium">Điểm đi:</span>{" "}
+                  {bookTicketsData?.from_location}
+                </p>
+                <p>
+                  <span className="font-medium">Điểm đến:</span>{" "}
+                  {bookTicketsData?.to_location}
+                </p>
+                <p>
+                  <span className="font-medium">Mã chuyến đi:</span>{" "}
+                  {bookTicketsData?.trip_id}
+                </p>
+                <p>
+                  <span className="font-medium">Họ và tên:</span>{" "}
+                  {bookTicketsData?.name}
+                </p>
+                <p>
+                  <span className="font-medium">Số điện thoại:</span>{" "}
+                  {bookTicketsData?.phone}
+                </p>
+                <p>
+                  <span className="font-medium">Email:</span>{" "}
+                  {bookTicketsData?.email}
+                </p>
+                <p>
+                  <span className="font-medium">Số ghế:</span>{" "}
+                  {bookTicketsData?.seat_number}
+                </p>
+                <p>
+                  <span className="font-medium">Trạng thái thanh toán:</span>{" "}
+                  <span className="text-red-600">
+                    {bookTicketsData?.status}
+                  </span>
+                </p>
+                <div className="text-sm font-medium flex flex-col sm:flex-row gap-2">
+                  Vui lòng thanh toán trong:
+                  <span className="text-red-600 flex gap-2">
+                    <CountdownTimer seatExpiresAt={expiresAtLocal || ""} /> (Nếu
+                    không thanh toán trong thời gian quy định vé sẽ hủy)
+                  </span>
                 </div>
-              );
-            })}
+              </div>
+            </div>
           </div>
 
           {/* Nút quay lại */}

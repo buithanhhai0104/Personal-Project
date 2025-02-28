@@ -40,7 +40,7 @@ interface UpdateTicketStatusResponse {
 
 export const updateTicketStatus = async (
   url: string,
-  changeTicketStatus: IChangeTicketStatus[]
+  changeTicketStatus: IChangeTicketStatus
 ): Promise<UpdateTicketStatusResponse> => {
   try {
     const response = await axios.put(url, { changeTicketStatus });

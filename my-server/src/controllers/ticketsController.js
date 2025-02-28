@@ -32,6 +32,8 @@ const ticketsController = {
         from_location,
       } = req.body;
 
+      console.log(seat_numbers);
+
       if (!Array.isArray(seat_numbers) || seat_numbers.length === 0) {
         return res.status(400).json({ error: "Danh sách ghế không hợp lệ." });
       }
