@@ -20,7 +20,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
 }) => {
   const totalAmount = detailTrip.price * selectedSeats.length;
   const [successfulPayment, setSuccessfulPayment] = useState<boolean>(false);
-
+  console.log(bookTicketsData);
   const handlePayment = async (details: unknown) => {
     if (bookTicketsData) {
       const result = await handlePaymentSuccess(bookTicketsData);
