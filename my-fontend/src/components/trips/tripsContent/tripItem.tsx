@@ -10,6 +10,11 @@ interface TripsItemProps {
   tripItem: ITrips;
 }
 
+interface ISeat {
+  seat_number: string;
+  status: string;
+}
+
 const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
   const { user } = useUser();
   const router = useRouter();
@@ -24,12 +29,18 @@ const TripItem: React.FC<TripsItemProps> = ({ tripItem }) => {
     }
   };
 
-  // Kiểm tra seats trước khi filter
-  const emptySeats = useMemo(() => {
-    if (!Array.isArray(tripItem.seats)) return [];
-    return tripItem.seats.filter((seat) => seat.status === "available");
+  const seats: ISeat[] = useMemo(() => {
+    try {
+      return typeof tripItem.seats === "string"
+        ? JSON.parse(tripItem.seats)
+        : tripItem.seats;
+    } catch (error) {
+      console.error("Lỗi parse seats:", error);
+      return [];
+    }
   }, [tripItem.seats]);
 
+  const emptySeats = seats.filter((seat) => seat.status === "available");
   // Format thời gian
   const formatTime = (time?: string) =>
     time?.slice(0, -3) || "Không có thông tin";
