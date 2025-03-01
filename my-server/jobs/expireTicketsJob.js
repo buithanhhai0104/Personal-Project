@@ -26,6 +26,8 @@ function startExpireTicketsJob() {
       }
     });
 
+    console.log(`Vé ${ticket.ticket_id} có danh sách ghế:`, seatNumbers);
+
     Object.keys(tripsToUpdate).forEach((tripId) => {
       Trip.getTripById(tripId, (err, results) => {
         if (err) {
@@ -64,12 +66,17 @@ function startExpireTicketsJob() {
             .map((s) => s.trim()) // Loại bỏ khoảng trắng thừa
             .filter((s) => s !== ""); // Bỏ phần tử rỗng
 
-          seats = seats.map((seat) => {
+          const updatedSeats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
-              seat.status = "available";
+              return { ...seat, status: "available" };
             }
             return seat;
           });
+
+          console.log(
+            `Sau khi cập nhật, seats (tripId: ${tripId}):`,
+            updatedSeats
+          );
 
           Trip.updateTripSeats(tripId, JSON.stringify(seats), (err) => {
             if (err) {
