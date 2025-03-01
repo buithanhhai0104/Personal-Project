@@ -53,23 +53,12 @@ const Ticket = {
     });
   },
 
-  updateMultipleTicketStatus: (ticketIds, status) => {
-    return new Promise((resolve, reject) => {
-      if (!Array.isArray(ticketIds) || ticketIds.length === 0) {
-        console.error("❌ Lỗi: ticketIds phải là một mảng hợp lệ", ticketIds);
-        return reject(new Error("Dữ liệu đầu vào không hợp lệ"));
-      }
-
-      const query = `UPDATE tickets SET status = ? WHERE ticket_id IN (?)`;
-
-      db.query(query, [status, ticketIds], (err, result) => {
-        if (err) {
-          console.error("❌ Lỗi khi cập nhật trạng thái vé:", err);
-          return reject(err);
-        }
-        resolve(result);
-      });
-    });
+  updateMultipleTicketStatus: async (ticketIds, status) => {
+    if (!Array.isArray(ticketIds) || ticketIds.length === 0) {
+      throw new Error("Danh sách ticket_id không hợp lệ");
+    }
+    const query = `UPDATE tickets SET status = ? WHERE ticket_id IN (?)`;
+    await db.promise().query(query, [status, ticketIds]);
   },
   getUnpaidTickets: (callback) => {
     db.query(

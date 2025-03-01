@@ -1,3 +1,7 @@
+const Ticket = require("../src/models/ticketsModel");
+const db = require("../src/config/db");
+const moment = require("moment");
+
 async function startExpireTicketsJob() {
   console.log("🔄 Kiểm tra vé hết hạn...");
 
@@ -15,16 +19,12 @@ async function startExpireTicketsJob() {
     const tripsToUpdate = {};
 
     tickets.forEach((ticket) => {
-      const currentTime = moment();
-      const expiresAt = moment(ticket.expires_at);
-
-      if (currentTime.isAfter(expiresAt)) {
+      if (moment().isAfter(moment(ticket.expires_at))) {
         console.log(`⚠️ Vé ${ticket.ticket_id} hết hạn`);
 
         if (!tripsToUpdate[ticket.trip_id]) {
           tripsToUpdate[ticket.trip_id] = [];
         }
-
         tripsToUpdate[ticket.trip_id].push(ticket);
       }
     });
@@ -62,7 +62,6 @@ async function startExpireTicketsJob() {
         ]);
 
         const ticketIds = tripsToUpdate[tripId].map((t) => t.ticket_id);
-
         await Ticket.updateMultipleTicketStatus(
           ticketIds,
           "Hủy đặt vé do chưa thanh toán"
@@ -79,3 +78,5 @@ async function startExpireTicketsJob() {
     }
   });
 }
+
+module.exports = startExpireTicketsJob;
