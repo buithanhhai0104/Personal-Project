@@ -1,82 +1,96 @@
 const Ticket = require("../src/models/ticketsModel");
-const db = require("../src/config/db");
+const Trip = require("../src/models/tripsModel");
 const moment = require("moment");
 
-async function startExpireTicketsJob() {
-  console.log("🔄 Kiểm tra vé hết hạn...");
+function startExpireTicketsJob() {
+  console.log("Kiểm tra vé hết hạn...");
 
-  Ticket.getUnpaidTickets(async (err, tickets) => {
+  // Lấy các vé chưa thanh toán
+  Ticket.getUnpaidTickets((err, tickets) => {
     if (err) {
-      console.error("❌ Lỗi khi lấy vé chưa thanh toán:", err);
+      console.error("Lỗi khi lấy vé chưa thanh toán:", err);
       return;
     }
 
-    if (!tickets.length) {
-      console.log("✅ Không có vé hết hạn.");
-      return;
-    }
-
+    // Nhóm vé theo trip_id để xử lý một lần
     const tripsToUpdate = {};
 
     tickets.forEach((ticket) => {
-      if (moment().isAfter(moment(ticket.expires_at))) {
-        console.log(`⚠️ Vé ${ticket.ticket_id} hết hạn`);
+      const currentTime = moment();
+      const expiresAt = moment(ticket.expires_at);
 
+      if (currentTime.isAfter(expiresAt)) {
+        console.log(`Vé ${ticket.ticket_id} hết hạn`);
+
+        // Nhóm vé theo trip_id để xử lý tất cả ghế cùng một chuyến
         if (!tripsToUpdate[ticket.trip_id]) {
           tripsToUpdate[ticket.trip_id] = [];
         }
+
         tripsToUpdate[ticket.trip_id].push(ticket);
       }
     });
 
-    for (const tripId of Object.keys(tripsToUpdate)) {
-      try {
-        const connection = await db.promise().getConnection();
-        await connection.beginTransaction();
-
-        const [results] = await connection.query(
-          `SELECT seats FROM trips WHERE trip_id = ?`,
-          [tripId]
-        );
-
-        if (!results.length) {
-          throw new Error(`Không tìm thấy chuyến đi ${tripId}`);
+    // Xử lý từng chuyến xe
+    Object.keys(tripsToUpdate).forEach((tripId) => {
+      Trip.getTripById(tripId, (err, results) => {
+        if (err) {
+          console.error(`Lỗi khi lấy thông tin chuyến đi: ${tripId}`, err);
+          return;
         }
 
-        let seats = JSON.parse(results[0].seats || "[]");
+        if (!results || results.length === 0) {
+          console.error(`Không tìm thấy chuyến đi: ${tripId}`);
+          return;
+        }
 
+        const trip = results[0];
+        const seats = Array.isArray(trip.seats)
+          ? trip.seats
+          : JSON.parse(trip.seats || "[]");
+
+        // Cập nhật ghế cho tất cả vé của chuyến
         tripsToUpdate[tripId].forEach((ticket) => {
-          const seatNumbers = ticket.seat_number.split(",");
-
-          seats = seats.map((seat) => {
-            if (seatNumbers.includes(seat.seat_number)) {
-              seat.status = "available";
+          const updatedSeats = seats.map((seat) => {
+            if (seat.seat_number === ticket.seat_number) {
+              seat.status = "available"; // Cập nhật trạng thái ghế
             }
             return seat;
           });
+
+          // Cập nhật ghế trong chuyến xe
+          Trip.updateTripSeats(tripId, updatedSeats, (err) => {
+            if (err) {
+              console.error(
+                `Lỗi khi cập nhật ghế cho chuyến đi ${tripId}:`,
+                err
+              );
+              return;
+            }
+
+            // Cập nhật vé thành hết hạn
+            Ticket.updateTicketStatus(
+              ticket.ticket_id,
+              "Hủy đặt vé do chưa thanh toán",
+              (err) => {
+                if (err) {
+                  console.error(
+                    `Lỗi khi cập nhật trạng thái vé ${ticket.ticket_id}:`,
+                    err
+                  );
+                  return;
+                }
+
+                console.log(
+                  `Ghế ${ticket.seat_number} trên chuyến đi ${tripId} đã được cập nhật thành "available"`
+                );
+              }
+            );
+          });
         });
-
-        await connection.query(`UPDATE trips SET seats = ? WHERE trip_id = ?`, [
-          JSON.stringify(seats),
-          tripId,
-        ]);
-
-        const ticketIds = tripsToUpdate[tripId].map((t) => t.ticket_id);
-        await Ticket.updateMultipleTicketStatus(
-          ticketIds,
-          "Hủy đặt vé do chưa thanh toán"
-        );
-
-        await connection.commit();
-        connection.release();
-        console.log(
-          `✅ Đã hủy ${ticketIds.length} vé trên chuyến đi ${tripId}`
-        );
-      } catch (err) {
-        console.error(`❌ Lỗi xử lý vé hết hạn cho chuyến ${tripId}:`, err);
-      }
-    }
+      });
+    });
   });
 }
 
-module.exports = startExpireTicketsJob;
+module.exports = { startExpireTicketsJob };
