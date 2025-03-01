@@ -32,7 +32,8 @@ const ticketsController = {
         from_location,
       } = req.body;
 
-      console.log(seat_numbers);
+      console.log("🚀 seat_numbers:", seat_numbers);
+      console.log("🚀 Kiểu dữ liệu:", typeof seat_numbers);
 
       if (!Array.isArray(seat_numbers) || seat_numbers.length === 0) {
         return res.status(400).json({ error: "Danh sách ghế không hợp lệ." });
@@ -85,7 +86,9 @@ const ticketsController = {
           ticket_id,
           user_id,
           trip_id,
-          seat_numbers: seat_numbers.join(","),
+          seat_numbers: Array.isArray(seat_numbers)
+            ? seat_numbers.join(",")
+            : seat_numbers,
           email,
           name,
           phone,
