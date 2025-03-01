@@ -8,8 +8,11 @@ const Ticket = {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `;
 
-    // Chuyển mảng seat_number thành chuỗi ghép bằng dấu phẩy
-    const seatNumbers = ticketData.seat_numbers.join(",");
+    const seatNumbers = Array.isArray(ticketData.seat_numbers)
+      ? ticketData.seat_numbers.join(",")
+      : typeof ticketData.seat_numbers === "string"
+      ? ticketData.seat_numbers // Nếu đã là chuỗi, giữ nguyên
+      : ""; // Nếu null hoặc undefined, gán thành chuỗi rỗng
 
     const values = [
       ticketData.ticket_id,
