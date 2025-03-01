@@ -70,8 +70,10 @@ function startExpireTicketsJob() {
 
             // Cập nhật vé thành hết hạn
             Ticket.updateTicketStatus(
-              ticket.ticket_id,
-              "Hủy đặt vé do chưa thanh toán",
+              {
+                ticket_id: ticket.ticket_id,
+                status: "Hủy đặt vé do chưa thanh toán",
+              },
               (err) => {
                 if (err) {
                   console.error(
@@ -82,7 +84,7 @@ function startExpireTicketsJob() {
                 }
 
                 console.log(
-                  `Ghế ${ticket.seat_number} trên chuyến đi ${tripId} đã được cập nhật thành "available"`
+                  `Vé ${ticket.ticket_id} đã bị hủy do chưa thanh toán.`
                 );
               }
             );
