@@ -79,4 +79,4 @@ async function startExpireTicketsJob() {
   });
 }
 
-module.exports = startExpireTicketsJob;
+module.exports = { startExpireTicketsJob };

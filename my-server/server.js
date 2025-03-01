@@ -11,6 +11,7 @@ const ticketsRoutes = require("./src/routes/ticketsRoutes");
 const newsRoutes = require("./src/routes/newsRoutes");
 const paypalRoutes = require("./src/routes/paypalRoutes");
 const { startExpireTicketsJob } = require("./jobs/expireTicketsJob");
+const { startExpireTicketsJob } = require("./jobs/expireTicketsJob"); // ✅ Import đúng cách
 
 const app = express();
 const port = process.env.PORT || 4000;
