@@ -26,8 +26,6 @@ function startExpireTicketsJob() {
       }
     });
 
-    console.log(`Vé ${ticket.ticket_id} có danh sách ghế:`, seatNumbers);
-
     Object.keys(tripsToUpdate).forEach((tripId) => {
       Trip.getTripById(tripId, (err, results) => {
         if (err) {
@@ -44,7 +42,6 @@ function startExpireTicketsJob() {
         let seats;
 
         try {
-          // Kiểm tra và parse dữ liệu seats từ MySQL
           seats =
             typeof trip.seats === "string"
               ? JSON.parse(trip.seats)
@@ -59,24 +56,23 @@ function startExpireTicketsJob() {
           return;
         }
 
-        tripsToUpdate[tripId].forEach((ticket) => {
+        const ticketsForTrip = tripsToUpdate[tripId];
+
+        ticketsForTrip.forEach((ticket) => {
           let seatNumbers = (ticket.seat_numbers ?? "")
             .toString()
             .split(",")
-            .map((s) => s.trim()) // Loại bỏ khoảng trắng thừa
-            .filter((s) => s !== ""); // Bỏ phần tử rỗng
+            .map((s) => s.trim())
+            .filter((s) => s !== "");
 
-          const updatedSeats = seats.map((seat) => {
+          seats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
               return { ...seat, status: "available" };
             }
             return seat;
           });
 
-          console.log(
-            `Sau khi cập nhật, seats (tripId: ${tripId}):`,
-            updatedSeats
-          );
+          console.log(`Sau khi cập nhật, seats (tripId: ${tripId}):`, seats);
 
           Trip.updateTripSeats(tripId, JSON.stringify(seats), (err) => {
             if (err) {
