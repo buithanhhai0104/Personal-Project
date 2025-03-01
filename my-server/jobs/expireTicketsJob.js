@@ -5,14 +5,12 @@ const moment = require("moment");
 function startExpireTicketsJob() {
   console.log("Kiểm tra vé hết hạn...");
 
-  // Lấy các vé chưa thanh toán
   Ticket.getUnpaidTickets((err, tickets) => {
     if (err) {
       console.error("Lỗi khi lấy vé chưa thanh toán:", err);
       return;
     }
 
-    // Nhóm vé theo trip_id để xử lý một lần
     const tripsToUpdate = {};
 
     tickets.forEach((ticket) => {
@@ -21,17 +19,13 @@ function startExpireTicketsJob() {
 
       if (currentTime.isAfter(expiresAt)) {
         console.log(`Vé ${ticket.ticket_id} hết hạn`);
-
-        // Nhóm vé theo trip_id để xử lý tất cả ghế cùng một chuyến
         if (!tripsToUpdate[ticket.trip_id]) {
           tripsToUpdate[ticket.trip_id] = [];
         }
-
         tripsToUpdate[ticket.trip_id].push(ticket);
       }
     });
 
-    // Xử lý từng chuyến xe
     Object.keys(tripsToUpdate).forEach((tripId) => {
       Trip.getTripById(tripId, (err, results) => {
         if (err) {
@@ -45,21 +39,24 @@ function startExpireTicketsJob() {
         }
 
         const trip = results[0];
-        const seats = Array.isArray(trip.seats)
-          ? trip.seats
-          : JSON.parse(trip.seats || "[]");
+        let seats = [];
+        try {
+          seats = JSON.parse(trip.seats || "[]");
+        } catch (parseErr) {
+          console.error(`Lỗi khi parse danh sách ghế:`, parseErr);
+          return;
+        }
 
-        // Cập nhật ghế cho tất cả vé của chuyến
         tripsToUpdate[tripId].forEach((ticket) => {
-          const updatedSeats = seats.map((seat) => {
-            if (seat.seat_number === ticket.seat_number) {
-              seat.status = "available"; // Cập nhật trạng thái ghế
+          const seatNumbers = ticket.seat_numbers.split(",");
+          seats = seats.map((seat) => {
+            if (seatNumbers.includes(seat.seat_number)) {
+              seat.status = "available";
             }
             return seat;
           });
 
-          // Cập nhật ghế trong chuyến xe
-          Trip.updateTripSeats(tripId, updatedSeats, (err) => {
+          Trip.updateTripSeats(tripId, JSON.stringify(seats), (err) => {
             if (err) {
               console.error(
                 `Lỗi khi cập nhật ghế cho chuyến đi ${tripId}:`,
@@ -68,7 +65,6 @@ function startExpireTicketsJob() {
               return;
             }
 
-            // Cập nhật vé thành hết hạn
             Ticket.updateTicketStatus(
               {
                 ticket_id: ticket.ticket_id,
@@ -82,7 +78,6 @@ function startExpireTicketsJob() {
                   );
                   return;
                 }
-
                 console.log(
                   `Vé ${ticket.ticket_id} đã bị hủy do chưa thanh toán.`
                 );
