@@ -21,6 +21,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
   const totalAmount = detailTrip.price * selectedSeats.length;
   const [successfulPayment, setSuccessfulPayment] = useState<boolean>(false);
   console.log(bookTicketsData);
+
   const handlePayment = async (details: unknown) => {
     if (bookTicketsData) {
       const result = await handlePaymentSuccess(bookTicketsData);
@@ -43,6 +44,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
   const expiresAtLocal = new Date(
     bookTicketsData?.expires_at + " UTC"
   ).toLocaleString();
+
   return (
     <div className="min-h-screen w-[90%] sm:w-[60%] flex items-center justify-center">
       {successfulPayment ? (

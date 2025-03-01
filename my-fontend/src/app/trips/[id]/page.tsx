@@ -83,7 +83,7 @@ const TripPage = ({ params }: { params: Promise<{ id: number }> }) => {
       phone: bookTicketPhone,
       email: bookTicketEmail,
     };
-    console.log(selectedSeats);
+    console.log(ticketData);
     try {
       const bookTicket = await bookTickets(ticketData);
       console.log(bookTicket);
