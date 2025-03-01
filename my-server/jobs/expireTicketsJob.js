@@ -42,11 +42,11 @@ function startExpireTicketsJob() {
         let seats;
 
         try {
-          // Kiểm tra và parse dữ liệu seats từ MySQL
           seats =
             typeof trip.seats === "string"
               ? JSON.parse(trip.seats)
               : trip.seats;
+
           if (!Array.isArray(seats))
             throw new Error("Dữ liệu seats không hợp lệ");
         } catch (error) {
@@ -60,9 +60,10 @@ function startExpireTicketsJob() {
         tripsToUpdate[tripId].forEach((ticket) => {
           let seatNumbers =
             typeof ticket.seat_numbers === "string"
-              ? ticket.seat_numbers.split(",")
+              ? ticket.seat_numbers.split(",").map((s) => s.trim())
               : [];
 
+          // Cập nhật trạng thái ghế
           seats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
               seat.status = "available";
@@ -70,6 +71,12 @@ function startExpireTicketsJob() {
             return seat;
           });
 
+          console.log(
+            `Seats sau khi cập nhật cho trip ${tripId}:`,
+            JSON.stringify(seats)
+          );
+
+          // Cập nhật ghế trước khi cập nhật trạng thái vé
           Trip.updateTripSeats(tripId, JSON.stringify(seats), (err) => {
             if (err) {
               console.error(
@@ -79,6 +86,7 @@ function startExpireTicketsJob() {
               return;
             }
 
+            // Cập nhật trạng thái vé sau khi cập nhật ghế thành công
             Ticket.updateTicketStatus(
               {
                 ticket_id: ticket.ticket_id,
