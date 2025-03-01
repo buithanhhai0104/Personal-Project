@@ -38,12 +38,18 @@ function startExpireTicketsJob() {
           return;
         }
 
-        const trip = results[0];
-        let seats = [];
+        let trip = results[0];
+        let seats;
+
         try {
-          seats = JSON.parse(trip.seats || "[]");
-        } catch (parseErr) {
-          console.error(`Lỗi khi parse danh sách ghế:`, parseErr);
+          seats =
+            typeof trip.seats === "string"
+              ? JSON.parse(trip.seats)
+              : trip.seats;
+          if (!Array.isArray(seats))
+            throw new Error("Dữ liệu seats không hợp lệ");
+        } catch (error) {
+          console.error("Lỗi khi parse danh sách ghế:", error);
           return;
         }
 

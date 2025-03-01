@@ -79,7 +79,7 @@ const ticketsController = {
         const ticket_id = uuidv4();
         const expires_at = moment
           .utc()
-          .add(10, "minutes")
+          .add(3, "minutes")
           .format("YYYY-MM-DD HH:mm:ss");
 
         const ticketData = {
