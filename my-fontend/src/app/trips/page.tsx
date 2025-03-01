@@ -17,7 +17,7 @@ export default function Trips() {
       setNewTrips([]);
     }
   }, [tripsData]);
-
+  console.log(tripsData);
   return (
     <div className="flex flex-col mt-24 mb-10 w-full max-w-[1200px] mx-auto">
       <SearchBox />
