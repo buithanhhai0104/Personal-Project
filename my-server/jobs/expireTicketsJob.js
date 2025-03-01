@@ -54,7 +54,11 @@ function startExpireTicketsJob() {
         }
 
         tripsToUpdate[tripId].forEach((ticket) => {
-          const seatNumbers = ticket.seat_numbers.split(",");
+          let seatNumbers =
+            typeof ticket.seat_number === "string"
+              ? ticket.seat_number.split(",")
+              : [];
+
           seats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
               seat.status = "available";
