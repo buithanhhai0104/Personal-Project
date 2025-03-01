@@ -91,19 +91,9 @@ const Trip = {
     );
   },
 
-  updateTripSeats: (trip_id, seats, callback) => {
-    let seatsData;
-    try {
-      seatsData = JSON.stringify(seats);
-    } catch (error) {
-      return callback(error);
-    }
-
-    const query = `UPDATE trips SET seats = ? WHERE trip_id = ?`;
-    db.query(query, [seatsData, trip_id], (err, result) => {
-      if (err) return callback(err);
-      callback(null, result);
-    });
+  updateTripSeats: (id, seats, callback) => {
+    const query = `UPDATE trips SET seats = ? WHERE id = ?`;
+    db.query(query, [JSON.stringify(seats), id], callback);
   },
 
   getSeatsByTripId: async (tripId) => {
