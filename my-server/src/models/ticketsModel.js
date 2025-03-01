@@ -37,57 +37,48 @@ const Ticket = {
     db.query(query, [ticket_id], callback);
   },
 
-  updateMultipleTicketStatus: (tickets, callback) => {
-    db.getConnection((err, connection) => {
+  updateMultipleTicketStatus: (ticket, callback) => {
+  if (typeof ticket !== "object" || Array.isArray(ticket)) {
+    console.error("Lỗi: ticket phải là một object hợp lệ", ticket);
+    return callback(new Error("Dữ liệu đầu vào không hợp lệ"));
+  }
+
+  db.getConnection((err, connection) => {
+    if (err) {
+      return callback(err);
+    }
+
+    const query = `UPDATE tickets SET status = ? WHERE ticket_id = ?`;
+
+    connection.beginTransaction((err) => {
       if (err) {
+        connection.release();
         return callback(err);
       }
 
-      const queries = tickets.map(
-        (ticket) =>
-          `UPDATE tickets SET status = '${ticket.status}' WHERE ticket_id = '${ticket.ticket_id}';`
-      );
-
-      connection.beginTransaction(async (err) => {
+      connection.query(query, [ticket.status, ticket.ticket_id], (err) => {
         if (err) {
-          connection.release();
-          return callback(err);
-        }
-
-        try {
-          for (let index = 0; index < queries.length; index++) {
-            const query = queries[index];
-            await new Promise((resolve, reject) => {
-              connection.query(query, (err) => {
-                if (err) {
-                  reject(new Error(`Failed at query #${index + 1}`));
-                } else {
-                  resolve();
-                }
-              });
-            });
-          }
-
-          // Commit giao dịch
-          connection.commit((err) => {
-            if (err) {
-              return connection.rollback(() => {
-                connection.release();
-                callback(new Error("Transaction failed."));
-              });
-            }
-            connection.release();
-            callback(null);
-          });
-        } catch (err) {
           return connection.rollback(() => {
             connection.release();
-            callback(err);
+            callback(new Error(`Lỗi khi cập nhật vé: ${err.message}`));
           });
         }
+
+        // Commit giao dịch
+        connection.commit((err) => {
+          if (err) {
+            return connection.rollback(() => {
+              connection.release();
+              callback(new Error("Giao dịch thất bại."));
+            });
+          }
+          connection.release();
+          callback(null);
+        });
       });
     });
-  },
+  });
+};
 
   getUnpaidTickets: (callback) => {
     db.query(
