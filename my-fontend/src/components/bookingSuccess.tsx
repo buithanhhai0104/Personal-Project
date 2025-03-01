@@ -81,9 +81,9 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
                 <p>
                   <span className="font-medium">Số ghế:</span>{" "}
                   <span className="flex gap-2">
-                    {bookTicketsData?.seat_numbers?.map((seat, index) => {
+                    {/* {bookTicketsData?.seat_numbers?.map((seat, index) => {
                       return <span key={index}>{seat}</span>;
-                    })}
+                    })} */}
                   </span>
                 </p>
 
@@ -146,9 +146,9 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
                 </p>
                 <p>
                   <span className="font-medium">Số ghế:</span>{" "}
-                  {bookTicketsData?.seat_numbers?.map((seat, index) => {
+                  {/* {bookTicketsData?.seat_numbers?.map((seat, index) => {
                     return <span key={index}>{seat}</span>;
-                  })}
+                  })} */}
                 </p>
                 <p>
                   <span className="font-medium">Trạng thái thanh toán:</span>{" "}
