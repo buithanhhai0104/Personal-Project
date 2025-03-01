@@ -58,15 +58,15 @@ function startExpireTicketsJob() {
         }
 
         tripsToUpdate[tripId].forEach((ticket) => {
-          // Kiểm tra và xử lý lỗi nếu seat_number không tồn tại
-          let seatNumbers =
-            typeof ticket.seat_numbers === "string"
-              ? ticket.seat_numbers.split(",")
-              : [];
+          let seatNumbers = (ticket.seat_numbers ?? "")
+            .toString()
+            .split(",")
+            .map((s) => s.trim()) // Loại bỏ khoảng trắng thừa
+            .filter((s) => s !== ""); // Bỏ phần tử rỗng
 
           seats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
-              seat.status = "available"; // Đặt lại ghế thành trạng thái trống
+              seat.status = "available";
             }
             return seat;
           });
