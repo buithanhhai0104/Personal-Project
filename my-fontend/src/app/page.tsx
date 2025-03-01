@@ -36,7 +36,7 @@ export default async function Home() {
   } catch (error) {
     console.error("Error fetching data:", error);
   }
-
+  console.log(tripsData);
   return (
     <>
       <div className="">
