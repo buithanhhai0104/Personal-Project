@@ -160,9 +160,11 @@ const ticketsController = {
 
   updateMultipleTicketStatus: async (req, res) => {
     const { changeTicketStatus } = req.body;
-    if (!Array.isArray(changeTicketStatus) || !changeTicketStatus.length)
-      return res.status(400).json({ error: "Dữ liệu vé không hợp lệ." });
-
+    if (!changeTicketStatus.ticket_id || !changeTicketStatus.status) {
+      return res
+        .status(400)
+        .json({ error: "Thiếu thông tin vé hoặc trạng thái." });
+    }
     try {
       await Ticket.updateMultipleTicketStatus(changeTicketStatus);
       res.status(200).json({ message: "Cập nhật trạng thái vé thành công." });
