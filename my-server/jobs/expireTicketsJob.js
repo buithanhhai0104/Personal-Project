@@ -64,7 +64,7 @@ function startExpireTicketsJob() {
               : [];
 
           // Cập nhật trạng thái ghế
-          seats = seats.map((seat) => {
+          let currentSeats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
               seat.status = "available";
             }
@@ -73,11 +73,11 @@ function startExpireTicketsJob() {
 
           console.log(
             `Seats sau khi cập nhật cho trip ${tripId}:`,
-            JSON.stringify(seats)
+            JSON.stringify(currentSeats)
           );
 
           // Cập nhật ghế trước khi cập nhật trạng thái vé
-          Trip.updateTripSeats(tripId, JSON.stringify(seats), (err) => {
+          Trip.updateTripSeats(tripId, JSON.stringify(currentSeats), (err) => {
             if (err) {
               console.error(
                 `Lỗi khi cập nhật ghế cho chuyến đi ${tripId}:`,
