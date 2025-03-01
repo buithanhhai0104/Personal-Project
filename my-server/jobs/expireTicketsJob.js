@@ -42,6 +42,7 @@ function startExpireTicketsJob() {
         let seats;
 
         try {
+          // Kiểm tra và parse dữ liệu seats từ MySQL
           seats =
             typeof trip.seats === "string"
               ? JSON.parse(trip.seats)
@@ -56,23 +57,18 @@ function startExpireTicketsJob() {
           return;
         }
 
-        const ticketsForTrip = tripsToUpdate[tripId];
-
-        ticketsForTrip.forEach((ticket) => {
-          let seatNumbers = (ticket.seat_numbers ?? "")
-            .toString()
-            .split(",")
-            .map((s) => s.trim())
-            .filter((s) => s !== "");
+        tripsToUpdate[tripId].forEach((ticket) => {
+          let seatNumbers =
+            typeof ticket.seat_numbers === "string"
+              ? ticket.seat_numbers.split(",")
+              : [];
 
           seats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
-              return { ...seat, status: "available" };
+              seat.status = "available";
             }
             return seat;
           });
-
-          console.log(`Sau khi cập nhật, seats (tripId: ${tripId}):`, seats);
 
           Trip.updateTripSeats(tripId, JSON.stringify(seats), (err) => {
             if (err) {
