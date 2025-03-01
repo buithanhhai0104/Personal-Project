@@ -60,28 +60,28 @@ app.post("/send-email", async (req, res) => {
     const { to, subject, tickets } = req.body;
 
     // Kiểm tra dữ liệu hợp lệ
-    if (!to || !subject || !Array.isArray(tickets) || tickets.length === 0) {
+    if (
+      !to ||
+      !subject ||
+      typeof tickets !== "object" ||
+      Array.isArray(tickets)
+    ) {
       console.error("Dữ liệu không hợp lệ:", req.body);
       return res.status(400).json({ error: "Dữ liệu gửi email không hợp lệ" });
     }
-
     // Gửi email với từng vé
-    const emailContent = tickets
-      .map(
-        (ticket) => `
+    const emailContent = `
       <div style="padding: 16px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-        <p><strong>Mã vé:</strong> ${ticket.ticket_id}</p>
-        <p><strong>Điểm đi:</strong> ${ticket.from_location}</p>
-        <p><strong>Điểm đến:</strong> ${ticket.to_location}</p>
-        <p><strong>Mã chuyến đi:</strong> ${ticket.trip_id}</p>
-        <p><strong>Họ và tên:</strong> ${ticket.name}</p>
-        <p><strong>Số điện thoại:</strong> ${ticket.phone}</p>
-        <p><strong>Email:</strong> ${ticket.email}</p>
-        <p><strong>Số ghế:</strong> ${ticket.seat_number}</p>
+        <p><strong>Mã vé:</strong> ${tickets.ticket_id}</p>
+        <p><strong>Điểm đi:</strong> ${tickets.from_location}</p>
+        <p><strong>Điểm đến:</strong> ${tickets.to_location}</p>
+        <p><strong>Mã chuyến đi:</strong> ${tickets.trip_id}</p>
+        <p><strong>Họ và tên:</strong> ${tickets.name}</p>
+        <p><strong>Số điện thoại:</strong> ${tickets.phone}</p>
+        <p><strong>Email:</strong> ${tickets.email}</p>
+        <p><strong>Số ghế:</strong> ${tickets.seat_number}</p>
       </div>
-      `
-      )
-      .join("<hr>");
+    `;
 
     // Gửi email
     const data = await resend.emails.send({
