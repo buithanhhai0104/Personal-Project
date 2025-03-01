@@ -38,47 +38,47 @@ const Ticket = {
   },
 
   updateMultipleTicketStatus: (ticket, callback) => {
-  if (typeof ticket !== "object" || Array.isArray(ticket)) {
-    console.error("Lỗi: ticket phải là một object hợp lệ", ticket);
-    return callback(new Error("Dữ liệu đầu vào không hợp lệ"));
-  }
-
-  db.getConnection((err, connection) => {
-    if (err) {
-      return callback(err);
+    if (typeof ticket !== "object" || Array.isArray(ticket)) {
+      console.error("Lỗi: ticket phải là một object hợp lệ", ticket);
+      return callback(new Error("Dữ liệu đầu vào không hợp lệ"));
     }
 
-    const query = `UPDATE tickets SET status = ? WHERE ticket_id = ?`;
-
-    connection.beginTransaction((err) => {
+    db.getConnection((err, connection) => {
       if (err) {
-        connection.release();
         return callback(err);
       }
 
-      connection.query(query, [ticket.status, ticket.ticket_id], (err) => {
+      const query = `UPDATE tickets SET status = ? WHERE ticket_id = ?`;
+
+      connection.beginTransaction((err) => {
         if (err) {
-          return connection.rollback(() => {
-            connection.release();
-            callback(new Error(`Lỗi khi cập nhật vé: ${err.message}`));
-          });
+          connection.release();
+          return callback(err);
         }
 
-        // Commit giao dịch
-        connection.commit((err) => {
+        connection.query(query, [ticket.status, ticket.ticket_id], (err) => {
           if (err) {
             return connection.rollback(() => {
               connection.release();
-              callback(new Error("Giao dịch thất bại."));
+              callback(new Error(`Lỗi khi cập nhật vé: ${err.message}`));
             });
           }
-          connection.release();
-          callback(null);
+
+          // Commit giao dịch
+          connection.commit((err) => {
+            if (err) {
+              return connection.rollback(() => {
+                connection.release();
+                callback(new Error("Giao dịch thất bại."));
+              });
+            }
+            connection.release();
+            callback(null);
+          });
         });
       });
     });
-  });
-};
+  },
 
   getUnpaidTickets: (callback) => {
     db.query(
