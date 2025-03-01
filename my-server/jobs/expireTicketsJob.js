@@ -62,7 +62,7 @@ function startExpireTicketsJob() {
             typeof ticket.seat_numbers === "string"
               ? ticket.seat_numbers.split(",").map((s) => s.trim())
               : [];
-
+          console.log(seatNumbers);
           // Cập nhật trạng thái ghế
           let currentSeats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
