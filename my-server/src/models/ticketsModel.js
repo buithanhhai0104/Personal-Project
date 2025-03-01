@@ -37,46 +37,19 @@ const Ticket = {
     db.query(query, [ticket_id], callback);
   },
 
-  updateMultipleTicketStatus: (ticket, callback) => {
-    if (typeof ticket !== "object" || Array.isArray(ticket)) {
+  updateTicketStatus: (ticket, callback) => {
+    if (!ticket || typeof ticket !== "object" || !ticket.ticket_id) {
       console.error("Lỗi: ticket phải là một object hợp lệ", ticket);
       return callback(new Error("Dữ liệu đầu vào không hợp lệ"));
     }
 
-    db.getConnection((err, connection) => {
+    const query = `UPDATE tickets SET status = ? WHERE ticket_id = ?`;
+    db.query(query, [ticket.status, ticket.ticket_id], (err, result) => {
       if (err) {
+        console.error("Lỗi khi cập nhật trạng thái vé:", err);
         return callback(err);
       }
-
-      const query = `UPDATE tickets SET status = ? WHERE ticket_id = ?`;
-
-      connection.beginTransaction((err) => {
-        if (err) {
-          connection.release();
-          return callback(err);
-        }
-
-        connection.query(query, [ticket.status, ticket.ticket_id], (err) => {
-          if (err) {
-            return connection.rollback(() => {
-              connection.release();
-              callback(new Error(`Lỗi khi cập nhật vé: ${err.message}`));
-            });
-          }
-
-          // Commit giao dịch
-          connection.commit((err) => {
-            if (err) {
-              return connection.rollback(() => {
-                connection.release();
-                callback(new Error("Giao dịch thất bại."));
-              });
-            }
-            connection.release();
-            callback(null);
-          });
-        });
-      });
+      callback(null, result);
     });
   },
 
@@ -86,16 +59,6 @@ const Ticket = {
       ["Chưa thanh toán"],
       callback
     );
-  },
-
-  updateTicketStatus: (ticketId, status, callback) => {
-    const query = "UPDATE tickets SET status = ? WHERE ticket_id = ?";
-    db.query(query, [status, ticketId], (err, result) => {
-      if (err) {
-        return callback(err);
-      }
-      callback(null, result);
-    });
   },
 
   getAllTickets: (callback) => {

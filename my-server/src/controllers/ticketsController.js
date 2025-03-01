@@ -166,7 +166,7 @@ const ticketsController = {
         .json({ error: "Thiếu thông tin vé hoặc trạng thái." });
     }
     try {
-      await Ticket.updateMultipleTicketStatus(changeTicketStatus);
+      await Ticket.updateTicketStatus(changeTicketStatus);
       res.status(200).json({ message: "Cập nhật trạng thái vé thành công." });
     } catch (err) {
       res.status(500).json({ error: err.message });
