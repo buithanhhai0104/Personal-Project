@@ -44,7 +44,7 @@ function startExpireTicketsJob() {
 
         let trip = results[0];
         let seats = [];
-
+        console.log(trip.seats, "&&", JSON.parse(trip.seats));
         try {
           seats = trip.seats ? JSON.parse(trip.seats) : [];
           if (!Array.isArray(seats))
