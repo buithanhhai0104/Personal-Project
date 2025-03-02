@@ -7,10 +7,27 @@ const Trip = {
     db.query(sql, callback);
   },
 
-  // 2. Lấy chuyến xe theo ID
   getTripById: (tripId, callback) => {
-    const sql = "SELECT * FROM trips WHERE id = ?";
-    db.query(sql, [tripId], callback);
+    db.query("SELECT * FROM trips WHERE id = ?", [tripId], (err, results) => {
+      if (err) return callback(err, null);
+      if (results.length === 0) return callback(null, null);
+
+      let trip = results[0];
+
+      // Xử lý lỗi JSON
+      try {
+        if (trip.seats && typeof trip.seats === "string") {
+          trip.seats = JSON.parse(trip.seats);
+        }
+      } catch (error) {
+        return callback(
+          new Error("❌ Lỗi khi parse seats: " + error.message),
+          null
+        );
+      }
+
+      callback(null, trip);
+    });
   },
 
   // 3. Thêm chuyến xe mới
