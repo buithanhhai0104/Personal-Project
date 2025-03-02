@@ -28,7 +28,6 @@ function startExpireTicketsJob() {
 
     Object.keys(tripsToUpdate).forEach((tripId) => {
       Trip.getTripById(tripId, (err, results) => {
-        console.log(results);
         if (err) {
           console.error(`Lỗi khi lấy thông tin chuyến đi: ${tripId}`, err);
           return;
@@ -59,12 +58,10 @@ function startExpireTicketsJob() {
         }
 
         tripsToUpdate[tripId].forEach((ticket) => {
-          console.log(ticket.seat_numbers);
-          let seatNumbers =
-            typeof ticket.seat_numbers === "string"
-              ? ticket.seat_numbers.split(",").map((s) => s.trim())
-              : [];
-          console.log(seatNumbers);
+          let seatNumbers = ticket.seat_number
+            ? [ticket.seat_number.trim()]
+            : [];
+
           // Cập nhật trạng thái ghế
           let currentSeats = seats.map((seat) => {
             if (seatNumbers.includes(seat.seat_number)) {
@@ -80,7 +77,6 @@ function startExpireTicketsJob() {
 
           // Cập nhật ghế trước khi cập nhật trạng thái vé
           Trip.updateTripSeats(tripId, JSON.stringify(currentSeats), (err) => {
-            console.log("curunentSeats", currentSeats);
             if (err) {
               console.error(
                 `Lỗi khi cập nhật ghế cho chuyến đi ${tripId}:`,
