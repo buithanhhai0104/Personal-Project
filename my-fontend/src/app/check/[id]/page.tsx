@@ -107,7 +107,7 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
                     />
                   </div>
                 ) : (
-                  <div className="w-full text-red-600 text-center mt-4 shadow-custom">
+                  <div className="w-full text-red-600 text-center mt-4 shadow-custom p-3 border-[1px] border-red-600">
                     Vé của bạn đã hết hạn do chưa thanh toán trong thời gian quy
                     định.
                   </div>
