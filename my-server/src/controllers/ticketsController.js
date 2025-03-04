@@ -1,9 +1,12 @@
-const { nanoid } = require("nanoid");
 const Ticket = require("../models/ticketsModel");
 const Trip = require("../models/tripsModel");
 const moment = require("moment");
 const db = require("../config/db");
 
+const getNanoid = async () => {
+  const { nanoid } = await import("nanoid");
+  return nanoid(10);
+};
 const ticketsController = {
   bookTicket: (req, res) => {
     try {
@@ -32,14 +35,11 @@ const ticketsController = {
         from_location,
       } = req.body;
 
-      console.log("🚀 seat_numbers:", seat_numbers);
-      console.log("🚀 Kiểu dữ liệu:", typeof seat_numbers);
-
       if (!Array.isArray(seat_numbers) || seat_numbers.length === 0) {
         return res.status(400).json({ error: "Danh sách ghế không hợp lệ." });
       }
 
-      Trip.getTripById(trip_id, (err, results) => {
+      Trip.getTripById(trip_id, async (err, results) => {
         if (err)
           return res
             .status(500)
@@ -76,12 +76,12 @@ const ticketsController = {
             : seat
         );
 
-        const ticket_id = nanoid(10);
         const expires_at = moment
           .utc()
           .add(3, "minutes")
           .format("YYYY-MM-DD HH:mm:ss");
 
+        const ticket_id = await getNanoid();
         const ticketData = {
           ticket_id,
           user_id,
