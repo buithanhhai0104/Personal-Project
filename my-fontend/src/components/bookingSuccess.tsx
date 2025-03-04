@@ -21,7 +21,6 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
   const totalAmount = detailTrip.price * selectedSeats.length;
   const [successfulPayment, setSuccessfulPayment] = useState<boolean>(false);
   const [paymentTimeExpires, setPaymentTimeExpires] = useState<boolean>(true);
-  const [key, setKey] = useState(0); // Cập nhật key để render lại component khi hết hạn
 
   const handlePayment = async () => {
     if (bookTicketsData) {
@@ -36,11 +35,6 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
         await apisendEmail(sendEmailForm);
       }
     }
-  };
-
-  const handleExpire = () => {
-    console.log("Hết thời gian, cập nhật lại component...");
-    setKey((prevKey) => prevKey + 1); // Thay đổi key để render lại CountdownTimer
   };
 
   const expiresAtLocal = new Date(
@@ -113,10 +107,8 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
               Vui lòng thanh toán trong:
               <span className="text-red-600 flex gap-2">
                 <CountdownTimer
-                  key={key} // Khi key thay đổi, component sẽ render lại
                   seatExpiresAt={expiresAtLocal || ""}
                   setPaymentTimeExpires={setPaymentTimeExpires}
-                  onExpire={handleExpire} // Callback khi hết thời gian
                 />
                 (Nếu không thanh toán trong thời gian quy định vé sẽ hủy)
               </span>

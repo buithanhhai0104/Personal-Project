@@ -11,7 +11,7 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
   const [ticketData, setTicketData] = useState<IBookTicket | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [paymentTimeExpires, setPaymentTimeExpires] = useState<boolean>(true);
-  const [key, setKey] = useState(0); // Cập nhật key để render lại component khi hết hạn
+
   const resolvedParams = React.use(params);
   const { id } = resolvedParams || {};
 
@@ -39,11 +39,6 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
     if (!ticketData) return;
     const result = await handlePaymentSuccess(ticketData);
     console.log(result, details);
-  };
-
-  const handleExpire = () => {
-    console.log("Hết thời gian, cập nhật lại component...");
-    setKey((prevKey) => prevKey + 1);
   };
 
   return (
@@ -95,10 +90,8 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
                   Vui lòng thanh toán trong:
                   <span className="text-red-600 flex gap-1">
                     <CountdownTimer
-                      key={key} // Khi key thay đổi, component sẽ render lại
                       seatExpiresAt={ticketData.expires_at || ""}
                       setPaymentTimeExpires={setPaymentTimeExpires}
-                      onExpire={handleExpire} // Callback khi hết thời gian
                     />
                     (Nếu không thanh toán trong thời gian quy định vé sẽ hủy)
                   </span>
