@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require("uuid");
+const { nanoid } = require("nanoid");
 const Ticket = require("../models/ticketsModel");
 const Trip = require("../models/tripsModel");
 const moment = require("moment");
@@ -76,7 +76,7 @@ const ticketsController = {
             : seat
         );
 
-        const ticket_id = uuidv4();
+        const ticket_id = nanoid(10);
         const expires_at = moment
           .utc()
           .add(3, "minutes")
