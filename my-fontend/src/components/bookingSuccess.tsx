@@ -128,7 +128,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
               />
             </div>
           ) : (
-            <div className="w-full text-red-600 text-center mt-4">
+            <div className="w-full text-red-600 text-center text-lg mt-4 shadow-custom p-2 border-[1px] border-red-600">
               Vé của bạn đã hết hạn do chưa thanh toán trong thời gian quy định.
             </div>
           )}

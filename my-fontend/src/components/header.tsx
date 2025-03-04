@@ -81,21 +81,21 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header className="fixed z-10 w-full bg-[#3b82f6] bg-opacity-90 h-20 ">
+    <header className="fixed z-50 w-full bg-[#3b82f6] bg-opacity-90 h-20 ">
       <div className="flex justify-between gap-2 items-center w-[95%] m-auto">
         {/* Nút mở Sidebar */}
         <div
-          className="flex md:hidden text-4xl cursor-pointer"
+          className="flex md:hidden text-4xl cursor-pointer mt-2"
           onClick={() => setShowSideBar(!showSideBar)}
         >
           <IoReorderThreeSharp />
         </div>
 
-        <Link href={"/"} className="mt-[5px]">
+        <Link href={"/"} className="mt-[5px] ml-5 md:ml-0">
           <Image width={70} height={70} src="/images/logo5.png" alt="logo" />
         </Link>
 
-        <nav className="hidden md:flex gap-10">
+        <nav className="hidden md:flex gap-10 mt-2 ">
           {navPage.map((item, index) => (
             <Link
               className="flex flex-col p-3 font-medium group text-lg"
@@ -103,17 +103,17 @@ const Header: React.FC = () => {
               href={item.to}
             >
               {item.title}
-              <span className="h-[1px] w-0 bg-white  transition-all duration-300 group-hover:w-full"></span>
+              <span className="h-[2px] w-0 bg-orange-400  transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
         </nav>
 
         {!user?.username ? (
           <Link
-            className="flex items-center gap-1 border-[1px] p-2 rounded-xl hover:border-blue-500"
+            className="flex text-[10px] justify-center  md:text-base mt-2 items-center gap-1 border-[1px] p-2 rounded-xl hover:border-orange-400 hover:text-orange-400"
             href={"/auth"}
           >
-            <CiUser className="text-xl" />
+            <CiUser className="text-xl flex " />
             Tài khoản
           </Link>
         ) : (
@@ -121,7 +121,7 @@ const Header: React.FC = () => {
             <div
               onClick={() => setIsOpen(!isOpen)}
               data-tip={isOpen ? "Đóng popup" : "Mở popup"}
-              className="cursor-pointer"
+              className="cursor-pointer hover:text-orange-400 mt-2"
             >
               <FaCircleUser />
             </div>
@@ -131,12 +131,16 @@ const Header: React.FC = () => {
                 ref={popupRef}
                 className="absolute top-full left-1/2 transform -translate-x-1/2 w-[150px] bg-[#3e3e3f] flex flex-col justify-center items-center rounded-xl text-[#ffff] text-[16px] mt-2"
               >
-                {user.role === "admin" && <Link href={"/admin"}>Quản lý</Link>}
+                {user.role === "admin" && (
+                  <Link href={"/admin"} className="hover:text-orange-400">
+                    Quản lý
+                  </Link>
+                )}
                 {popup.map((item, index) => (
                   <button
                     key={index}
                     onClick={() => handleClickPopupItem(item.title, item.to)}
-                    className="text-white"
+                    className="text-white hover:text-orange-400"
                   >
                     {item.title}
                   </button>

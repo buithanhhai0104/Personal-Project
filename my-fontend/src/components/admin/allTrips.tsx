@@ -142,7 +142,7 @@ const AllTrips = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1   py-10 bg-gray-100  min-h-screen">
+    <div className="flex flex-col flex-1  bg-gray-100  min-h-screen">
       <div className="flex  flex-col  gap-10 justify-between mb-4">
         <h2 className="text-3xl font-semibold text-blue-800">
           Danh sách chuyến đi
@@ -233,7 +233,7 @@ const AllTrips = () => {
           return (
             <div
               key={index}
-              className="bg-white  rounded-lg shadow-md hover:shadow-lg transition-shadow transform overflow-hidden"
+              className="bg-white  rounded-lg shadow-md hover:shadow-lg  transition-shadow transform overflow-hidden"
             >
               <div className="p-5 flex  flex-col md:flex-row items-center justify-between gap-4">
                 {/* Thời gian và giá vé */}

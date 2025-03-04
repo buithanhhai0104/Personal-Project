@@ -86,11 +86,15 @@ const Manage = () => {
       </button>
       {/* Sidebar */}
       <div
-        className={` mt-[80px] z-30 sm:mt-0 bg-white shadow-lg border-r border-gray-200 
+        className={` mt-[80px] z-10 sm:mt-0 bg-white shadow-lg border-r border-gray-200 
     w-[70%] sm:w-[50%] md:w-[25%] 
     transition-transform duration-300 ease-in-out 
     fixed top-0 left-0 bottom-0 md:sticky md:top-[80px] md:h-[calc(100vh-60px)] 
-    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+    ${
+      isSidebarOpen
+        ? "translate-x-0"
+        : "-translate-x-full md:translate-x-0 mb-20"
+    }
   `}
       >
         <div className=" flex justify-between md:justify-center  p-4 border-b border-gray-300 text-center text-xl font-semibold text-[#3b82f6]">
@@ -236,7 +240,7 @@ const Manage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-grow bg-gray-100 p-3 md:p-10">
+      <div className="flex-grow mb-20 bg-gray-100 p-3 md:p-10">
         {renderComponent() || (
           <div className="text-center text-gray-500">
             Chọn một mục để xem nội dung
