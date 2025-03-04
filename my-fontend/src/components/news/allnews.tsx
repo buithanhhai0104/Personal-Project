@@ -41,18 +41,21 @@ const Allnews: React.FC<INewsProps> = ({ newsData }) => {
                 handleGetNewsById(news.id, news.title);
               }
             }}
-            className="border p-3 rounded-lg shadow cursor-pointer"
+            className="border p-3 rounded-lg shadow cursor-pointer "
           >
-            <Image
-              className="rounded-xl shadow-custom"
-              src={
-                typeof news.image === "string" ? news.image : "/images/logo.png"
-              }
-              alt={news.title || "Ảnh bài báo"}
-              width={500}
-              height={500}
-              layout="responsive"
-            />
+            <div className=" relative w-full h-[190px]">
+              <Image
+                className="rounded-xl shadow-custom"
+                src={
+                  typeof news.image === "string"
+                    ? news.image
+                    : "/images/logo.png"
+                }
+                layout="fill"
+                objectFit="cover"
+                alt={news.title}
+              />
+            </div>
             <p className="mt-2 text-sm font-bold line-clamp-2">{news.title}</p>
           </div>
         ))}

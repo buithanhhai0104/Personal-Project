@@ -59,18 +59,17 @@ const RelatedNews: React.FC = () => {
               }}
               key={news.id}
             >
-              <div className="w-full ">
+              <div className=" relative w-full h-[190px]">
                 <Image
-                  className="rounded-xl shadow-custom "
+                  className="rounded-xl shadow-custom"
                   src={
                     typeof news.image === "string"
                       ? news.image
                       : "/images/logo.png"
                   }
+                  layout="fill"
+                  objectFit="cover"
                   alt={news.title}
-                  layout="responsive"
-                  width={500}
-                  height={500}
                 />
               </div>
               <div className="flex flex-col w-[100%] sm:w-[70%] text-sm leading-loose">

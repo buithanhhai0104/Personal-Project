@@ -91,7 +91,7 @@ export default function NewsPage() {
                   key={index}
                   className="flex cursor-pointer flex-col col-span-2 sm:col-span-1 shadow-custom p-2 rounded-xl"
                 >
-                  <div className="w-full flex flex-1">
+                  <div className=" relative w-full h-[190px]">
                     <Image
                       className="rounded-xl shadow-custom"
                       src={
@@ -99,10 +99,9 @@ export default function NewsPage() {
                           ? news.image
                           : "/images/logo.png"
                       }
+                      layout="fill"
+                      objectFit="cover"
                       alt={news.title}
-                      width={500}
-                      height={500}
-                      layout="responsive"
                     />
                   </div>
                   <div className="flex flex-col">

@@ -153,7 +153,9 @@ const AllTickets: React.FC<AllTicketsProps> = ({ type }) => {
                   {ticket.status}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {ticket.booking_time}
+                  {ticket.booking_time
+                    ? new Date(ticket.booking_time).toLocaleString("vi-VN")
+                    : "N/A"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2 flex flex-col gap-2">
                   <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
