@@ -100,7 +100,11 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
             </p>
             <p>
               <b>Trạng thái thanh toán:</b>{" "}
-              <span className="text-red-600">{bookTicketsData?.status}</span>
+              <span className="text-red-600">
+                {paymentTimeExpires
+                  ? bookTicketsData?.status
+                  : "Hết hạn do chưa thanh toán"}
+              </span>
             </p>
 
             <div className="text-sm font-medium flex flex-col sm:flex-row gap-2">

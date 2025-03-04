@@ -81,7 +81,9 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
                     : "text-red-600"
                 }
               >
-                {ticketData.status}
+                {paymentTimeExpires
+                  ? ticketData.status
+                  : "Hết hạn do chưa thanh toán"}
               </span>
             </div>
             {ticketData.status === "Chưa thanh toán" && (
@@ -105,7 +107,7 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
                     />
                   </div>
                 ) : (
-                  <div className="w-full text-red-600 text-center mt-4">
+                  <div className="w-full text-red-600 text-center mt-4 shadow-custom">
                     Vé của bạn đã hết hạn do chưa thanh toán trong thời gian quy
                     định.
                   </div>
