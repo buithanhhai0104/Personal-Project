@@ -20,8 +20,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
 }) => {
   const totalAmount = detailTrip.price * selectedSeats.length;
   const [successfulPayment, setSuccessfulPayment] = useState<boolean>(false);
-  console.log(bookTicketsData);
-
+  const [paymentTimeExpires, setPaymentTimeExpires] = useState<boolean>(true);
   const handlePayment = async (details: unknown) => {
     if (bookTicketsData) {
       const result = await handlePaymentSuccess(bookTicketsData);
@@ -81,7 +80,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
                 <p>
                   <span className="font-medium">Số ghế:</span>{" "}
                   <span className="flex gap-2">
-                    {bookTicketsData?.seat_number}
+                    {bookTicketsData?.seat_numbers}
                   </span>
                 </p>
 
@@ -144,7 +143,7 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
                 </p>
                 <p>
                   <span className="font-medium">Số ghế:</span>{" "}
-                  {bookTicketsData?.seat_number}
+                  {bookTicketsData?.seat_numbers}
                 </p>
                 <p>
                   <span className="font-medium">Trạng thái thanh toán:</span>{" "}
@@ -155,22 +154,29 @@ const BookingSuccess: React.FC<IBookingSuccessProps> = ({
                 <div className="text-sm font-medium flex flex-col sm:flex-row gap-2">
                   Vui lòng thanh toán trong:
                   <span className="text-red-600 flex gap-2">
-                    <CountdownTimer seatExpiresAt={expiresAtLocal || ""} /> (Nếu
-                    không thanh toán trong thời gian quy định vé sẽ hủy)
+                    <CountdownTimer
+                      seatExpiresAt={expiresAtLocal || ""}
+                      setPaymentTimeExpires={setPaymentTimeExpires}
+                    />{" "}
+                    (Nếu không thanh toán trong thời gian quy định vé sẽ hủy)
                   </span>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Nút quay lại */}
-          <div className="text-center  mt-8 w-full flex flex-col items-center gap-2 text-xl">
-            <PayPalButton
-              amount={totalAmount}
-              currency="USD"
-              onSuccess={handlePayment}
-            />
-          </div>
+          {paymentTimeExpires ? (
+            <div className="text-center  mt-8 w-full flex flex-col items-center gap-2 text-xl">
+              <PayPalButton
+                amount={totalAmount}
+                currency="USD"
+                onSuccess={handlePayment}
+              />
+            </div>
+          ) : (
+            <div className="w-full text-red-600">
+              Vé của bạn đã hết hạn do chưa thanh toán trong thời gian quy định
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -2,20 +2,27 @@ import { useEffect, useState } from "react";
 
 interface CountdownProps {
   seatExpiresAt: string | undefined;
+  setPaymentTimeExpires: (value: boolean) => void; // Định nghĩa prop đúng
 }
 
-const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
+const CountdownTimer: React.FC<CountdownProps> = ({
+  seatExpiresAt,
+  setPaymentTimeExpires,
+}) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   useEffect(() => {
     if (seatExpiresAt) {
       const expiresAt = new Date(seatExpiresAt).getTime();
       const currentTime = Date.now();
-      console.log(seatExpiresAt, currentTime, expiresAt);
+
       if (expiresAt <= currentTime) {
         setTimeLeft(0);
+        setPaymentTimeExpires(false); // Cập nhật trạng thái khi hết hạn
         return;
       }
+
+      setPaymentTimeExpires(true); // Còn thời gian
 
       const interval = setInterval(() => {
         const remaining = expiresAt - Date.now();
@@ -23,6 +30,7 @@ const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
         if (remaining <= 0) {
           clearInterval(interval);
           setTimeLeft(0);
+          setPaymentTimeExpires(false);
         } else {
           setTimeLeft(remaining);
         }
@@ -30,7 +38,7 @@ const CountdownTimer: React.FC<CountdownProps> = ({ seatExpiresAt }) => {
 
       return () => clearInterval(interval);
     }
-  }, [seatExpiresAt]);
+  }, [seatExpiresAt, setPaymentTimeExpires]);
 
   if (timeLeft === null) return null;
 
