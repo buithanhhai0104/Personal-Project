@@ -65,7 +65,7 @@ async function startExpireTicketsJob() {
               return;
             }
           } else if (Array.isArray(trip.seats)) {
-            seats = trip.seats; // Nếu đã là array thì giữ nguyên
+            seats = trip.seats;
           } else {
             console.error(`❌ Dữ liệu seats của trip ${tripId} không hợp lệ`);
             return;

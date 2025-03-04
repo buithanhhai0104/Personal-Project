@@ -220,9 +220,16 @@ const AllTrips = () => {
             month: "2-digit",
             year: "numeric",
           });
-          const reservedSeats = trip.seats.filter(
-            (seat) => seat.status === "booked"
-          );
+
+          const seatsArray =
+            typeof trip.seats === "string"
+              ? JSON.parse(trip.seats)
+              : trip.seats;
+
+          const reservedSeats = Array.isArray(seatsArray)
+            ? seatsArray.filter((seat) => seat.status === "booked")
+            : [];
+
           return (
             <div
               key={index}
@@ -262,7 +269,7 @@ const AllTrips = () => {
 
                 {/* Thông tin ghế */}
                 <div className=" lg:block text-gray-700">
-                  Ghế: {reservedSeats.length}/{trip.seats.length}
+                  Ghế: {reservedSeats.length}/{seatsArray.length}
                 </div>
 
                 {/* Giá vé */}
