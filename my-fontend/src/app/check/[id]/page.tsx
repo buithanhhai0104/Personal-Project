@@ -10,7 +10,8 @@ import { ClipLoader } from "react-spinners";
 const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
   const [ticketData, setTicketData] = useState<IBookTicket | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [paymentTimeExpires, setPaymentTimeExpires] = useState<boolean>(true);
+  const [key, setKey] = useState(0); // Cập nhật key để render lại component khi hết hạn
   const resolvedParams = React.use(params);
   const { id } = resolvedParams || {};
 
@@ -38,6 +39,11 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
     if (!ticketData) return;
     const result = await handlePaymentSuccess(ticketData);
     console.log(result, details);
+  };
+
+  const handleExpire = () => {
+    console.log("Hết thời gian, cập nhật lại component...");
+    setKey((prevKey) => prevKey + 1);
   };
 
   return (
@@ -88,15 +94,29 @@ const TripInformation = ({ params }: { params: Promise<{ id: string }> }) => {
                 <div className="text-[14px] flex flex-col sm:flex-row gap-3 text-black p-2">
                   Vui lòng thanh toán trong:
                   <span className="text-red-600 flex gap-1">
-                    <CountdownTimer seatExpiresAt={ticketData.expires_at} />
+                    <CountdownTimer
+                      key={key} // Khi key thay đổi, component sẽ render lại
+                      seatExpiresAt={ticketData.expires_at || ""}
+                      setPaymentTimeExpires={setPaymentTimeExpires}
+                      onExpire={handleExpire} // Callback khi hết thời gian
+                    />
                     (Nếu không thanh toán trong thời gian quy định vé sẽ hủy)
                   </span>
                 </div>
-                <PayPalButton
-                  amount={300}
-                  currency="USD"
-                  onSuccess={handlePayment}
-                />
+                {paymentTimeExpires ? (
+                  <div className="text-center mt-8 w-full flex flex-col items-center gap-2 text-xl">
+                    <PayPalButton
+                      amount={300}
+                      currency="USD"
+                      onSuccess={handlePayment}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full text-red-600 text-center mt-4">
+                    Vé của bạn đã hết hạn do chưa thanh toán trong thời gian quy
+                    định.
+                  </div>
+                )}
               </div>
             )}
           </div>
